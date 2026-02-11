@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+  --background: 28 8% 96%;
+  --foreground: 20 14% 4%;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+
+  /*
+    - 英文：Roboto Regular
+    - 中文：优先思源黑体（若本机未装则回退到 Noto Sans SC 等）
+  */
+  font-family: var(--font-roboto), "Roboto", "Source Han Sans SC",
+    "Source Han Sans CN", var(--font-noto-sans-sc), "Noto Sans SC",
+    ui-sans-serif, system-ui, -apple-system, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+}
+
+/* 首页大标题：思源宋体（等价 Web 字体 Noto Serif SC） */
+.font-cn-serif {
+  font-family: var(--font-noto-serif-sc), "Source Han Serif SC",
+    "Source Han Serif CN", "Noto Serif SC", serif;
+}
+
+.text-shadow {
+  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.text-shadow-lg {
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
