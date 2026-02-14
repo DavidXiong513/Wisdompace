@@ -3,11 +3,11 @@ import ReadInstructionsToc from "@/app/chapter/read-instructions/ReadInstruction
 import ScrollTopButton from "@/app/chapter/read-instructions/ScrollTopButton";
 
 const tocItems = [
-  { id: "origin", label: "缘起" },
-  { id: "intention", label: "初衷" },
-  { id: "framework", label: "框架" },
-  { id: "usage", label: "使用说明" },
-  { id: "reminders", label: "五点提醒" },
+  { id: "section-1", label: "缘起" },
+  { id: "section-2", label: "初衷" },
+  { id: "section-3", label: "框架" },
+  { id: "section-4", label: "使用说明" },
+  { id: "section-5", label: "五点提醒" },
 ];
 
 const frameworkCards = [
@@ -46,7 +46,7 @@ const reminderCards = [
   },
 ];
 
-export default function ReadInstructionsPage() {
+export default function ChapterThreePage() {
   return (
     <div className="relative min-h-screen bg-[#F5F0E8]">
       <div
@@ -62,7 +62,7 @@ export default function ReadInstructionsPage() {
             <div className="mx-auto w-full max-w-[860px]">
               <div className="flex flex-col gap-8">
                 <section
-                  id="origin"
+                  id="section-1"
                   className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
@@ -92,7 +92,7 @@ export default function ReadInstructionsPage() {
                 </section>
 
                 <section
-                  id="intention"
+                  id="section-2"
                   className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
@@ -123,9 +123,7 @@ export default function ReadInstructionsPage() {
                     <p className="indent-[2em]">
                       这个网站，与其说是“关于死亡”，不如说更像是一份“关于我们如何认真回顾此生的使用说明书”。
                     </p>
-                    <p className="indent-[2em]">
-                      它关心的是：
-                    </p>
+                    <p className="indent-[2em]">它关心的是：</p>
                   </div>
                   <ul className="mt-4 list-disc space-y-3 pl-6 text-[17px] leading-[1.8] tracking-[-0.01em] text-[#3D3D3D] marker:text-[#8B7355]">
                     <li>如何如实地面对自己</li>
@@ -149,7 +147,7 @@ export default function ReadInstructionsPage() {
                 </section>
 
                 <section
-                  id="framework"
+                  id="section-3"
                   className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
@@ -200,7 +198,7 @@ export default function ReadInstructionsPage() {
                 </section>
 
                 <section
-                  id="usage"
+                  id="section-4"
                   className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
@@ -227,7 +225,7 @@ export default function ReadInstructionsPage() {
                 </section>
 
                 <section
-                  id="reminders"
+                  id="section-5"
                   className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">

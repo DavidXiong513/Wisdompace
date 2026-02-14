@@ -1,8 +1,10 @@
+import NavBar from "@/components/NavBar";
 import HomeChapterNav from "@/components/HomeChapterNav";
 
 export default function Home() {
   return (
     <div className="relative h-screen w-screen">
+      <NavBar />
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center brightness-75"

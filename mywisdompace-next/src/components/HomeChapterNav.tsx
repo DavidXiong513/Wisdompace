@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 
 const navItems = [
-  { chinese: "阅读说明", english: "Read Instructions", href: "/chapter/read-instructions" },
+  { chinese: "预备此生", english: "Prepare Wisely", href: "/chapter/read-instructions" },
   { chinese: "看见自己", english: "See Yourself", href: "/chapter/chapter-1" },
   { chinese: "积极生活", english: "Live Positively", href: "/chapter/chapter-2" },
   { chinese: "清楚交代", english: "State Clearly", href: "/chapter/chapter-3" },
@@ -17,11 +17,14 @@ const HomeChapterNav = () => {
           <ul className="flex flex-col items-center justify-center gap-1 text-center text-white sm:flex-row sm:justify-around">
             {navItems.map((item) => (
               <li key={item.english} className="py-2 sm:py-0">
-                <Link href={item.href} className="group block">
-                  <span className="text-base font-semibold tracking-widest text-white transition-colors duration-300 group-hover:text-yellow-200 sm:text-lg">
+                <Link
+                  href={item.href}
+                  className="group block rounded-md px-4 py-3 transition duration-300 hover:bg-white/10"
+                >
+                  <span className="block text-base font-semibold tracking-widest text-white transition-colors duration-300 group-hover:text-yellow-200 sm:text-lg">
                     {item.chinese}
                   </span>
-                  <span className="mt-1 block text-sm font-medium uppercase tracking-wider text-white/90 sm:text-base">
+                  <span className="mt-1 block text-sm font-medium uppercase tracking-wider text-white/90 transition-colors duration-300 group-hover:text-yellow-200/80 sm:text-base">
                     {item.english}
                   </span>
                 </Link>

@@ -3,6 +3,15 @@
 :root {
   --background: 28 8% 96%;
   --foreground: 20 14% 4%;
+  --sidebar-width: 240px;
+  --sidebar-left: 24px;
+  --content-max-width: 800px;
+  --nav-gap: 32px;
+  --color-primary: #4a3728;
+  --color-secondary: #6b5b4f;
+  --color-bg-light: #f5ede0;
+  --color-bg-page: #f5f0e8;
+  --color-bg-card: #ffffff;
 }
 
 html,
@@ -10,18 +19,16 @@ body {
   height: 100%;
 }
 
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+html {
+  scroll-behavior: smooth;
+}
 
-  /*
-    - 英文：Roboto Regular
-    - 中文：优先思源黑体（若本机未装则回退到 Noto Sans SC 等）
-  */
-  font-family: var(--font-roboto), "Roboto", "Source Han Sans SC",
-    "Source Han Sans CN", var(--font-noto-sans-sc), "Noto Sans SC",
-    ui-sans-serif, system-ui, -apple-system, "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
+body {
+  background-color: var(--color-bg-page);
+  color: hsl(var(--foreground));
+  font-family: "Noto Sans SC", "Source Han Sans SC", "Source Han Sans CN",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui,
+    sans-serif;
 }
 
 /* 首页大标题：思源宋体（等价 Web 字体 Noto Serif SC） */

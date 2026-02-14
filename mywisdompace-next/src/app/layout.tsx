@@ -3,7 +3,6 @@ import { Noto_Sans_SC, Noto_Serif_SC, Roboto } from "next/font/google";
 
 import "./globals.css";
 
-import NavBar from "@/components/NavBar";
 
 const roboto = Roboto({
   weight: ["400"],
@@ -41,7 +40,6 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} ${notoSansSC.variable} ${notoSerifSC.variable} antialiased`}
       >
-        <NavBar />
         <main>{children}</main>
       </body>
     </html>

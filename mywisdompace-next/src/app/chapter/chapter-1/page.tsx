@@ -46,7 +46,7 @@ const reminderCards = [
   },
 ];
 
-export default function ReadInstructionsPage() {
+export default function ChapterOnePage() {
   return (
     <div className="relative min-h-screen bg-[#F5F0E8]">
       <div
@@ -123,9 +123,7 @@ export default function ReadInstructionsPage() {
                     <p className="indent-[2em]">
                       这个网站，与其说是“关于死亡”，不如说更像是一份“关于我们如何认真回顾此生的使用说明书”。
                     </p>
-                    <p className="indent-[2em]">
-                      它关心的是：
-                    </p>
+                    <p className="indent-[2em]">它关心的是：</p>
                   </div>
                   <ul className="mt-4 list-disc space-y-3 pl-6 text-[17px] leading-[1.8] tracking-[-0.01em] text-[#3D3D3D] marker:text-[#8B7355]">
                     <li>如何如实地面对自己</li>
