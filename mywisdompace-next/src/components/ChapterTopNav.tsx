@@ -19,7 +19,17 @@ const navItems = [
   { chinese: "好好告别", english: "Farewell Gracefully", href: "/chapter/chapter-4" },
 ];
 
-export default function ChapterTopNav() {
+type ChapterTopNavProps = {
+  containerClassName?: string;
+  navClassName?: string;
+  navListClassName?: string;
+};
+
+export default function ChapterTopNav({
+  containerClassName = "",
+  navClassName = "",
+  navListClassName = "",
+}: ChapterTopNavProps) {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -30,8 +40,10 @@ export default function ChapterTopNav() {
   return (
     <header className="sticky top-0 z-50 bg-[#4A3728]">
       <div className="relative w-full">
-        <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center px-4">
-          <div className="flex w-[220px] -translate-x-[120px] items-center justify-start text-left">
+        <div
+          className={`mx-auto flex h-[72px] w-full max-w-6xl items-center px-4 ${containerClassName}`}
+        >
+          <div className="flex w-[220px] -translate-x-[57px] items-center justify-start text-left">
             <Link
               href="/"
               className="whitespace-nowrap font-cn-serif text-[25px] font-bold text-[#F5EDE0] transition duration-300 hover:text-[#FFF3DF]"
@@ -40,8 +52,12 @@ export default function ChapterTopNav() {
             </Link>
           </div>
 
-          <nav className="hidden md:block md:ml-20">
-            <ul className="flex w-[760px] items-center justify-between text-center text-[#F5EDE0]">
+          <nav
+            className={`hidden md:block md:ml-20 ${navClassName}`}
+          >
+            <ul
+              className={`flex w-[760px] items-center justify-between text-center text-[#F5EDE0] ${navListClassName}`}
+            >
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (

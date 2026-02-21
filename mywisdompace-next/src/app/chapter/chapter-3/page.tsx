@@ -55,11 +55,15 @@ export default function ChapterThreePage() {
         aria-hidden
       />
       <div className="relative z-10">
-        <ChapterTopNav />
-        <main className="mx-auto max-w-6xl px-6 pb-20 pt-8 sm:pt-10">
+        <ChapterTopNav
+          containerClassName="max-w-[min(1800px,96vw)] px-6"
+          navClassName="md:ml-0 md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[min(1316px,92vw)] md:flex md:items-center"
+          navListClassName="w-[min(1120px,85vw)] max-w-full mx-auto"
+        />
+        <main className="mx-auto max-w-[min(1800px,96vw)] px-6 pb-20 pt-8 sm:pt-10">
           <ReadInstructionsToc items={tocItems} />
           <div className="lg:ml-[280px]">
-            <div className="mx-auto w-full max-w-[860px]">
+            <div className="mx-auto w-full max-w-[min(1316px,92vw)]">
               <div className="flex flex-col gap-8">
                 <section
                   id="section-1"

@@ -1,15 +1,22 @@
+import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import HomeChapterNav from "@/components/HomeChapterNav";
 
 export default function Home() {
   return (
-    <div className="relative h-screen w-screen">
+    <div className="relative h-screen w-screen overflow-hidden">
       <NavBar />
       {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center brightness-75"
-        style={{ backgroundImage: "url(/images/hero-background.webp)" }}
-      />
+      <div className="absolute inset-0">
+        <Image
+          src="/images/hero-background.webp"
+          alt="Hero Background"
+          fill
+          priority
+          className="object-cover object-center brightness-75"
+          sizes="100vw"
+        />
+      </div>
 
       {/* Overlay to darken the image slightly for better text contrast */}
       <div className="absolute inset-0 bg-black/20" />

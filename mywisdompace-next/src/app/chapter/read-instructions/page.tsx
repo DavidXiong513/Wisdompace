@@ -1,10 +1,13 @@
 import ChapterTopNav from "@/components/ChapterTopNav";
 import ReadInstructionsToc from "@/app/chapter/read-instructions/ReadInstructionsToc";
+import PreparednessSlider from "@/app/chapter/read-instructions/PreparednessSlider";
 import ScrollTopButton from "@/app/chapter/read-instructions/ScrollTopButton";
+
 
 const tocItems = [
   { id: "origin", label: "缘起" },
   { id: "intention", label: "初衷" },
+  { id: "preparedness", label: "预备自测" },
   { id: "framework", label: "框架" },
   { id: "usage", label: "使用说明" },
   { id: "reminders", label: "五点提醒" },
@@ -55,11 +58,15 @@ export default function ReadInstructionsPage() {
         aria-hidden
       />
       <div className="relative z-10">
-        <ChapterTopNav />
-        <main className="mx-auto max-w-6xl px-6 pb-20 pt-8 sm:pt-10">
+        <ChapterTopNav
+          containerClassName="max-w-[min(1800px,96vw)] px-6"
+          navClassName="md:ml-0 md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[min(1316px,92vw)] md:flex md:items-center"
+          navListClassName="w-[min(1120px,85vw)] max-w-full mx-auto"
+        />
+        <main className="mx-auto max-w-[min(1800px,96vw)] px-6 pb-20 pt-8 sm:pt-10">
           <ReadInstructionsToc items={tocItems} />
           <div className="lg:ml-[280px]">
-            <div className="mx-auto w-full max-w-[860px]">
+            <div className="mx-auto w-full max-w-[min(1316px,92vw)]">
               <div className="flex flex-col gap-8">
                 <section
                   id="origin"
@@ -145,6 +152,27 @@ export default function ReadInstructionsPage() {
                   </div>
                   <div className="my-6 rounded-[6px] border-l-[4px] border-[#4A3728] bg-[#F0E8DC] px-6 py-5 text-[17px] font-medium text-[#4A3728]">
                     “如果此生无法被预测和控制，那我是否至少可以，提前在因地做一些让自己身体与心灵得到安顿的筹备？”
+                  </div>
+                </section>
+
+                <section
+                  id="preparedness"
+                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                >
+                  <h2 className="text-[24px] font-bold text-[#4A3728]">
+                    预备自测
+                  </h2>
+                  <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
+                  <div className="mt-4 space-y-3 text-[16px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
+                    <p className="indent-[2em]">
+                      这不是一场考试，只是帮你辨识当下的准备程度。你可以随时调整分值，记录真实的当下即可。
+                    </p>
+                    <p className="indent-[2em]">
+                      如果你觉得难以判断，也没关系——从直觉出发，先给出一个大致区间。
+                    </p>
+                  </div>
+                  <div className="mt-6 rounded-lg border border-[#E8E4DD] bg-[#FAF8F3] p-6">
+                    <PreparednessSlider />
                   </div>
                 </section>
 

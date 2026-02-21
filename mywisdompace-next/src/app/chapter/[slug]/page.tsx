@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import BackToHome from "@/components/BackToHome";
@@ -10,12 +11,29 @@ export function generateStaticParams() {
   return chapters.map((c) => ({ slug: c.slug }));
 }
 
-export default function ChapterPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const chapter = getChapterBySlug(params.slug);
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const chapter = getChapterBySlug(slug);
+
+  if (!chapter) {
+    return {
+      title: "章节未找到",
+    };
+  }
+
+  return {
+    title: `${chapter.title} | 《一生的整理》`,
+    description: chapter.description,
+  };
+}
+
+export default async function ChapterPage({ params }: Props) {
+  const { slug } = await params;
+  const chapter = getChapterBySlug(slug);
   if (!chapter) notFound();
 
   const chapterIndex = chapters.findIndex((c) => c.slug === chapter.slug);
