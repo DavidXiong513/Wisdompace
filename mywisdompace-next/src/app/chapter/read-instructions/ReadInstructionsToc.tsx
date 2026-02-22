@@ -45,7 +45,7 @@ export default function ReadInstructionsToc({
   }, [items]);
 
   return (
-    <div className="relative z-30 mx-auto mb-6 w-full max-w-[800px] rounded-xl border border-[#E8E4DD] bg-white px-4 py-5 shadow-[2px_0_8px_rgba(0,0,0,0.05)] lg:fixed lg:left-[24px] lg:top-[72px] lg:mx-0 lg:mb-0 lg:h-[calc(100vh-72px)] lg:w-[240px] lg:overflow-y-auto lg:rounded-none lg:border-0 lg:border-r lg:px-4 lg:py-6">
+    <div className="relative z-30 mx-auto mb-6 w-full max-w-[800px] rounded-xl border border-[#E8E4DD] bg-white px-4 py-5 shadow-[2px_0_8px_rgba(0,0,0,0.05)] xl:fixed xl:left-[24px] xl:top-[72px] xl:mx-0 xl:mb-0 xl:h-[calc(100vh-72px)] xl:w-[240px] xl:overflow-y-auto xl:rounded-none xl:border-0 xl:border-r xl:px-4 xl:py-6">
       <div className="flex items-center justify-center gap-2 text-[18px] font-semibold text-[#7A6A52]">
         <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#EFE6DA] text-[#7A5A3A]">
           <svg

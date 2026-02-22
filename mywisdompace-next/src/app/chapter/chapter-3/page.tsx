@@ -58,7 +58,7 @@ export default function ChapterThreePage() {
         <ChapterTopNav
           containerClassName="max-w-[min(1800px,96vw)] px-6"
           navClassName="md:ml-0 md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[min(1316px,92vw)] md:flex md:items-center"
-          navListClassName="w-[min(1120px,85vw)] max-w-full mx-auto"
+          navListClassName="w-[940px] max-w-none lg:ml-[80px] xl:ml-[185px] 2xl:ml-[220px]"
         />
         <main className="mx-auto max-w-[min(1800px,96vw)] px-6 pb-20 pt-8 sm:pt-10">
           <ReadInstructionsToc items={tocItems} />
@@ -67,7 +67,7 @@ export default function ChapterThreePage() {
               <div className="flex flex-col gap-8">
                 <section
                   id="section-1"
-                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
                     缘起
@@ -97,7 +97,7 @@ export default function ChapterThreePage() {
 
                 <section
                   id="section-2"
-                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
                     初衷
@@ -152,7 +152,7 @@ export default function ChapterThreePage() {
 
                 <section
                   id="section-3"
-                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
                     框架
@@ -203,7 +203,7 @@ export default function ChapterThreePage() {
 
                 <section
                   id="section-4"
-                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
                     使用说明
@@ -230,7 +230,7 @@ export default function ChapterThreePage() {
 
                 <section
                   id="section-5"
-                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-10 shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
                     五点提醒

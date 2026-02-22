@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import BackToHome from "@/components/BackToHome";
 import { ChapterToc } from "@/components/ChapterToc";
 import ChapterTopNav from "@/components/ChapterTopNav";
 import { ToolPlaceholder } from "@/components/ToolPlaceholder";
@@ -142,13 +141,12 @@ export default async function ChapterPage({ params }: Props) {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 pt-6">
-          <button
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          <a
+            href="#"
             className="rounded-full border border-black/10 bg-white/80 px-4 py-2 text-sm text-[#6A6256] shadow-sm transition hover:-translate-y-0.5 hover:text-[#2F2A24]"
           >
             回到顶部
-          </button>
+          </a>
         </div>
         <div className="mx-auto mt-10 max-w-3xl pb-6 text-center text-xs text-[#7A6A52]">
           网站制作：思考熊 | 内容来源：《一生的整理》（全网同名：借假修真的思考熊）

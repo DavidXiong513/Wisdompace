@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AuthEntry from "@/components/AuthEntry";
@@ -33,46 +33,42 @@ export default function ChapterTopNav({
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
-
   return (
     <header className="sticky top-0 z-50 bg-[#4A3728]">
       <div className="relative w-full">
         <div
-          className={`mx-auto flex h-[72px] w-full max-w-6xl items-center px-4 ${containerClassName}`}
+          className={`mx-auto flex h-[72px] w-full max-w-6xl items-center px-4 sm:px-6 ${containerClassName}`}
         >
-          <div className="flex w-[220px] -translate-x-[57px] items-center justify-start text-left">
+          <div className="flex shrink-0 items-center justify-start text-left">
             <Link
               href="/"
-              className="whitespace-nowrap font-cn-serif text-[25px] font-bold text-[#F5EDE0] transition duration-300 hover:text-[#FFF3DF]"
+              className="whitespace-nowrap font-cn-serif text-[22px] font-bold text-[#F5EDE0] transition duration-300 hover:text-[#FFF3DF] sm:text-[25px]"
             >
               一生的整理
             </Link>
           </div>
 
           <nav
-            className={`hidden md:block md:ml-20 ${navClassName}`}
+            className={`hidden flex-1 px-2 md:block md:ml-4 lg:ml-6 ${navClassName}`}
           >
             <ul
-              className={`flex w-[760px] items-center justify-between text-center text-[#F5EDE0] ${navListClassName}`}
+              className={`mx-auto grid w-full max-w-[min(1316px,92vw)] grid-cols-5 gap-2 text-center text-[#F5EDE0] ${navListClassName}`}
             >
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
-                <li key={item.href}>
+                <li key={item.href} className="min-w-0">
                   <Link
                     href={item.href}
                     aria-current={isActive ? "page" : undefined}
-                    className={`flex flex-col items-center rounded-md px-4 py-3 transition duration-300 ${
+                    className={`flex w-full flex-col items-center rounded-md px-2 py-2.5 transition duration-300 lg:px-3 ${
                       isActive
                         ? "bg-[#F9F2E7] shadow-[inset_0_0_0_1px_rgba(74,55,40,0.15)]"
                         : "hover:bg-white/10"
                     }`}
                   >
                     <span
-                      className={`text-[14px] font-semibold ${
+                      className={`text-[13px] font-semibold lg:text-[14px] ${
                         isActive ? "text-[#4A3728]" : "text-[#F5EDE0]"
                       }`}
                     >
@@ -93,7 +89,7 @@ export default function ChapterTopNav({
           </nav>
         </div>
 
-        <div className="absolute right-6 top-1/2 flex -translate-y-1/2 items-center gap-3">
+        <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-3 sm:right-6">
           <button
             type="button"
             aria-label="打开菜单"
@@ -143,5 +139,3 @@ export default function ChapterTopNav({
 
   );
 }
-
-

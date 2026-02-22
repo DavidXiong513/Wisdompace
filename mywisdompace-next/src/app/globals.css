@@ -33,8 +33,8 @@ body {
 
 /* 首页大标题：思源宋体（等价 Web 字体 Noto Serif SC） */
 .font-cn-serif {
-  font-family: var(--font-noto-serif-sc), "Source Han Serif SC",
-    "Source Han Serif CN", "Noto Serif SC", serif;
+  font-family: "Source Han Serif SC", "Source Han Serif CN", "Noto Serif SC",
+    "Songti SC", "STSong", serif;
 }
 
 .text-shadow {
