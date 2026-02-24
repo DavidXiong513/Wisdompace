@@ -1,5 +1,8 @@
 import { getToolInfo, getToolStatusText } from "@/lib/tools";
 
+// 生产环境检测
+const isDev = process.env.NODE_ENV === "development";
+
 export function ToolPlaceholder({ toolId }: { toolId: string }) {
   const tool = getToolInfo(toolId);
   if (!tool) return null;
@@ -47,9 +50,12 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
         </details>
       </div>
 
-      <div className="mt-3 text-xs text-muted">
-        toolId: <span className="font-mono">{toolId}</span>
-      </div>
+      {/* 仅在开发环境显示调试信息 */}
+      {isDev && (
+        <div className="mt-3 text-xs text-muted">
+          toolId: <span className="font-mono">{toolId}</span>
+        </div>
+      )}
     </div>
   );
 }

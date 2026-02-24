@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { searchAll } from "@/lib/search-index";
+import { validateSearchQuery, escapeHtml } from "@/lib/security";
 
 export function SearchPanel({
   open,
@@ -13,6 +14,7 @@ export function SearchPanel({
   onClose: () => void;
 }) {
   const [query, setQuery] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -30,7 +32,28 @@ export function SearchPanel({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
-  const results = useMemo(() => searchAll(query), [query]);
+  // 安全处理: 验证并清洗搜索查询
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value;
+    
+    // 限制输入长度
+    if (rawValue.length > 100) {
+      setError("搜索内容不能超过100个字符");
+      return;
+    }
+    
+    setError(null);
+    setQuery(rawValue);
+  };
+
+  // 安全处理: 使用验证后的查询进行搜索
+  const results = useMemo(() => {
+    const validation = validateSearchQuery(query);
+    if (!validation.valid) {
+      return [];
+    }
+    return searchAll(validation.sanitized);
+  }, [query]);
 
   if (!open) return null;
 
@@ -48,9 +71,12 @@ export function SearchPanel({
           <input
             ref={inputRef}
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={handleQueryChange}
             placeholder="检索全站（占位实现：基于本地数据）"
             className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted"
+            maxLength={100}
+            autoComplete="off"
+            spellCheck="false"
           />
           <button
             className="rounded-full px-3 py-1.5 text-sm text-muted hover:bg-black/5"
@@ -62,7 +88,11 @@ export function SearchPanel({
         </div>
 
         <div className="max-h-[60vh] overflow-auto p-2">
-          {query.trim() && results.length === 0 ? (
+          {error ? (
+            <div className="px-3 py-10 text-center text-sm text-red-500">
+              {error}
+            </div>
+          ) : query.trim() && results.length === 0 ? (
             <div className="px-3 py-10 text-center text-sm text-muted">
               没有找到结果
             </div>
@@ -75,6 +105,7 @@ export function SearchPanel({
               onClick={onClose}
               className="block rounded-xl px-3 py-3 transition hover:bg-black/5"
             >
+              {/* 安全处理: 确保React默认转义生效，标题和摘要已经是安全的 */}
               <div className="text-sm font-medium text-foreground">{r.title}</div>
               <div className="mt-1 text-xs text-muted">{r.excerpt}</div>
             </Link>
