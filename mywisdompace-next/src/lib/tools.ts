@@ -1,10 +1,14 @@
+import React from 'react';
+
 export type ToolStatus = "developing" | "ready" | "maintenance";
 
 export type ToolInfo = {
   id: string;
   name: string;
+  label?: string; // alias for name, used by ToolContainer
   status: ToolStatus;
   description: string;
+  component?: React.ComponentType<{ toolId: string; initialData: unknown; onSave: (data: unknown) => void }> | null;
 };
 
 // 参考旧站 tools-placeholder.js 的定义（不引入 emoji，保持克制）。
@@ -67,6 +71,16 @@ export const tools: Record<string, ToolInfo> = {
 
 export function getToolInfo(toolId: string): ToolInfo | null {
   return tools[toolId] ?? null;
+}
+
+/**
+ * Get tool definition for ToolContainer compatibility.
+ * Maps ToolInfo fields to the shape expected by ToolContainer (label, component, etc.)
+ */
+export function getToolDefinition(toolId: string): ToolInfo | null {
+  const info = tools[toolId];
+  if (!info) return null;
+  return { ...info, label: info.name, component: null };
 }
 
 export function getToolStatusText(status: ToolStatus): string {

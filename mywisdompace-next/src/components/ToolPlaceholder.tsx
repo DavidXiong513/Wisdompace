@@ -1,9 +1,15 @@
 import { getToolInfo, getToolStatusText } from "@/lib/tools";
+import PersonalityTestCards from "@/components/PersonalityTestCards";
 
 // 生产环境检测
 const isDev = process.env.NODE_ENV === "development";
 
 export function ToolPlaceholder({ toolId }: { toolId: string }) {
+  // 特殊处理：性格测试卡片
+  if (toolId === "personality-test-cards") {
+    return <PersonalityTestCards />;
+  }
+
   const tool = getToolInfo(toolId);
   if (!tool) return null;
 

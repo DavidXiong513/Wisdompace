@@ -32,6 +32,16 @@ export const chapters: Chapter[] = [
         ],
       },
       {
+        id: "personality-tests",
+        title: "性格自测工具",
+        paragraphs: [
+          "在开始深入探索之前，我们为你准备了两个经典的性格测评工具。",
+          "这些测试可以帮助你从不同角度认识自己的性格特质、行为模式和思维偏好。它们不是为了给你贴标签，而是提供一个参考框架，让你更好地理解自己。",
+          "你可以选择其中一个或两个都尝试，没有对错，只有更深入的自我认识。",
+        ],
+        toolId: "personality-test-cards",
+      },
+      {
         id: "social-roles",
         title: "我的社会角色",
         paragraphs: [

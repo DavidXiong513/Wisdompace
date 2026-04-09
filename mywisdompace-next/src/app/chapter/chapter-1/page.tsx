@@ -1,52 +1,24 @@
+import Link from "next/link";
 import ChapterTopNav from "@/components/ChapterTopNav";
 import ReadInstructionsToc from "@/app/chapter/read-instructions/ReadInstructionsToc";
 import ScrollTopButton from "@/app/chapter/read-instructions/ScrollTopButton";
+import PersonalityTestCards from "@/components/PersonalityTestCards";
+import { getChapterBySlug } from "@/data/chapters";
 
 const tocItems = [
-  { id: "origin", label: "缘起" },
-  { id: "intention", label: "初衷" },
-  { id: "framework", label: "框架" },
-  { id: "usage", label: "使用说明" },
-  { id: "reminders", label: "五点提醒" },
-];
-
-const frameworkCards = [
-  {
-    title: "上半部分：如何积极地活",
-    subtitle: "「看见自己」\n「积极去活」",
-    desc: "认识自己是谁，状态怎么样，珍惜过什么，喜欢过什么，还有哪些尚未完成的、藏在内心深处的心愿",
-  },
-  {
-    title: "下半部分：如何坦然地死",
-    subtitle: "「清楚交代」\n「好好告别」",
-    desc: "把该建立的深度生死信仰建立到位；把想说的重要的话说完；把此生看重的事情安排好",
-  },
-];
-
-const reminderCards = [
-  {
-    title: "① 缓慢阅读，允许暂停",
-    desc: "网站中的内容与工具，可以被视为贯穿人生不同阶段的一系列重要功课。在阅读与练习的过程中，并不需要急于求成，更不必一气呵成。你可以从「看见自己」的相关内容开始，慢慢寻找属于自己的节奏。当状态不佳、感受不到连接，或只是单纯觉得累了，随时放下，都是被允许的。建议尽量在头脑清晰、身体不疲惫、情绪相对稳定的时候，进行重要的思考与练习。",
-  },
-  {
-    title: "② 坦诚细致，对己负责",
-    desc: "本网站的内容并不是一份需要对他人展示的答卷。所有问题，最终只服务于你自己，并且帮助你逐步形成生命的自洽。因此，在填写与思考的过程中，请尽量对自己保持充分的坦诚。不需要为了给谁看而写得好看，也不需要迎合任何“应该如此”的期待。哪怕答案并不光彩、不够体面，甚至尚未想清楚、显得不够成熟和完善——但只要它是真实的，这便已足够。",
-  },
-  {
-    title: "③ 反复修改，允许变化",
-    desc: "网站中的许多问题，都不存在一次就能完成的版本。今天的你，与多年后的你，可能会在同一件事上给出完全不同的答案。请允许这些变化发生。你可以随时回到某一页，涂改、补充、推翻乃至重写。每个人的人生轨道本就不会是一条笔直的铁轨，而更像是一条蜿蜒起伏的山路——当你站在山脚、山腰或山顶，回眼望去，眼中都会出现不一样的景致。",
-  },
-  {
-    title: "④ 定期复盘，照见变化",
-    desc: "如果条件允许，你可以为自己设定一个“复盘周期”。譬如半年或一年一次，或在人生发生重要变化或重大事件之后，再去重新翻看一下曾经的记录。你不必强迫自己马上要得出结论或写上新的东西，可以先只是看看：细细观察哪些地方已发生了改变，哪些地方相关的问题依然存在。这本身，就是一种极其珍贵的穿越时空的自我对话。",
-  },
-  {
-    title: "⑤ 妥善保管，尊重边界",
-    desc: "在这个网站上，可能会逐渐记录下你最真实、最私密的思考与选择。建议将你的记录存放在一个你觉得安全、安心的位置。是否与他人分享、分享多少、在什么时候分享，都应由你自己决定。你的整理，你的隐私，有权被保护妥当。",
-  },
+  { id: "stop-and-look", label: "停下，看看自己" },
+  { id: "personality-tests", label: "性格自测工具" },
+  { id: "ability-assessment", label: "社会能力自测" },
+  { id: "social-roles", label: "我的社会角色" },
+  { id: "identity-tags", label: "身份的标签" },
+  { id: "true-self", label: "剥去角色后的自己" },
+  { id: "summary", label: "重新认识自己" },
 ];
 
 export default function ChapterOnePage() {
+  const chapter = getChapterBySlug("chapter-1");
+  if (!chapter) return null;
+
   return (
     <div className="relative min-h-screen bg-[#F5F0E8]">
       <div
@@ -65,195 +37,229 @@ export default function ChapterOnePage() {
           <div className="lg:ml-[280px]">
             <div className="mx-auto w-full max-w-[min(1316px,92vw)]">
               <div className="flex flex-col gap-8">
+                {/* 停下，看看自己 */}
                 <section
-                  id="origin"
+                  id="stop-and-look"
                   className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
-                    缘起
+                    停下，看看自己
                   </h2>
                   <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
                   <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
                     <p className="indent-[2em]">
-                      这个网站的构想，其实在早几年就已经存在。只是那时的我，总觉得还不急，还太早，还可以再等等……
+                      在人生的某个时刻，我们突然意识到：自己已经走了很远，却很少真正停下来看看自己。
                     </p>
                     <p className="indent-[2em]">
-                      但在最近这一年里，我愈发清晰地感受到：
+                      我们被推着向前走，被各种期待、责任、角色所定义。我们是谁？我们想要什么？这些问题似乎越来越模糊。
                     </p>
                     <p className="indent-[2em]">
-                      在这个充满不确定性的时代，无常的来袭往往不打招呼，也不讲道理。
+                      这一章，邀请你停下来，重新认识自己。不是为了改变什么，而是为了看见——看见那些被忽略的部分，看见真实的自己。
                     </p>
-                    <p className="indent-[2em]">
-                      一些看似毫无征兆的中年同龄人生病与离世的事件愈发增多；单身、不婚不育、丁克、离异与孤寡家庭结构已开始逐渐变得常态化；互联网上各自媒体平台关于生命意义的焦虑与迷茫不断蔓延；以及，家中两方奔八的父母亲们，也正在一年年、一天天地走在衰老的路上……
-                    </p>
-                    <p className="indent-[2em]">
-                      这些现实，让我越来越难以继续告诉自己：“这件事，可以再等等。”
-                    </p>
-                  </div>
-                  <div className="my-6 rounded-[6px] border-l-[4px] border-[#4A3728] bg-[#F0E8DC] px-6 py-5 text-[17px] font-medium text-[#4A3728]">
-                    “这件事，可以再等等。”
                   </div>
                 </section>
 
+                {/* 性格自测工具 */}
                 <section
-                  id="intention"
+                  id="personality-tests"
                   className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
-                    初衷
+                    性格自测工具
                   </h2>
                   <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
                   <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
                     <p className="indent-[2em]">
-                      创建这个网站，并不是因为我已经参透了生死，从而来给大家煲些所谓的人生鸡汤……
+                      在开始深入探索之前，我们为你准备了两个经典的性格测评工具。
                     </p>
                     <p className="indent-[2em]">
-                      恰恰相反，是因为我一次又一次地意识到：我们绝大多数人，对“无常”的准备，几乎为零。
+                      这些测试可以帮助你从不同角度认识自己的性格特质、行为模式和思维偏好。它们不是为了给你贴标签，而是提供一个参考框架，让你更好地理解自己。
                     </p>
                     <p className="indent-[2em]">
-                      我们习惯为学业、职业、家庭、资产做出详尽的长期规划，却很少正面去回答一个更基础的问题：
+                      你可以选择其中一个或两个都尝试，没有对错，只有更深入的自我认识。
                     </p>
                   </div>
-                  <div className="my-6 rounded-[6px] border-l-[4px] border-[#4A3728] bg-[#F0E8DC] px-6 py-5 text-[17px] font-medium text-[#4A3728]">
-                    “如果人生不能按预期的计划继续，我是否提前为自己预留过应对无常的空间？”
-                  </div>
-                  <div className="space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
-                    <p className="indent-[2em]">
-                      现实中，真正让人崩溃的，往往不是“生死无常”本身，而是在这类事情发生时——毫无预想、毫无交代、毫无共识、毫无选择权。
-                    </p>
-                    <p className="indent-[2em]">
-                      于是，决定被仓促做出，责任被情绪裹挟，混乱被留给了最亲近的人。
-                    </p>
-                    <p className="indent-[2em]">
-                      这个网站，与其说是“关于死亡”，不如说更像是一份“关于我们如何认真回顾此生的使用说明书”。
-                    </p>
-                    <p className="indent-[2em]">它关心的是：</p>
-                  </div>
-                  <ul className="mt-4 list-disc space-y-3 pl-6 text-[17px] leading-[1.8] tracking-[-0.01em] text-[#3D3D3D] marker:text-[#8B7355]">
-                    <li>如何如实地面对自己</li>
-                    <li>如何系统地归纳一生</li>
-                    <li>如何在接受无常的前提下，为自己预留一些选择权</li>
-                  </ul>
-                  <div className="mt-5 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
-                    <p className="indent-[2em]">
-                      从而能够认真、清醒、有尊严及有趣味地活着。
-                    </p>
-                    <p className="indent-[2em]">
-                      它并不只写给老年人、病人，也不只写给那些站在人生终点附近的人。
-                    </p>
-                    <p className="indent-[2em]">
-                      它是写给所有已经开始思考这样一个问题的人：
-                    </p>
-                  </div>
-                  <div className="my-6 rounded-[6px] border-l-[4px] border-[#4A3728] bg-[#F0E8DC] px-6 py-5 text-[17px] font-medium text-[#4A3728]">
-                    “如果此生无法被预测和控制，那我是否至少可以，提前在因地做一些让自己身体与心灵得到安顿的筹备？”
-                  </div>
+                  <PersonalityTestCards />
                 </section>
 
+                {/* 社会能力自测 */}
                 <section
-                  id="framework"
+                  id="ability-assessment"
                   className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
                 >
                   <h2 className="text-[24px] font-bold text-[#4A3728]">
-                    框架
+                    社会能力自测
                   </h2>
                   <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
                   <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
-                    <p className="indent-[2em]">本网站分为两大部分和四大篇章。</p>
+                    <p className="indent-[2em]">
+                      性格告诉我们"我是谁"，而能力则回答"我能做什么"。了解自己的社会能力，是认识自我的另一面。
+                    </p>
+                    <p className="indent-[2em]">
+                      社会能力不是单一的指标，它涵盖了沟通表达、人际协作、情绪管理、问题解决、适应变化等多个维度。你可能擅长某一方面，却在另一方面感到吃力——这很正常。
+                    </p>
+                    <p className="indent-[2em]">
+                      通过这项自测，你可以更清晰地看到自己在各项社会能力上的优势与不足，从而更好地规划自我提升的方向，也更好地接纳自己的不完美。
+                    </p>
                   </div>
-                  <div className="mt-6 grid gap-6 md:grid-cols-2 md:items-stretch">
-                    {frameworkCards.map((card) => (
-                      <div
-                        key={card.title}
-                        className="flex h-full flex-col gap-4 rounded-lg border border-[#E8E4DD] bg-[#FAF8F3] p-6"
-                      >
-                        <div className="text-[18px] font-semibold text-[#4A3728]">
-                          {card.title}
-                        </div>
-                        <div className="whitespace-pre-line text-[15px] font-semibold text-[#4A3728]">
-                          {card.subtitle}
-                        </div>
-                        <p className="text-[15px] leading-[1.7] text-[#5A5A5A]">
-                          {card.desc}
+                  {/* 社会能力自测链接卡片 */}
+                  <div className="mt-8">
+                    <Link
+                      href="/tools/ability-test"
+                      className="group relative flex items-center gap-5 overflow-hidden rounded-2xl border border-black/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(42,32,23,0.12)]"
+                    >
+                      {/* 背景渐变装饰 */}
+                      <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-gradient-to-br from-[#8BA888] to-[#6B9A68] opacity-10 blur-2xl transition-opacity group-hover:opacity-20" />
+
+                      {/* 徽章 */}
+                      <div className="absolute right-4 top-4">
+                        <span className="rounded-full bg-[#E8F0E8] px-3 py-1 text-xs font-medium text-[#5A7A52]">
+                          全新上线
+                        </span>
+                      </div>
+
+                      {/* 图标 */}
+                      <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#E8F0E8] to-white text-3xl shadow-sm">
+                        🌱
+                      </div>
+
+                      {/* 文字内容 */}
+                      <div className="relative min-w-0">
+                        <h3 className="text-xl font-semibold text-[#2F2A24] transition-colors group-hover:text-[#6B9A68]">
+                          社会能力自测
+                        </h3>
+                        <p className="mt-1 text-sm font-medium text-[#8A7E6A]">
+                          Social Competence Assessment
+                        </p>
+                        <p className="mt-2 text-sm leading-relaxed text-[#6A6256]">
+                          从沟通表达、人际协作、情绪管理、问题解决、适应变化五大维度，评估你的社会能力图谱。
                         </p>
                       </div>
-                    ))}
-                  </div>
-                  <div className="mt-6 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
-                    <p className="indent-[2em]">
-                      在这个单身、不婚、不育、家庭结构不断变化的时代，我们越来越不能假设：总会有人替我们收拾残局。
-                    </p>
-                    <p className="indent-[2em]">
-                      也正因如此，提前为自己搭建一套“人生与终局”的准备系统，不再是悲观，而是一种成熟。
-                    </p>
-                    <p className="indent-[2em]">
-                      如果你对以上这些内容产生了共鸣，很可能内心敏锐的你早已意识到：面对无常，逃避并不会让事情更轻松。
-                    </p>
-                    <p className="indent-[2em]">
-                      衷心希望，这个网站能成为你的一个安静空间——不催促你，不吓唬你，只陪你把这一生，慢慢整理清楚。
-                    </p>
-                    <p className="indent-[2em]">
-                      当有一天，你回望此生时，或许不能说一切都完美，但至少可以说一句：
-                    </p>
-                  </div>
-                  <div className="my-6 rounded-[6px] border-l-[4px] border-[#4A3728] bg-[#F0E8DC] px-6 py-5 text-[17px] font-medium text-[#4A3728]">
-                    “我已经认真地活过，也已经为无常，做好了该做的整理与筹备。”
-                  </div>
-                </section>
 
-                <section
-                  id="usage"
-                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
-                >
-                  <h2 className="text-[24px] font-bold text-[#4A3728]">
-                    使用说明
-                  </h2>
-                  <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
-                  <div className="mt-4 space-y-4 text-[16px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
-                    <p className="indent-[2em]">
-                      本网站共分为四个篇章。在不同篇章中，我们会引导你结合相应章节的工具与模板，围绕自己真实的人生处境，进行深入的思考与整理。
-                    </p>
-                    <p className="indent-[2em]">
-                      为了便于理解和使用，网站中会提供相应的示范案例（Demo），并尽量将练习设计为手册表格或可选项的形式，以减少大量书写与理解工具本身所带来的负担。
-                    </p>
-                    <p className="indent-[2em]">但需要郑重说明的是：</p>
-                  </div>
-                  <div className="my-6 rounded-[6px] border-l-[4px] border-[#4A3728] bg-[#F0E8DC] px-6 py-5 text-[17px] font-medium text-[#4A3728]">
-                    “无论我们提供多少辅助，真正的思考与整理，始终只能由你自己完成。”
-                  </div>
-                  <div className="space-y-4 text-[16px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
-                    <p className="indent-[2em]">
-                      这些练习，并不是为了“完成任务”，而是一次次认真对待自己人生的过程。
-                    </p>
-                  </div>
-                </section>
-
-                <section
-                  id="reminders"
-                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
-                >
-                  <h2 className="text-[24px] font-bold text-[#4A3728]">
-                    五点提醒
-                  </h2>
-                  <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
-                  <div className="mt-6 flex flex-col gap-4">
-                    {reminderCards.map((card) => (
-                      <div
-                        key={card.title}
-                        className="rounded-lg border border-[#E8E4DD] bg-[#FAF8F3] p-5"
-                      >
-                        <div className="text-[18px] font-semibold text-[#4A3728]">
-                          {card.title}
-                        </div>
-                        <p className="mt-3 text-[15px] leading-[1.7] text-[#5A5A5A]">
-                          {card.desc}
-                        </p>
+                      {/* 箭头指示 */}
+                      <div className="relative ml-auto flex shrink-0 items-center text-sm font-medium text-[#6B9A68] transition-transform group-hover:translate-x-1">
+                        开始测试
+                        <svg
+                          className="ml-1 h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
                       </div>
-                    ))}
+                    </Link>
                   </div>
-                  <p className="mt-6 text-[14px] italic text-[#888888]">
-                    如果你在使用过程中感到长时间的强烈不适或情绪困扰，请优先照顾好自己，并考虑寻求身边的专业人士进行相关支持。
-                  </p>
+                </section>
+
+                {/* 我的社会角色 */}
+                <section
+                  id="social-roles"
+                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
+                >
+                  <h2 className="text-[24px] font-bold text-[#4A3728]">
+                    我的社会角色
+                  </h2>
+                  <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
+                  <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
+                    <p className="indent-[2em]">
+                      我们从出生起，就被赋予了各种角色：孩子、学生、员工、父母、伴侣...
+                    </p>
+                    <p className="indent-[2em]">
+                      这些角色塑造了我们，也在某种程度上限制了我们。我们习惯了用角色来定义自己，却忘记了在这些角色之外，还有一个"我"。
+                    </p>
+                    <p className="indent-[2em]">
+                      这个练习，帮助你梳理自己承担的各种角色，看看它们在你的生命中占据了多少空间。
+                    </p>
+                  </div>
+                  <div className="mt-6 rounded-lg border border-[#E8E4DD] bg-[#FAF8F3] p-6 text-center text-[#7A6A52]">
+                    工具开发中...
+                  </div>
+                </section>
+
+                {/* 身份的标签 */}
+                <section
+                  id="identity-tags"
+                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
+                >
+                  <h2 className="text-[24px] font-bold text-[#4A3728]">
+                    身份的标签
+                  </h2>
+                  <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
+                  <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
+                    <p className="indent-[2em]">
+                      我们身上的标签，有些是自己贴的，有些是别人给的。聪明的、笨拙的、优秀的、平凡的、坚强的、脆弱的...
+                    </p>
+                    <p className="indent-[2em]">
+                      这些标签，有些已经内化成了我们自我认知的一部分。但它们真的是我们吗？
+                    </p>
+                    <p className="indent-[2em]">
+                      这个练习，帮助你识别身上的标签，并思考哪些标签是你认同的，哪些是你想要卸下的。
+                    </p>
+                  </div>
+                  <div className="mt-6 rounded-lg border border-[#E8E4DD] bg-[#FAF8F3] p-6 text-center text-[#7A6A52]">
+                    工具开发中...
+                  </div>
+                </section>
+
+                {/* 剥去角色后的自己 */}
+                <section
+                  id="true-self"
+                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
+                >
+                  <h2 className="text-[24px] font-bold text-[#4A3728]">
+                    剥去角色后的自己
+                  </h2>
+                  <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
+                  <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
+                    <p className="indent-[2em]">
+                      如果你去掉所有的社会角色，去掉所有的标签，你还剩下什么？
+                    </p>
+                    <p className="indent-[2em]">
+                      这个问题可能会让你感到不安，也可能会让你感到释然。无论如何，这是认识自己的重要一步。
+                    </p>
+                    <p className="indent-[2em]">
+                      这个练习，帮助你尝试剥离角色和标签，看见那个最底层的自己。
+                    </p>
+                  </div>
+                  <div className="mt-6 rounded-lg border border-[#E8E4DD] bg-[#FAF8F3] p-6 text-center text-[#7A6A52]">
+                    工具开发中...
+                  </div>
+                </section>
+
+                {/* 重新认识自己 */}
+                <section
+                  id="summary"
+                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
+                >
+                  <h2 className="text-[24px] font-bold text-[#4A3728]">
+                    重新认识自己
+                  </h2>
+                  <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
+                  <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
+                    <p className="indent-[2em]">
+                      通过这一章的练习，你可能对自己有了新的认识。这些认识可能并不完整，也可能并不准确，但它们是一个开始。
+                    </p>
+                    <p className="indent-[2em]">
+                      认识自己是一个持续的过程，不是一次就能完成的。保持耐心，保持好奇。
+                    </p>
+                  </div>
+                  <div className="mt-6 rounded-lg border border-[#E8E4DD] bg-[#FAF8F3] p-6">
+                    <div className="text-sm font-semibold text-[#4A3728] mb-3">
+                      思考题：
+                    </div>
+                    <ul className="list-disc space-y-2 pl-5 text-sm text-[#6A6256]">
+                      <li>哪个社会角色让你感到最累？为什么？</li>
+                      <li>哪个标签是你最想要卸下的？</li>
+                      <li>如果用一个词来形容剥去角色后的自己，你会用什么词？</li>
+                      <li>你希望如何重新定义自己？</li>
+                    </ul>
+                  </div>
                 </section>
               </div>
             </div>

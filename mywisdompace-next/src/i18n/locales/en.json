@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "chapters":  "Chapters",
+    "search":    "Search",
+    "progress":  "My Progress",
+    "openMenu":  "Open navigation menu",
+    "siteTitle": "A Life Organized",
+    "skipLink":  "Skip to main content"
+  },
+  "footer": {
+    "copyright": "© 2026 A Life Organized | Wisdompace"
+  },
+  "search": {
+    "placeholder": "Search personality, strengths, aging...",
+    "button":      "Search",
+    "hotLabel":    "🔥 Popular:",
+    "noResults":   "No results found. Try different keywords.",
+    "errorTooLong":"Search query is too long (max 100 characters).",
+    "errorEmpty":  "Please enter a search term."
+  },
+  "tool": {
+    "developing":  "In Development",
+    "ready":       "Available",
+    "maintenance": "Under Maintenance",
+    "comingSoon":  "This tool is under development. Stay tuned.",
+    "underMaintenance": "This tool is under maintenance. Please check back later.",
+    "loadError":   "Tool failed to load. Please refresh the page.",
+    "unknown":     "Unknown tool"
+  },
+  "chapter": {
+    "backToTop":   "Back to top",
+    "reflections": "Reflection Questions",
+    "prevChapter": "Previous",
+    "nextChapter": "Next"
+  },
+  "language": {
+    "zh-CN":   "简体中文",
+    "zh-TW":   "繁體中文",
+    "en":      "English"
+  },
+  "errors": {
+    "invalidUrl":       "Sorry, this link is unsafe and cannot be accessed.",
+    "invalidFile":      "File format not supported or file is corrupted.",
+    "fileTooLarge":     "File size exceeds limit (max 1MB).",
+    "importInvalid":    "Data format invalid. Some content was skipped.",
+    "importCorrupted":  "Data file is corrupted. Please use a recent backup."
+  }
+}

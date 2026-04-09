@@ -1,0 +1,373 @@
+{
+  "title": "大五人格自测（60题版）",
+  "description": "基于经典大五人格理论，包含神经质、尽责性、开放性、外向性、亲和性五个维度的专业测评",
+  "instructions": "请根据您的实际情况，选择最符合您真实想法的选项。没有对错之分，请诚实作答。",
+  "scoring": {
+    "scale": [1, 2, 3, 4, 5],
+    "labels": ["完全不同意", "基本不同意", "不确定", "基本同意", "完全同意"],
+    "reverse_formula": "6 - score"
+  },
+  "dimensions": {
+    "extraversion": {
+      "name": "外向性",
+      "name_en": "Extraversion",
+      "description": "衡量个体对外部世界的积极投入程度，包括社交活跃度、精力充沛程度和积极情绪倾向",
+      "questions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "reverse_questions": [4, 5, 10]
+    },
+    "openness": {
+      "name": "开放性",
+      "name_en": "Openness",
+      "description": "衡量个体对经验的开放程度，包括想象力、审美敏感性、求知欲和创造力",
+      "questions": [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+      "reverse_questions": [13, 15, 17, 21, 23]
+    },
+    "agreeableness": {
+      "name": "亲和性",
+      "name_en": "Agreeableness",
+      "description": "衡量个体在人际关系中的合作性、信任度和利他倾向",
+      "questions": [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36],
+      "reverse_questions": [25, 26, 27, 28, 29, 33, 34, 36]
+    },
+    "conscientiousness": {
+      "name": "尽责性",
+      "name_en": "Conscientiousness",
+      "description": "衡量个体的自律性、条理性、目标导向和责任感",
+      "questions": [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48],
+      "reverse_questions": [39, 40, 42, 48]
+    },
+    "neuroticism": {
+      "name": "神经质",
+      "name_en": "Neuroticism",
+      "description": "衡量个体情绪稳定性和应对压力的能力，高分表示更容易体验到负面情绪",
+      "questions": [49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60],
+      "reverse_questions": [49, 50, 53, 55]
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "text": "我真的喜欢大部分我遇见的人。",
+      "dimension": "extraversion"
+    },
+    {
+      "id": 2,
+      "text": "我很喜欢与别人交谈。",
+      "dimension": "extraversion"
+    },
+    {
+      "id": 3,
+      "text": "我喜欢很多人在我周围。",
+      "dimension": "extraversion"
+    },
+    {
+      "id": 4,
+      "text": "我一向喜欢单独工作。",
+      "dimension": "extraversion",
+      "reverse": true
+    },
+    {
+      "id": 5,
+      "text": "我宁愿我行我素也不愿成为别人的领袖。",
+      "dimension": "extraversion",
+      "reverse": true
+    },
+    {
+      "id": 6,
+      "text": "我常常感到精力旺盛。",
+      "dimension": "extraversion"
+    },
+    {
+      "id": 7,
+      "text": "我生活的节奏很快。",
+      "dimension": "extraversion"
+    },
+    {
+      "id": 8,
+      "text": "我是一个十分活跃的人。",
+      "dimension": "extraversion"
+    },
+    {
+      "id": 9,
+      "text": "我喜欢身临其境，置身于事件之中。",
+      "dimension": "extraversion"
+    },
+    {
+      "id": 10,
+      "text": "我并不是一个乐观主义者。",
+      "dimension": "extraversion",
+      "reverse": true
+    },
+    {
+      "id": 11,
+      "text": "我是一个快乐、高兴的人。",
+      "dimension": "extraversion"
+    },
+    {
+      "id": 12,
+      "text": "我很容易笑。",
+      "dimension": "extraversion"
+    },
+    {
+      "id": 13,
+      "text": "我不喜欢浪费时间去做白日梦。",
+      "dimension": "openness",
+      "reverse": true
+    },
+    {
+      "id": 14,
+      "text": "大自然和艺术的规律形态使我感到极为奥妙。",
+      "dimension": "openness"
+    },
+    {
+      "id": 15,
+      "text": "我对诗词只有少许感觉甚至无动于衷。",
+      "dimension": "openness",
+      "reverse": true
+    },
+    {
+      "id": 16,
+      "text": "当我阅读一首诗或欣赏一件艺术品时，我有时会感到兴奋或惊喜。",
+      "dimension": "openness"
+    },
+    {
+      "id": 17,
+      "text": "我很少注意自己在不同环境下的情绪或感觉。",
+      "dimension": "openness",
+      "reverse": true
+    },
+    {
+      "id": 18,
+      "text": "当我找到了做事情的正确方法后，我会坚持采用这个方法。",
+      "dimension": "openness"
+    },
+    {
+      "id": 19,
+      "text": "我经常会去尝试新的及来自外国的食物。",
+      "dimension": "openness"
+    },
+    {
+      "id": 20,
+      "text": "我喜欢思考及把玩理论或抽象的概念。",
+      "dimension": "openness"
+    },
+    {
+      "id": 21,
+      "text": "我没有兴趣思索宇宙的规律或人类的情况。",
+      "dimension": "openness",
+      "reverse": true
+    },
+    {
+      "id": 22,
+      "text": "我对思考性的事物充满好奇。",
+      "dimension": "openness"
+    },
+    {
+      "id": 23,
+      "text": "我相信让学生听富有争论性的演讲只会混淆及误导他们的思想。",
+      "dimension": "openness",
+      "reverse": true
+    },
+    {
+      "id": 24,
+      "text": "我认为在道德问题上做决定时，我们应遵从宗教权威。",
+      "dimension": "openness"
+    },
+    {
+      "id": 25,
+      "text": "我会怀疑及讽刺别人的企图。",
+      "dimension": "agreeableness",
+      "reverse": true
+    },
+    {
+      "id": 26,
+      "text": "我相信如果我容许别人占你的便宜，很多人都会占你的便宜。",
+      "dimension": "agreeableness",
+      "reverse": true
+    },
+    {
+      "id": 27,
+      "text": "如果需要，我会去操纵别人而达到我所想要的。",
+      "dimension": "agreeableness",
+      "reverse": true
+    },
+    {
+      "id": 28,
+      "text": "有些人觉得我自私又自我中心。",
+      "dimension": "agreeableness",
+      "reverse": true
+    },
+    {
+      "id": 29,
+      "text": "有些人觉得我冷漠又爱算计。",
+      "dimension": "agreeableness",
+      "reverse": true
+    },
+    {
+      "id": 30,
+      "text": "我通常会尽力体贴及考虑周到。",
+      "dimension": "agreeableness"
+    },
+    {
+      "id": 31,
+      "text": "大部分认识我的人都喜欢我。",
+      "dimension": "agreeableness"
+    },
+    {
+      "id": 32,
+      "text": "我宁愿与人合作，而不愿与人竞争。",
+      "dimension": "agreeableness"
+    },
+    {
+      "id": 33,
+      "text": "如果我不喜欢某一个人，我会让他知道。",
+      "dimension": "agreeableness",
+      "reverse": true
+    },
+    {
+      "id": 34,
+      "text": "我时常和家人及同事起争执。",
+      "dimension": "agreeableness",
+      "reverse": true
+    },
+    {
+      "id": 35,
+      "text": "我对自己有很高的评价。",
+      "dimension": "agreeableness"
+    },
+    {
+      "id": 36,
+      "text": "在态度上，我是顽固不妥协的。",
+      "dimension": "agreeableness",
+      "reverse": true
+    },
+    {
+      "id": 37,
+      "text": "在工作上，我是有效率又能胜任的。",
+      "dimension": "conscientiousness"
+    },
+    {
+      "id": 38,
+      "text": "我会保持我的东西整齐和清洁。",
+      "dimension": "conscientiousness"
+    },
+    {
+      "id": 39,
+      "text": "我不是一个做事有条不紊的人。",
+      "dimension": "conscientiousness",
+      "reverse": true
+    },
+    {
+      "id": 40,
+      "text": "我好像总是不能把事情安排得井井有条。",
+      "dimension": "conscientiousness",
+      "reverse": true
+    },
+    {
+      "id": 41,
+      "text": "我会尽心尽力完成一切分派给我的工作。",
+      "dimension": "conscientiousness"
+    },
+    {
+      "id": 42,
+      "text": "我有时不能做到我应有的可靠或可信。",
+      "dimension": "conscientiousness",
+      "reverse": true
+    },
+    {
+      "id": 43,
+      "text": "当我做了承诺，通常我能贯彻到底。",
+      "dimension": "conscientiousness"
+    },
+    {
+      "id": 44,
+      "text": "我有一套明确的目标，并能有条不紊地朝着它而工作。",
+      "dimension": "conscientiousness"
+    },
+    {
+      "id": 45,
+      "text": "我努力完成我的目标。",
+      "dimension": "conscientiousness"
+    },
+    {
+      "id": 46,
+      "text": "我凡事必追求卓越。",
+      "dimension": "conscientiousness"
+    },
+    {
+      "id": 47,
+      "text": "我颇能按照自己的步伐，把事情准时办妥。",
+      "dimension": "conscientiousness"
+    },
+    {
+      "id": 48,
+      "text": "我要花很多时间才能让自己安顿下来进入工作状态。",
+      "dimension": "conscientiousness",
+      "reverse": true
+    },
+    {
+      "id": 49,
+      "text": "我不是一个充满烦恼的人。",
+      "dimension": "neuroticism",
+      "reverse": true
+    },
+    {
+      "id": 50,
+      "text": "我很少感到恐惧及焦虑。",
+      "dimension": "neuroticism",
+      "reverse": true
+    },
+    {
+      "id": 51,
+      "text": "我经常感到紧张及心神不定。",
+      "dimension": "neuroticism"
+    },
+    {
+      "id": 52,
+      "text": "别人对待我的方式常使我感到愤怒。",
+      "dimension": "neuroticism"
+    },
+    {
+      "id": 53,
+      "text": "我很少感到寂寞或忧郁。",
+      "dimension": "neuroticism",
+      "reverse": true
+    },
+    {
+      "id": 54,
+      "text": "有时我感到自己完全一文不值。",
+      "dimension": "neuroticism"
+    },
+    {
+      "id": 55,
+      "text": "我很少感到忧郁或沮丧。",
+      "dimension": "neuroticism",
+      "reverse": true
+    },
+    {
+      "id": 56,
+      "text": "很多时候，当事情不对劲时，我会感到神败及想放弃。",
+      "dimension": "neuroticism"
+    },
+    {
+      "id": 57,
+      "text": "我经常感到无助，并希望有人能解决我的问题。",
+      "dimension": "neuroticism"
+    },
+    {
+      "id": 58,
+      "text": "有时我会羞愧得想躲起来。",
+      "dimension": "neuroticism"
+    },
+    {
+      "id": 59,
+      "text": "我经常感到自己不如别人。",
+      "dimension": "neuroticism"
+    },
+    {
+      "id": 60,
+      "text": "当我处于极大压力下，有时候我会感到好像精神崩溃似的。",
+      "dimension": "neuroticism"
+    }
+  ]
+}

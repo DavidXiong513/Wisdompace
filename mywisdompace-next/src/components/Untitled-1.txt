@@ -1,0 +1,1 @@
+cd /d d:\AICode\MyWisdompace && npx --yes create-next-app@latest mywisdompace-next --ts --tailwind --eslint --app --src-dir --use-npm --import-alias "@/*"

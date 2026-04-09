@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { ChapterSection } from "@/data/chapters";
-import { getReadingProgress, saveReadingProgress } from "@/lib/reading-progress";
+import { useReadingProgressStore } from "@/stores/readingProgressStore";
 
 type TocVariant = "bar" | "sidebar";
 
@@ -18,14 +18,15 @@ export function ChapterToc({
 }) {
   const ids = useMemo(() => sections.map((s) => s.id), [sections]);
   const [activeId, setActiveId] = useState(ids[0] ?? "");
+  const { getProgress, saveProgress } = useReadingProgressStore();
 
   useEffect(() => {
-    const last = getReadingProgress(chapterSlug);
+    const last = getProgress(chapterSlug);
     if (!last?.sectionId) return;
     const el = document.getElementById(last.sectionId);
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [chapterSlug]);
+  }, [chapterSlug, getProgress]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -38,7 +39,7 @@ export function ChapterToc({
         const id = first?.target?.id;
         if (!id) return;
         setActiveId(id);
-        saveReadingProgress(chapterSlug, id);
+        saveProgress(chapterSlug, id);
       },
       { threshold: [0.35, 0.5, 0.75] }
     );
@@ -49,12 +50,22 @@ export function ChapterToc({
     });
 
     return () => observer.disconnect();
-  }, [chapterSlug, ids]);
+  }, [chapterSlug, ids, saveProgress]);
 
   if (variant === "sidebar") {
     return (
-      <aside className="sticky top-24 rounded-2xl border border-black/10 bg-white/70 p-4 text-center shadow-sm backdrop-blur">
-        <div className="text-base font-bold uppercase tracking-[0.2em] text-[#7A6A52]">
+      <aside
+        className="sticky top-[180px] rounded-2xl p-4 text-center"
+        style={{
+          border:     '1px solid var(--wp-border)',
+          background: 'var(--wp-card-bg)',
+          backdropFilter: 'blur(8px)',
+        }}
+      >
+        <div
+          className="text-base font-bold uppercase tracking-[0.2em]"
+          style={{ color: 'var(--wp-ink-light)' }}
+        >
           目录导航
         </div>
         <ul className="mt-4 space-y-3 font-semibold">
@@ -70,12 +81,12 @@ export function ChapterToc({
                       block: "start",
                     })
                   }
-                  className={
-                    "w-full rounded-lg px-2 py-3 text-base transition " +
-                    (active
-                      ? "bg-[#F6E9D2] text-[#3D3A32]"
-                      : "text-[#6A6256] hover:bg-[#F6E9D2]/70")
-                  }
+                  className="w-full rounded-lg px-2 py-3 text-base transition"
+                  style={{
+                    background: active ? 'var(--wp-bg-alt)' : 'transparent',
+                    color:      active ? 'var(--wp-accent)' : 'var(--wp-ink-muted)',
+                    fontWeight: active ? 600 : 400,
+                  }}
                 >
                   {s.title}
                 </button>
@@ -84,7 +95,6 @@ export function ChapterToc({
           })}
         </ul>
       </aside>
-
     );
   }
 

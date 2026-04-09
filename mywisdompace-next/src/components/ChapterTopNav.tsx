@@ -4,10 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AuthEntry from "@/components/AuthEntry";
+import { chapters } from "@/data/chapters";
 
 const navItems = [
-
-
   {
     chinese: "预备此生",
     english: "Prepare Wisely",
@@ -33,6 +32,20 @@ export default function ChapterTopNav({
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Prev / next chapter navigation
+  const currentSlug = pathname.split('/').pop() ?? '';
+  const chapterIndex = chapters.findIndex((c) => c.slug === currentSlug);
+  
+  // 特殊处理：如果当前是 chapter-1，上一章应该是 read-instructions
+  let prevChapter = chapterIndex > 0 ? chapters[chapterIndex - 1] : null;
+  if (currentSlug === 'chapter-1') {
+    prevChapter = { slug: 'read-instructions', title: '预备此生' } as any;
+  }
+  
+  const nextChapter  = chapterIndex >= 0 && chapterIndex < chapters.length - 1
+    ? chapters[chapterIndex + 1]
+    : null;
+
   return (
     <header className="sticky top-0 z-50 bg-[#4A3728]">
       <div className="relative w-full">
@@ -42,7 +55,7 @@ export default function ChapterTopNav({
           <div className="flex shrink-0 items-center justify-start text-left">
             <Link
               href="/"
-              className="whitespace-nowrap font-cn-serif text-[22px] font-bold text-[#F5EDE0] transition duration-300 hover:text-[#FFF3DF] sm:text-[25px]"
+              className="whitespace-nowrap font-cn-serif text-[22px] font-bold text-[#FFF3DF] transition duration-300 hover:text-[#FFFFFF] sm:text-[25px]"
             >
               一生的整理
             </Link>
@@ -63,20 +76,20 @@ export default function ChapterTopNav({
                     aria-current={isActive ? "page" : undefined}
                     className={`flex w-full flex-col items-center rounded-md px-2 py-2.5 transition duration-300 lg:px-3 ${
                       isActive
-                        ? "bg-[#F9F2E7] shadow-[inset_0_0_0_1px_rgba(74,55,40,0.15)]"
+                        ? "bg-[#1A1A2E] border-2 border-[#F5EDE0] shadow-[0_4px_12px_rgba(0,0,0,0.3)]"
                         : "hover:bg-white/10"
                     }`}
                   >
                     <span
                       className={`text-[13px] font-semibold lg:text-[14px] ${
-                        isActive ? "text-[#4A3728]" : "text-[#F5EDE0]"
+                        isActive ? "text-[#FFFFFF]" : "text-[#F5EDE0]"
                       }`}
                     >
                       {item.chinese}
                     </span>
                     <span
                       className={`mt-0.5 text-[10px] font-normal uppercase tracking-[0.5px] ${
-                        isActive ? "text-[#4A3728]/70" : "text-[#F5EDE0]/80"
+                        isActive ? "text-[#F5EDE0]/90" : "text-[#F5EDE0]/80"
                       }`}
                     >
                       {item.english}
@@ -118,13 +131,15 @@ export default function ChapterTopNav({
                       onClick={() => setIsMenuOpen(false)}
                       aria-current={isActive ? "page" : undefined}
                       className={`flex items-center justify-between rounded-md px-3 py-2 transition duration-300 ${
-                        isActive ? "bg-[#F9F2E7] text-[#4A3728]" : "hover:bg-white/10"
+                        isActive ? "bg-[#1A1A2E] border-2 border-[#F5EDE0] text-[#FFFFFF]" : "hover:bg-white/10 text-[#F5EDE0]"
                       }`}
                     >
                       <span className="text-[14px] font-semibold">
                         {item.chinese}
                       </span>
-                      <span className="text-[11px] uppercase tracking-[0.4px] text-[#F5EDE0]/80">
+                      <span className={`text-[11px] uppercase tracking-[0.4px] ${
+                        isActive ? "text-[#F5EDE0]/90" : "text-[#F5EDE0]/80"
+                      }`}>
                         {item.english}
                       </span>
                     </Link>
@@ -135,7 +150,31 @@ export default function ChapterTopNav({
           </div>
         )}
       </div>
-    </header>
 
+      {/* ── Prev / Next chapter bar ── */}
+      {(prevChapter || nextChapter) && (
+        <div
+          className="flex items-center justify-between px-6 py-2 text-sm"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.1)', background: '#3d2e22' }}
+        >
+          {prevChapter ? (
+            <Link
+              href={`/chapter/${prevChapter.slug}`}
+              className="flex items-center gap-1 text-[#F5EDE0]/80 transition hover:text-[#F5EDE0]"
+            >
+              ← {prevChapter.title}
+            </Link>
+          ) : <span />}
+          {nextChapter ? (
+            <Link
+              href={`/chapter/${nextChapter.slug}`}
+              className="flex items-center gap-1 text-[#F5EDE0]/80 transition hover:text-[#F5EDE0]"
+            >
+              {nextChapter.title} →
+            </Link>
+          ) : <span />}
+        </div>
+      )}
+    </header>
   );
 }

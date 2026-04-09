@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "chapters":  "章节导读",
+    "search":    "全站搜索",
+    "progress":  "我的进度",
+    "openMenu":  "打开导航菜单",
+    "siteTitle": "一生的整理",
+    "skipLink":  "跳至主要内容"
+  },
+  "footer": {
+    "copyright": "© 2026 《一生的整理》｜Wisdompace · 网站制作：思考熊"
+  },
+  "search": {
+    "placeholder": "全站搜索 性格测评、优势探索、痴呆预防...",
+    "button":      "搜索",
+    "hotLabel":    "🔥 热门搜索：",
+    "noResults":   "未找到相关内容，请尝试其他关键词。",
+    "errorTooLong":"搜索内容过长，请缩短后重试（最多100字符）。",
+    "errorEmpty":  "请输入搜索内容。"
+  },
+  "tool": {
+    "developing":  "开发中",
+    "ready":       "可用",
+    "maintenance": "维护中",
+    "comingSoon":  "该工具正在开发中，敬请期待。",
+    "underMaintenance": "该工具正在维护中，请稍后再试。",
+    "loadError":   "工具加载失败，请刷新页面重试。",
+    "unknown":     "未知工具"
+  },
+  "chapter": {
+    "backToTop":   "回到顶部",
+    "reflections": "思考题",
+    "prevChapter": "上一篇",
+    "nextChapter": "下一篇"
+  },
+  "language": {
+    "zh-CN":   "简体中文",
+    "zh-TW":   "繁體中文",
+    "en":      "English"
+  },
+  "errors": {
+    "invalidUrl":       "抱歉，该链接不安全，无法访问。",
+    "invalidFile":      "文件格式不支持或文件已损坏，请检查后重试。",
+    "fileTooLarge":     "文件大小超出限制（最大1MB），请压缩后重试。",
+    "importInvalid":    "数据格式不符合要求，部分内容已被跳过。",
+    "importCorrupted":  "数据文件已损坏，无法导入。请使用最近的备份文件。"
+  }
+}

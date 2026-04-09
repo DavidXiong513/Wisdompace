@@ -1,0 +1,59 @@
+/* ============================================================
+   Wisdompace Design Tokens
+   --wp-* prefix (adapted from fojin-master --fj-* palette)
+   User-owned: freely editable to adjust the site's visual identity
+   ============================================================ */
+
+:root {
+  /* ── Color Palette ── */
+  --wp-bg:        #f8f5ef;              /* warm parchment background */
+  --wp-bg-alt:    #f0ebe2;              /* slightly darker background */
+  --wp-ink:       #2b2318;              /* primary text */
+  --wp-ink-light: #5c4f3d;             /* secondary text */
+  --wp-ink-muted: #9a8e7a;             /* muted / placeholder text */
+  --wp-accent:    #8b2500;              /* primary accent — deep red */
+  --wp-gold:      #b08d57;              /* secondary accent — gold */
+  --wp-border:    #d9d0c1;              /* border color */
+  --wp-card-bg:   rgba(255,255,255,0.6); /* card / panel background */
+
+  /* ── Cyberpunk Accents (20% usage) ── */
+  --wp-cyber-blue:   #00F0FF;
+  --wp-cyber-purple: #BD00FF;
+  --wp-cyber-dark:   #1A1A2E;
+
+  /* ── Typography ── */
+  --wp-font-serif: "Noto Serif SC", "Source Han Serif SC", "Source Han Serif CN",
+                   "Songti SC", "STSong", serif;
+  --wp-font-sans:  "Noto Sans SC", "Source Han Sans SC", "Source Han Sans CN",
+                   "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+                   system-ui, sans-serif;
+
+  /* ── Layout ── */
+  --wp-sidebar-width: 220px;
+  --wp-content-max:   800px;
+  --wp-header-h:      52px;
+
+  /* ── Breakpoints (reference values — use in JS via getComputedStyle) ── */
+  --wp-bp-mobile: 768px;
+  --wp-bp-tablet: 1024px;
+
+  /* ── Shadows ── */
+  --wp-shadow-sm:  0 2px 8px rgba(43, 35, 24, 0.06);
+  --wp-shadow-md:  0 4px 16px rgba(43, 35, 24, 0.10);
+  --wp-shadow-lg:  0 8px 32px rgba(43, 35, 24, 0.14);
+
+  /* ── Transitions ── */
+  --wp-transition: 0.2s ease;
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto   !important;
+  }
+}
