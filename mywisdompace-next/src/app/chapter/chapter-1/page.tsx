@@ -8,6 +8,7 @@ import { getChapterBySlug } from "@/data/chapters";
 const tocItems = [
   { id: "stop-and-look", label: "停下，看看自己" },
   { id: "personality-tests", label: "性格自测工具" },
+  { id: "career-values", label: "生涯价值观测评" },
   { id: "ability-assessment", label: "社会能力自测" },
   { id: "social-roles", label: "我的社会角色" },
   { id: "identity-tags", label: "身份的标签" },
@@ -80,6 +81,81 @@ export default function ChapterOnePage() {
                     </p>
                   </div>
                   <PersonalityTestCards />
+                </section>
+
+                {/* 生涯价值观测评 */}
+                <section
+                  id="career-values"
+                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
+                >
+                  <h2 className="text-[24px] font-bold text-[#4A3728]">
+                    生涯价值观测评
+                  </h2>
+                  <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
+                  <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
+                    <p className="indent-[2em]">
+                      性格告诉你"我是谁"，能力回答"我能做什么"，而价值观决定了"我为什么而活"。
+                    </p>
+                    <p className="indent-[2em]">
+                      价值观是我们做选择的底层逻辑——它影响着我们的职业方向、人际关系、生活方式，甚至是面对困境时的取舍。然而，许多时候我们并不清楚自己真正看重什么，只是随波逐流地做着"应该"做的事。
+                    </p>
+                    <p className="indent-[2em]">
+                      这项测评将帮助你梳理自己的核心价值观，看清哪些东西对你真正重要，哪些只是外界强加的期望。只有明白了自己的价值坐标，才能做出真正属于自己的选择。
+                    </p>
+                  </div>
+                  {/* 生涯价值观测评链接卡片 */}
+                  <div className="mt-8">
+                    <Link
+                      href="/tools/career-values-test"
+                      className="group relative flex items-center gap-5 overflow-hidden rounded-2xl border border-black/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(42,32,23,0.12)]"
+                    >
+                      {/* 背景渐变装饰 */}
+                      <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-gradient-to-br from-[#A88BB8] to-[#8B6AA0] opacity-10 blur-2xl transition-opacity group-hover:opacity-20" />
+
+                      {/* 徽章 */}
+                      <div className="absolute right-4 top-4">
+                        <span className="rounded-full bg-[#EDE4F3] px-3 py-1 text-xs font-medium text-[#7A5A8F]">
+                          全新上线
+                        </span>
+                      </div>
+
+                      {/* 图标 */}
+                      <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#EDE4F3] to-white text-3xl shadow-sm">
+                        💎
+                      </div>
+
+                      {/* 文字内容 */}
+                      <div className="relative min-w-0">
+                        <h3 className="text-xl font-semibold text-[#2F2A24] transition-colors group-hover:text-[#8B6AA0]">
+                          生涯价值观测评
+                        </h3>
+                        <p className="mt-1 text-sm font-medium text-[#8A7E6A]">
+                          Career Values Assessment
+                        </p>
+                        <p className="mt-2 text-sm leading-relaxed text-[#6A6256]">
+                          探索你的核心价值观，看清真正驱动你做选择的力量，找到属于你的人生方向。
+                        </p>
+                      </div>
+
+                      {/* 箭头指示 */}
+                      <div className="relative ml-auto flex shrink-0 items-center text-sm font-medium text-[#8B6AA0] transition-transform group-hover:translate-x-1">
+                        开始测试
+                        <svg
+                          className="ml-1 h-4 w-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </div>
+                    </Link>
+                  </div>
                 </section>
 
                 {/* 社会能力自测 */}
