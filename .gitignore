@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+
+# Build output
+.next/
+out/
+build/
+dist/
+
+# IDE
+.vscode/
+.idea/
+.kiro/
+
+# WorkBuddy AI
+.workbuddy/
+.codebuddy/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env files
+.env*
+!.env.example
+
+# Testing
+coverage/
+test-results/
+playwright-report/
+
+# Vercel
+.vercel
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Reference sub-projects (not part of main codebase)
+fojin-master/
+big-five-personality/
+mbti-assessment/
+depression-assessment-lowrisk/
+skill-能力兴趣测评/
+
+# Misc test/debug files
+test-bug-exploration.html
+test-checkpoint-verification.html
+test-preservation.html
+test-navigation.html
+validate-css-fixes.js
+CHECKPOINT-SUMMARY.md
