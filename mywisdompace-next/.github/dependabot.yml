@@ -1,0 +1,58 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    # Look for `package.json` and `lock` files in the `root` directory
+    directory: "/"
+    # Check for updates once a week
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    # Labels on pull requests for version updates only
+    labels:
+      - "dependencies"
+    # Limit the number of open PRs for npm updates
+    open-pull-requests-limit: 10
+    # Group all updates together
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+        patterns:
+          - "*"
+      prod-dependencies:
+        dependency-type: "production"
+        patterns:
+          - "*"
+    # Specify the target branch for PRs
+    target-branch: "main"
+    # Configure commit message
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore(dev)"
+      include: "scope"
+    # Ignore certain dependencies
+    ignore:
+      # For Next.js, ignore patch updates
+      - dependency-name: "next"
+        update-types: ["version-update:semver-patch"]
+      # For React, ignore patch updates
+      - dependency-name: "react"
+        update-types: ["version-update:semver-patch"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-patch"]
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"
