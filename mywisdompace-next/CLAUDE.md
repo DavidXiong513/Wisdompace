@@ -1,7 +1,9 @@
 # MyWisdompace-next 项目指南
 
 > 《一生的整理》官方网站 — 生命意义与人生规划平台  
-> 最后更新：2026-04-08
+> 最后更新：2026-04-10  
+>  
+> **📋 项目升级路线图**: [docs/ROADMAP-Upgrade-Milestones.md](./docs/ROADMAP-Upgrade-Milestones.md)
 
 ---
 
