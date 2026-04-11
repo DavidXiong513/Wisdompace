@@ -39,7 +39,7 @@ export default function ChapterTopNav({
   // 特殊处理：如果当前是 chapter-1，上一章应该是 read-instructions
   let prevChapter = chapterIndex > 0 ? chapters[chapterIndex - 1] : null;
   if (currentSlug === 'chapter-1') {
-    prevChapter = { slug: 'read-instructions', title: '预备此生' } as any;
+    prevChapter = { slug: 'read-instructions', title: '预备此生' } as unknown as typeof chapters[number];
   }
   
   const nextChapter  = chapterIndex >= 0 && chapterIndex < chapters.length - 1

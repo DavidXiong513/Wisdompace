@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/stores/authStore';
 import { ChatContainer } from '@/components/chat/ChatContainer';
@@ -15,7 +15,6 @@ interface ConversationData {
 
 function ConversationDetail() {
   const params = useParams();
-  const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const id = params.id as string;
 

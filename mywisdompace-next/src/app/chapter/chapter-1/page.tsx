@@ -94,10 +94,10 @@ export default function ChapterOnePage() {
                   <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
                   <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
                     <p className="indent-[2em]">
-                      性格告诉你"我是谁"，能力回答"我能做什么"，而价值观决定了"我为什么而活"。
+                      性格告诉你&quot;我是谁&quot;，能力回答&quot;我能做什么&quot;，而价值观决定了&quot;我为什么而活&quot;。
                     </p>
                     <p className="indent-[2em]">
-                      价值观是我们做选择的底层逻辑——它影响着我们的职业方向、人际关系、生活方式，甚至是面对困境时的取舍。然而，许多时候我们并不清楚自己真正看重什么，只是随波逐流地做着"应该"做的事。
+                      价值观是我们做选择的底层逻辑——它影响着我们的职业方向、人际关系、生活方式，甚至是面对困境时的取舍。然而，许多时候我们并不清楚自己真正看重什么，只是随波逐流地做着&quot;应该&quot;做的事。
                     </p>
                     <p className="indent-[2em]">
                       这项测评将帮助你梳理自己的核心价值观，看清哪些东西对你真正重要，哪些只是外界强加的期望。只有明白了自己的价值坐标，才能做出真正属于自己的选择。
@@ -169,7 +169,7 @@ export default function ChapterOnePage() {
                   <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
                   <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
                     <p className="indent-[2em]">
-                      性格告诉我们"我是谁"，而能力则回答"我能做什么"。了解自己的社会能力，是认识自我的另一面。
+                      性格告诉我们&quot;我是谁&quot;，而能力则回答&quot;我能做什么&quot;。了解自己的社会能力，是认识自我的另一面。
                     </p>
                     <p className="indent-[2em]">
                       社会能力不是单一的指标，它涵盖了沟通表达、人际协作、情绪管理、问题解决、适应变化等多个维度。你可能擅长某一方面，却在另一方面感到吃力——这很正常。
@@ -247,7 +247,7 @@ export default function ChapterOnePage() {
                       我们从出生起，就被赋予了各种角色：孩子、学生、员工、父母、伴侣...
                     </p>
                     <p className="indent-[2em]">
-                      这些角色塑造了我们，也在某种程度上限制了我们。我们习惯了用角色来定义自己，却忘记了在这些角色之外，还有一个"我"。
+                      这些角色塑造了我们，也在某种程度上限制了我们。我们习惯了用角色来定义自己，却忘记了在这些角色之外，还有一个&quot;我&quot;。
                     </p>
                     <p className="indent-[2em]">
                       这个练习，帮助你梳理自己承担的各种角色，看看它们在你的生命中占据了多少空间。

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -31,10 +31,8 @@ export function ProtectedRoute({
 }: ProtectedRouteProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, initialized, status } = useAuthStore();
+  const { initialized, status } = useAuthStore();
   const isAuthenticated = status === 'authenticated';
-  const [checked, setChecked] = useState(false);
-
   useEffect(() => {
     if (!initialized) return;
 
@@ -47,14 +45,13 @@ export function ProtectedRoute({
           : `${redirectTo}?returnUrl=${returnUrl}`;
 
       router.replace(target);
-    } else {
-      setChecked(true);
     }
+    // else: 用户已登录，无需操作，initialized=true 时自然渲染 children
   }, [initialized, isAuthenticated, pathname, redirectTo, router]);
 
   // 未初始化时显示空白，避免闪烁
   // 未登录时 router.replace 会跳转，这里不渲染 children
-  if (!checked) {
+  if (!initialized) {
     return (
       <div
         style={{

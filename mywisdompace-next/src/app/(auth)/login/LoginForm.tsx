@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 
 import { useAuthStore } from '@/stores/authStore';
 
@@ -15,14 +15,10 @@ export function LoginForm() {
   const [rememberMe] = useState(true); // rememberMe 暂未使用，由 Supabase 管理
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [returnUrl, setReturnUrl] = useState('/');
-
   // 从 URL 读取 returnUrl（登录后跳转回来源页面）
-  useEffect(() => {
-    const returnParam = searchParams.get('returnUrl');
-    if (returnParam && returnParam.startsWith('/')) {
-      setReturnUrl(returnParam);
-    }
+  const returnUrl = useMemo(() => {
+    const p = searchParams.get('returnUrl');
+    return p && p.startsWith('/') ? p : '/';
   }, [searchParams]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

@@ -5,7 +5,7 @@ import { Database } from '@/types/database';
 import { SaveAssessmentSchema } from '@/lib/validations/assessment';
 
 /** GET /api/assessments — 获取当前用户所有测评结果 */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const cookieStore = await cookies();
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

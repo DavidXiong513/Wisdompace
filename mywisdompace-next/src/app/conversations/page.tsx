@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
+
 import { useAuthStore } from '@/stores/authStore';
 import Link from 'next/link';
 
@@ -14,7 +14,7 @@ interface Conversation {
 }
 
 function ConversationsContent() {
-  const { t } = useTranslation();
+
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
 

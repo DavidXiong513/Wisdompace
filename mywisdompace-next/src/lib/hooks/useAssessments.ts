@@ -12,7 +12,6 @@ import type { SaveAssessmentInput, AssessmentType } from '@/lib/validations/asse
 
 // ============ 类型别名 ============
 type AssessmentRow = Database['public']['Tables']['assessments']['Row'];
-type AssessmentInsert = Database['public']['Tables']['assessments']['Insert'];
 
 // ============ API 基础函数 ============
 

@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     async start(controller) {
       const reader = streamResponse.body!.getReader();
       let fullContent = '';
-      let assistantMessageId = crypto.randomUUID();
+      const assistantMessageId = crypto.randomUUID();
 
       try {
         while (true) {

@@ -9,9 +9,7 @@
 import type {
   BigFiveQuestion,
   BigFiveDimensionKey,
-  DimensionMeta,
   DimensionInterpretation,
-  DimensionRange,
   DimensionScore,
   BigFiveTestResult,
 } from '@/types/big-five';
@@ -54,9 +52,7 @@ export const DIMENSION_COLORS: Record<BigFiveDimensionKey, { main: string; light
 // ── 数据缓存 ──────────────────────────────────────────────────────────────
 
 let _questions: BigFiveQuestion[] | null = null;
-let _dimensionMeta: Record<string, DimensionMeta> | null = null;
 let _interpretations: Record<string, DimensionInterpretation> | null = null;
-let _overallProfiles: Record<string, { name: string; description: string }> | null = null;
 
 // ── 数据加载 ──────────────────────────────────────────────────────────────
 
@@ -65,7 +61,6 @@ export async function loadQuestions(): Promise<BigFiveQuestion[]> {
   const res = await fetch('/data/big-five/questions.json');
   const json = await res.json();
   _questions = json.questions;
-  _dimensionMeta = json.dimensions;
   return _questions!;
 }
 
@@ -74,7 +69,6 @@ export async function loadInterpretations(): Promise<Record<string, DimensionInt
   const res = await fetch('/data/big-five/interpretations.json');
   const json = await res.json();
   _interpretations = json.dimensions;
-  _overallProfiles = json.overall_profiles;
   return _interpretations!;
 }
 

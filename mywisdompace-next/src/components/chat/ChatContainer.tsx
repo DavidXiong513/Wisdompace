@@ -11,19 +11,16 @@ interface ChatContainerProps {
   initialMessages?: AIMessage[];
   /** 关联的对话 ID */
   conversationId?: string | null;
-  /** 完成后回调 */
-  onConversationIdChange?: (id: string | null) => void;
 }
 
 export function ChatContainer({
   initialMessages = [],
   conversationId,
-  onConversationIdChange,
 }: ChatContainerProps) {
   const user = useAuthStore((s) => s.user);
   const [messages, setMessages] = useState<AIMessage[]>(initialMessages);
   const [isThinking, setIsThinking] = useState(false);
-  const [currentConvId, setCurrentConvId] = useState<string | null>(conversationId ?? null);
+  const [currentConvId] = useState<string | null>(conversationId ?? null);
   const abortRef = useRef<AbortController | null>(null);
 
   const handleSend = useCallback(
@@ -62,7 +59,6 @@ export function ChatContainer({
         const reader = response.body!.getReader();
         const decoder = new TextDecoder();
         let assistantContent = '';
-        const assistantMsgId = crypto.randomUUID();
 
         setMessages((prev) => [
           ...prev,

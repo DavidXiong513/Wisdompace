@@ -89,7 +89,7 @@ function SearchContent() {
               ) : results.length > 0 ? (
                 <>找到 <strong className="font-semibold" style={{ color: "var(--wp-ink)" }}>{results.length}</strong> 条结果</>
               ) : (
-                <>未找到与 "<strong>{query}</strong>" 相关的内容</>
+                <>未找到与 &quot;<strong>{query}</strong>&quot; 相关的内容</>
               )}
             </div>
 

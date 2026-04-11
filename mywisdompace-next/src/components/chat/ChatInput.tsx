@@ -1,15 +1,12 @@
 'use client';
 
 import React, { useState, useRef, useCallback, KeyboardEvent } from 'react';
-import { useTranslation } from 'react-i18next';
-
 interface ChatInputProps {
   onSend: (message: string) => void;
   disabled?: boolean;
 }
 
 export function ChatInput({ onSend, disabled = false }: ChatInputProps) {
-  const { t } = useTranslation();
   const [value, setValue] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 

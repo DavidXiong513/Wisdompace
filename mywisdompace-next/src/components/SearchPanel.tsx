@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { searchAll } from "@/lib/search-index";
-import { validateSearchQuery, escapeHtml } from "@/lib/security";
+import { validateSearchQuery } from "@/lib/security";
 
 export function SearchPanel({
   open,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 
 import { useAuthStore } from '@/stores/authStore';
 
@@ -17,14 +17,10 @@ export function RegisterForm() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [returnUrl, setReturnUrl] = useState('/');
-
   // 从 URL 读取 returnUrl（注册后跳转回来源页面）
-  useEffect(() => {
-    const returnParam = searchParams.get('returnUrl');
-    if (returnParam && returnParam.startsWith('/')) {
-      setReturnUrl(returnParam);
-    }
+  const returnUrl = useMemo(() => {
+    const p = searchParams.get('returnUrl');
+    return p && p.startsWith('/') ? p : '/';
   }, [searchParams]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {

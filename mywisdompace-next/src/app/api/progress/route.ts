@@ -5,7 +5,7 @@ import { Database } from '@/types/database';
 import { UpsertProgressSchema } from '@/lib/validations/progress';
 
 /** GET /api/progress — 获取当前用户所有进度 */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const cookieStore = await cookies();
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
   }
 
   // 支持按 category 过滤：?category=chapter-read
-  const { searchParams } = new URL(request.url);
+  const { searchParams } = new URL(_request.url);
   const category = searchParams.get('category');
 
   let query = supabase
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
 
   const { data, error } = await supabase
     .from('progress')
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     .upsert(
       { user_id: user.id, category, key, value } as any,
       { onConflict: 'user_id,category,key' }

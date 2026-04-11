@@ -12,7 +12,6 @@ import type { UpsertProgressInput, ProgressCategory } from '@/lib/validations/pr
 
 // ============ 类型别名 ============
 type ProgressRow = Database['public']['Tables']['progress']['Row'];
-type ProgressInsert = Database['public']['Tables']['progress']['Insert'];
 
 // ============ API 基础函数 ============
 
