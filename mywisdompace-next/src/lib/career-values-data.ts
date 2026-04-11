@@ -328,7 +328,7 @@ export function generateReport(
   realityScore: number,
 ): CareerValuesReport {
   const allIds = CAREER_VALUES.map(v => v.id);
-  const from15to8 = allIds.filter(id => !selected8.includes(id));
+  const from14to8 = allIds.filter(id => !selected8.includes(id));
   const from8to3 = selected8.filter(id => !ranked3.includes(id));
 
   const conflicts = detectConflicts(ranked3);
@@ -341,7 +341,7 @@ export function generateReport(
 
   return {
     coreValues,
-    eliminatedPath: { from15to8, from8to3 },
+    eliminatedPath: { from14to8, from8to3 },
     sentence,
     realityScore,
     detectedConflicts: conflicts,

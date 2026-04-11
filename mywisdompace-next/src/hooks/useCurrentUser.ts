@@ -1,56 +1,42 @@
 /**
  * 用户态管理 Hook
- * 
- * 当前阶段：仅占位实现，使用内存状态模拟
- * 未来接入真实后端时：
- * - 从 Cookie 读取 session token
- * - 调用 /api/auth/me 获取当前用户
- * - 处理 token 过期和刷新逻辑
+ *
+ * 对接 Supabase Auth：
+ * - 初始从 Zustand authStore 读取（持久化的用户信息）
+ * - 调用 initSession() 从服务端验证 session，同步最新用户数据
  */
 
-import { useState, useEffect } from "react";
-import { AuthUser } from "@/lib/auth-placeholder";
-
-// 内存模拟的全局用户状态（仅用于当前占位阶段）
-let globalUser: AuthUser | null = null;
+import { useEffect, useCallback } from 'react';
+import { useAuthStore } from '@/stores/authStore';
+import type { AuthUser } from '@/lib/auth-placeholder';
 
 export function useCurrentUser() {
-  const [user, setUser] = useState<AuthUser | null>(globalUser);
+  const user     = useAuthStore((s) => s.user);
+  const status   = useAuthStore((s) => s.status);
+  const error    = useAuthStore((s) => s.error);
+  const initSession = useAuthStore((s) => s.initSession);
+  const logoutStore  = useAuthStore((s) => s.logout);
 
+  // 页面加载时：从服务端验证 session，同步最新用户数据
   useEffect(() => {
-    // 未来这里会：
-    // 1. 检查 Cookie 中的 session token
-    // 2. 调用 /api/auth/me 验证并获取用户信息
-    // 3. 处理 token 过期的情况
-    
-    // 当前占位阶段：从全局状态读取
-    setUser(globalUser);
-  }, []);
+    if (status === 'loading') {
+      initSession();
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // 故意不加 initSession 依赖，避免每次渲染都触发
 
-  const updateUser = (newUser: AuthUser | null) => {
-    globalUser = newUser;
-    setUser(newUser);
-  };
-
-  const logout = () => {
-    // 未来这里会：
-    // 1. 调用 /api/auth/logout 清除服务端 session
-    // 2. 清除客户端 Cookie
-    
-    // 当前占位阶段：清空全局状态
-    globalUser = null;
-    setUser(null);
-  };
+  const logout = useCallback(async () => {
+    await logoutStore();
+    // 登出后跳转到首页
+    window.location.href = '/';
+  }, [logoutStore]);
 
   return {
     user,
-    isLoggedIn: !!user,
-    updateUser,
+    isLoggedIn: status === 'authenticated',
+    isLoading:  status === 'loading',
+    error,
+    updateUser: (newUser: AuthUser | null) => useAuthStore.getState().setUser(newUser),
     logout,
   };
-}
-
-// 内部辅助函数：供登录/注册页面调用，模拟设置当前用户
-export function setCurrentUserForDemo(user: AuthUser | null) {
-  globalUser = user;
 }

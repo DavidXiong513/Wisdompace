@@ -752,7 +752,7 @@ function ReportPage() {
   if (!report) return null;
 
   const allValues = CAREER_VALUES;
-  const eliminated15to8 = getValuesByIds(report.eliminatedPath.from15to8);
+  const eliminated15to8 = getValuesByIds(report.eliminatedPath.from14to8);
   const eliminated8to3 = getValuesByIds(report.eliminatedPath.from8to3);
 
   // 高亮造句中的价值观词

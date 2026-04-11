@@ -49,6 +49,7 @@ export const ALLOWED_IMAGE_DOMAINS = [
  * 使用场景: API调用、第三方服务
  */
 export const ALLOWED_CONNECT_DOMAINS = [
+  'https://enubvdkirskacmtuzgys.supabase.co', // Supabase 项目
   // 'https://api.example.com',           // 后端API
   // 'https://analytics.google.com',      // 分析服务
 ];
