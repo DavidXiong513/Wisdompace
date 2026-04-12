@@ -13,8 +13,16 @@ import {
 } from '@/lib/scoring';
 import type { ScoringRule, PersonalityTypeData } from '@/types/mbti';
 
+type TestCaseResult = {
+  test: string;
+  input: unknown;
+  output: unknown;
+  expected: string;
+  passed: boolean;
+};
+
 export async function GET() {
-  const results: any[] = [];
+  const results: TestCaseResult[] = [];
 
   // Sample scoring rules (first 10 questions)
   const sampleScoringRules: ScoringRule[] = [

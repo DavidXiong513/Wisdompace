@@ -100,14 +100,17 @@ export async function POST(request: NextRequest) {
   }
 
   const { category, key, value } = parsed.data;
+  const progressPayload: Database['public']['Tables']['progress']['Insert'] = {
+    user_id: user.id,
+    category,
+    key,
+    value,
+  };
 
   const { data, error } = await supabase
     .from('progress')
-     
-    .upsert(
-      { user_id: user.id, category, key, value } as any,
-      { onConflict: 'user_id,category,key' }
-    )
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .upsert(progressPayload as any, { onConflict: 'user_id,category,key' })
     .select()
     .single();
 

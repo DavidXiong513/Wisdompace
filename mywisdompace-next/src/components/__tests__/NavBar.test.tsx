@@ -17,12 +17,18 @@ describe('NavBar', () => {
     vi.clearAllMocks();
   });
 
+  const baseMockValue = {
+    isLoggedIn: false,
+    isLoading: false,
+    error: null,
+    updateUser: vi.fn(),
+    logout: vi.fn(async () => {}),
+  };
+
   it('should render login/register button when user is not logged in', () => {
     mockedUseCurrentUser.mockReturnValue({
+      ...baseMockValue,
       user: null,
-      isLoggedIn: false,
-      updateUser: vi.fn(),
-      logout: vi.fn(),
     });
 
     render(<NavBar />);
@@ -32,10 +38,9 @@ describe('NavBar', () => {
 
   it('should render user info and logout button when user is logged in', () => {
     mockedUseCurrentUser.mockReturnValue({
-      user: { name: '张三', email: 'zhangsan@example.com' },
+      ...baseMockValue,
+      user: { id: '1', name: '张三', email: 'zhangsan@example.com' },
       isLoggedIn: true,
-      updateUser: vi.fn(),
-      logout: vi.fn(),
     });
 
     render(<NavBar />);
@@ -46,10 +51,9 @@ describe('NavBar', () => {
 
   it('should display user email prefix when name is not available', () => {
     mockedUseCurrentUser.mockReturnValue({
-      user: { email: 'test@example.com' },
+      ...baseMockValue,
+      user: { id: '2', email: 'test@example.com' },
       isLoggedIn: true,
-      updateUser: vi.fn(),
-      logout: vi.fn(),
     });
 
     render(<NavBar />);
@@ -59,10 +63,9 @@ describe('NavBar', () => {
 
   it('should display user initial avatar when logged in', () => {
     mockedUseCurrentUser.mockReturnValue({
-      user: { name: '李四', email: 'lisi@example.com' },
+      ...baseMockValue,
+      user: { id: '3', name: '李四', email: 'lisi@example.com' },
       isLoggedIn: true,
-      updateUser: vi.fn(),
-      logout: vi.fn(),
     });
 
     render(<NavBar />);
@@ -72,11 +75,11 @@ describe('NavBar', () => {
   });
 
   it('should call logout when logout button is clicked', () => {
-    const mockLogout = vi.fn();
+    const mockLogout = vi.fn(async () => {});
     mockedUseCurrentUser.mockReturnValue({
-      user: { name: '王五', email: 'wangwu@example.com' },
+      ...baseMockValue,
+      user: { id: '4', name: '王五', email: 'wangwu@example.com' },
       isLoggedIn: true,
-      updateUser: vi.fn(),
       logout: mockLogout,
     });
 
@@ -90,10 +93,8 @@ describe('NavBar', () => {
 
   it('should have link to login page when not logged in', () => {
     mockedUseCurrentUser.mockReturnValue({
+      ...baseMockValue,
       user: null,
-      isLoggedIn: false,
-      updateUser: vi.fn(),
-      logout: vi.fn(),
     });
 
     render(<NavBar />);
@@ -104,10 +105,8 @@ describe('NavBar', () => {
 
   it('should render as fixed header with correct styling classes', () => {
     mockedUseCurrentUser.mockReturnValue({
+      ...baseMockValue,
       user: null,
-      isLoggedIn: false,
-      updateUser: vi.fn(),
-      logout: vi.fn(),
     });
 
     const { container } = render(<NavBar />);

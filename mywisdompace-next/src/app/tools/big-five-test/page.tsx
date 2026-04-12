@@ -6,21 +6,17 @@ import {
   loadAllBigFiveData,
   getPageQuestions,
   getTotalPages,
-  QUESTIONS_PER_PAGE,
   DIMENSION_ORDER,
   DIMENSION_INFO,
   DIMENSION_COLORS,
   SCALE_LABELS,
   generateTestResult,
-  getDimensionAnsweredCount,
-  getDimensionQuestionCount,
 } from '@/lib/big-five-data';
 import type {
   BigFiveQuestion,
   DimensionInterpretation,
   BigFiveTestResult,
   BigFiveDimensionKey,
-  DimensionScore,
 } from '@/types/big-five';
 
 // ── 阶段状态 ──────────────────────────────────────────────────────────────

@@ -7,7 +7,6 @@ import {
   loadAllMBTIData,
   getPageQuestions,
   getTotalPages,
-  QUESTIONS_PER_PAGE,
   SECTION_INFO,
   generateTestResult,
   getDimensionPairs,
@@ -36,7 +35,6 @@ export default function MBTITestPage() {
     setCurrentPage,
     resetTest,
     answeredCount,
-    isPageComplete,
   } = useTestStore();
 
   // 加载数据
@@ -50,14 +48,11 @@ export default function MBTITestPage() {
   }, []);
 
   // 如果有已有答案，自动跳到答题页
-  useEffect(() => {
-    if (!loading && Object.keys(answers).length > 0 && phase === 'welcome') {
-      setPhase('testing');
-    }
-  }, [loading, answers, phase]);
-
   const totalPages = useMemo(() => getTotalPages(questions.length), [questions.length]);
   const pageQuestions = useMemo(() => getPageQuestions(questions, currentPage), [questions, currentPage]);
+  const effectivePhase = !loading && Object.keys(answers).length > 0 && phase === 'welcome'
+    ? 'testing'
+    : phase;
 
   const handleStartTest = useCallback(() => {
     resetTest();
@@ -129,25 +124,23 @@ export default function MBTITestPage() {
       </nav>
 
       <main className="max-w-3xl mx-auto px-4 py-6">
-        {phase === 'welcome' && <WelcomePhase onStart={handleStartTest} />}
-        {phase === 'testing' && (
+        {effectivePhase === 'welcome' && <WelcomePhase onStart={handleStartTest} />}
+        {effectivePhase === 'testing' && (
           <TestingPhase
             questions={pageQuestions}
             currentPage={currentPage}
             totalPages={totalPages}
             totalQuestions={questions.length}
             answers={answers}
-            allQuestions={questions}
             onAnswer={handleAnswer}
             onNext={handleNextPage}
             onPrev={handlePrevPage}
             onSubmit={handleSubmit}
             isLastPage={currentPage === totalPages - 1}
-            isPageComplete={isPageComplete(currentPage, QUESTIONS_PER_PAGE)}
             answeredCount={answeredCount()}
           />
         )}
-        {phase === 'result' && result && (
+        {effectivePhase === 'result' && result && (
           <ResultPhase
             result={result}
             resultTab={resultTab}
@@ -236,13 +229,11 @@ interface TestingPhaseProps {
   totalPages: number;
   totalQuestions: number;
   answers: Record<number, 'A' | 'B'>;
-  allQuestions: MBTIQuestion[];
   onAnswer: (questionId: number, answer: 'A' | 'B') => void;
   onNext: () => void;
   onPrev: () => void;
   onSubmit: () => void;
   isLastPage: boolean;
-  isPageComplete: boolean;
   answeredCount: number;
 }
 
@@ -252,13 +243,11 @@ function TestingPhase({
   totalPages,
   totalQuestions,
   answers,
-  allQuestions,
   onAnswer,
   onNext,
   onPrev,
   onSubmit,
   isLastPage,
-  isPageComplete,
   answeredCount,
 }: TestingPhaseProps) {
   const progressPct = Math.round((answeredCount / totalQuestions) * 100);

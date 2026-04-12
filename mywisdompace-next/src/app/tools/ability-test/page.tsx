@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useAbilityStore } from '@/lib/ability-store';
+import { usePersistHydrated } from '@/lib/hooks/usePersistHydrated';
 import {
   getAllAbilities,
   getAbilityByIndex,
@@ -13,7 +14,7 @@ import {
   exportMarkdown,
   DOMAINS,
 } from '@/lib/ability-data';
-import type { Ability, AbilityAlert, AbilityReport } from '@/types/ability';
+import type { Ability } from '@/types/ability';
 import {
   PROF_LABELS,
   INTE_LABELS,
@@ -224,7 +225,6 @@ function EvaluatePage() {
   const { currentIndex, answers, setCurrentIndex, setAnswer, setPhase, setLastCompletedBatch } = useAbilityStore();
   const [showProfAnchors, setShowProfAnchors] = useState(false);
   const [showInteAnchors, setShowInteAnchors] = useState(false);
-  const [alerts, setAlerts] = useState<AbilityAlert[]>([]);
 
   const ability = getAbilityByIndex(currentIndex);
   const allAbilities = getAllAbilities();
@@ -232,6 +232,10 @@ function EvaluatePage() {
   // 当前能力评分
   const currentAnswer = ability ? answers[ability.id] : undefined;
   const hasBoth = !!(currentAnswer?.p && currentAnswer?.i);
+  const alerts = useMemo(
+    () => (ability && currentAnswer?.p ? checkAlerts(ability, answers) : []),
+    [ability, currentAnswer?.p, answers]
+  );
 
   // 是否是当前批次的第一项
   const isBatchFirst = useMemo(() => {
@@ -242,14 +246,6 @@ function EvaluatePage() {
   }, [currentIndex, ability]);
 
   // 矛盾检测
-  useEffect(() => {
-    if (ability && currentAnswer?.p) {
-      setAlerts(checkAlerts(ability, answers));
-    } else {
-      setAlerts([]);
-    }
-  }, [ability, currentAnswer, answers]);
-
   const handlePickProf = (v: number) => {
     if (!ability) return;
     setAnswer(ability.id, v, currentAnswer?.i || 0);
@@ -777,11 +773,7 @@ function MiniGrid({ cells, tip }: {
 // --- 结果报告页 ---
 function ReportPage() {
   const { answers, name, years, reset } = useAbilityStore();
-  const [report, setReport] = useState<AbilityReport | null>(null);
-
-  useEffect(() => {
-    setReport(generateReport(answers));
-  }, [answers]);
+  const report = useMemo(() => generateReport(answers), [answers]);
 
   const handleExportMD = () => {
     if (!report) return;
@@ -997,19 +989,10 @@ function ReportPage() {
 
 // ==================== 主页面 ==================== //
 export default function AbilityTestPage() {
-  const { phase, reset } = useAbilityStore();
-  const [mounted, setMounted] = useState(false);
+  const phase = useAbilityStore((state) => state.phase);
+  const hydrated = usePersistHydrated(useAbilityStore);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // 恢复进度
-  const handleResume = () => {
-    // store 已经持久化了 phase 和数据，直接使用
-  };
-
-  if (!mounted) {
+  if (!hydrated) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F5F0E8]">
         <div className="text-sm text-[#8A7E6A]">加载中…</div>

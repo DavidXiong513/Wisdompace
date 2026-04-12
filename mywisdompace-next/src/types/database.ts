@@ -164,5 +164,14 @@ export interface Database {
         Update: Partial<Omit<Conversation, 'id' | 'user_id' | 'created_at'>>;
       };
     };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
+    Enums: {
+      [_ in never]: never;
+    };
   };
 }

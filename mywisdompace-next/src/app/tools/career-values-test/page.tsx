@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useCareerValuesStore } from '@/lib/career-values-store';
+import { usePersistHydrated } from '@/lib/hooks/usePersistHydrated';
 import {
   CAREER_VALUES,
   VALUE_CONFLICTS,
@@ -10,24 +11,9 @@ import {
   CONNECTORS,
   getValueById,
   getValuesByIds,
-  detectConflicts,
   generateReport,
   exportMarkdown,
 } from '@/lib/career-values-data';
-import type { CareerValuesReport } from '@/types/career-values';
-
-// ── 紫色系配色 ──
-const PURPLE = {
-  main: '#8B6AA0',
-  light: '#EDE4F3',
-  dark: '#5A3A6F',
-  bg: '#F5F0E8',
-  card: '#FFFFFF',
-  border: '#E8E4DD',
-  text: '#2F2A24',
-  textSecondary: '#6A6256',
-  textMuted: '#8A7E6A',
-};
 
 // ==================== 欢迎页 ==================== //
 function WelcomePage() {
@@ -132,7 +118,6 @@ function WelcomePage() {
 function ExplorePage() {
   const { setPhase } = useCareerValuesStore();
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
-  const [showTip, setShowTip] = useState(false);
 
   const expandedCount = expandedIds.size;
 
@@ -210,7 +195,7 @@ function ExplorePage() {
       </div>
 
       {/* 达到上限提示 */}
-      {expandedCount >= 5 && !showTip && (
+      {expandedCount >= 5 && (
         <div className="mb-4 rounded-lg bg-[#EDE4F3] p-3 text-center text-xs text-[#5A3A6F]">
           ✓ 你已阅读足够多的价值观，可以进入下一阶段了
         </div>
@@ -532,7 +517,6 @@ function SentencePage() {
   const [showConflictTip, setShowConflictTip] = useState(true);
 
   const values3 = getValuesByIds(ranked3.filter(Boolean));
-  const conflicts = detectConflicts(ranked3 as [string, string, string]);
 
   const isValid = sentence.trim().length >= 10 && realityScore > 0;
 
@@ -718,18 +702,17 @@ function SentencePage() {
 // ==================== 第五阶段：报告 ==================== //
 function ReportPage() {
   const { selected8, ranked3, sentence, realityScore, reset } = useCareerValuesStore();
-  const [report, setReport] = useState<CareerValuesReport | null>(null);
 
-  useEffect(() => {
+  const report = useMemo(() => {
     if (ranked3.every(Boolean)) {
-      const r = generateReport(
+      return generateReport(
         selected8,
         ranked3 as [string, string, string],
         sentence,
         realityScore,
       );
-      setReport(r);
     }
+    return null;
   }, [selected8, ranked3, sentence, realityScore]);
 
   const handleExportMD = () => {
@@ -751,7 +734,6 @@ function ReportPage() {
 
   if (!report) return null;
 
-  const allValues = CAREER_VALUES;
   const eliminated15to8 = getValuesByIds(report.eliminatedPath.from14to8);
   const eliminated8to3 = getValuesByIds(report.eliminatedPath.from8to3);
 
@@ -952,13 +934,9 @@ function ProgressBar({ current, total, label }: { current: number; total: number
 // ==================== 主页面 ==================== //
 export default function CareerValuesTestPage() {
   const phase = useCareerValuesStore(s => s.phase);
-  const [mounted, setMounted] = useState(false);
+  const hydrated = usePersistHydrated(useCareerValuesStore);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
+  if (!hydrated) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F5F0E8]">
         <div className="text-sm text-[#8A7E6A]">加载中…</div>
