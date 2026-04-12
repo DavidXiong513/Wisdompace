@@ -12,6 +12,8 @@ import {
   SCALE_LABELS,
   generateTestResult,
 } from '@/lib/big-five-data';
+import { useBigFiveStore } from '@/lib/big-five-store';
+import { usePersistHydrated } from '@/lib/hooks/usePersistHydrated';
 import type {
   BigFiveQuestion,
   DimensionInterpretation,
@@ -19,89 +21,36 @@ import type {
   BigFiveDimensionKey,
 } from '@/types/big-five';
 
-// ── 阶段状态 ──────────────────────────────────────────────────────────────
-
-type Phase = 'welcome' | 'testing' | 'result';
-
-// ── 持久化答案 ────────────────────────────────────────────────────────────
-
-const STORAGE_KEY = 'big-five-answers';
-const STORAGE_PAGE_KEY = 'big-five-page';
-
-function loadSavedAnswers(): Record<number, number> {
-  if (typeof window === 'undefined') return {};
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveAnswers(answers: Record<number, number>) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(answers));
-  } catch { /* ignore */ }
-}
-
-function loadSavedPage(): number {
-  if (typeof window === 'undefined') return 1;
-  try {
-    const saved = localStorage.getItem(STORAGE_PAGE_KEY);
-    return saved ? parseInt(saved, 10) : 1;
-  } catch {
-    return 1;
-  }
-}
-
-function savePage(page: number) {
-  try {
-    localStorage.setItem(STORAGE_PAGE_KEY, String(page));
-  } catch { /* ignore */ }
-}
-
-function clearSaved() {
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem(STORAGE_PAGE_KEY);
-  } catch { /* ignore */ }
-}
-
 // ── 主页面 ────────────────────────────────────────────────────────────────
 
 export default function BigFiveTestPage() {
-  const [phase, setPhase] = useState<Phase>('welcome');
+  const {
+    phase,
+    currentPage,
+    answers,
+    result,
+    setPhase,
+    setCurrentPage,
+    setAnswer,
+    setResult,
+    reset,
+  } = useBigFiveStore();
+
+  const hydrated = usePersistHydrated(useBigFiveStore);
+
   const [questions, setQuestions] = useState<BigFiveQuestion[]>([]);
   const [interpretations, setInterpretations] = useState<Record<string, DimensionInterpretation>>({});
-  const [result, setResult] = useState<BigFiveTestResult | null>(null);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [answers, setAnswers] = useState<Record<number, number>>({});
   const [activeDimTab, setActiveDimTab] = useState<BigFiveDimensionKey>('extraversion');
 
-  // 加载数据
+  // 加载题库数据（静态 JSON，不随用户状态改变）
   useEffect(() => {
     loadAllBigFiveData().then(({ questions, interpretations }) => {
       setQuestions(questions);
       setInterpretations(interpretations);
-      // 尝试恢复进度
-      const savedAnswers = loadSavedAnswers();
-      const savedPage = loadSavedPage();
-      if (Object.keys(savedAnswers).length > 0) {
-        setAnswers(savedAnswers);
-        setCurrentPage(savedPage);
-      }
       setLoading(false);
     });
   }, []);
-
-  // 保存答案
-  useEffect(() => {
-    if (Object.keys(answers).length > 0) {
-      saveAnswers(answers);
-      savePage(currentPage);
-    }
-  }, [answers, currentPage]);
 
   const totalPages = useMemo(() => getTotalPages(questions.length), [questions]);
   const pageQuestions = useMemo(() => getPageQuestions(questions, currentPage), [questions, currentPage]);
@@ -109,52 +58,47 @@ export default function BigFiveTestPage() {
 
   // 选择答案
   const handleSelect = useCallback((questionId: number, value: number) => {
-    setAnswers((prev) => ({ ...prev, [questionId]: value }));
-  }, []);
+    setAnswer(questionId, value);
+  }, [setAnswer]);
 
   // 当前页是否全部作答
   const isPageComplete = useMemo(
-    () => pageQuestions.every((q) => answers[q.id] !== undefined),
+    () => pageQuestions.length > 0 && pageQuestions.every((q) => answers[q.id] !== undefined),
     [pageQuestions, answers],
   );
 
   // 下一页
   const goNextPage = useCallback(() => {
     if (currentPage < totalPages) {
-      setCurrentPage((p) => p + 1);
+      setCurrentPage(currentPage + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       // 完成所有题目，生成结果
       const r = generateTestResult(answers, questions, interpretations);
       setResult(r);
       setPhase('result');
-      clearSaved();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [currentPage, totalPages, answers, questions, interpretations]);
+  }, [currentPage, totalPages, answers, questions, interpretations, setCurrentPage, setResult, setPhase]);
 
   // 上一页
   const goPrevPage = useCallback(() => {
     if (currentPage > 1) {
-      setCurrentPage((p) => p - 1);
+      setCurrentPage(currentPage - 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [currentPage]);
+  }, [currentPage, setCurrentPage]);
 
   // 开始测试
   const startTest = useCallback(() => {
     setPhase('testing');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  }, [setPhase]);
 
   // 重新测试
   const resetTest = useCallback(() => {
-    setAnswers({});
-    setCurrentPage(1);
-    setResult(null);
-    setPhase('welcome');
-    clearSaved();
-  }, []);
+    reset();
+  }, [reset]);
 
   // 退出确认
   const handleBack = useCallback(() => {
@@ -169,7 +113,7 @@ export default function BigFiveTestPage() {
 
   // ── 渲染 ──────────────────────────────────────────────────────────────────
 
-  if (loading) {
+  if (!hydrated || loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F5F0E8]">
         <div className="text-[#8A7E6A]">加载中...</div>
@@ -198,7 +142,7 @@ export default function BigFiveTestPage() {
 
       <main className="mx-auto max-w-3xl px-4 pb-20 pt-6">
         {phase === 'welcome' && (
-          <WelcomePhase onStart={startTest} hasProgress={answeredCount > 0} savedPage={loadSavedPage()} />
+          <WelcomePhase onStart={startTest} hasProgress={answeredCount > 0} savedPage={currentPage} />
         )}
         {phase === 'testing' && (
           <TestingPhase
@@ -238,6 +182,7 @@ function WelcomePhase({
   hasProgress: boolean;
   savedPage: number;
 }) {
+  const reset = useBigFiveStore(s => s.reset);
   return (
     <div className="space-y-6">
       {/* 标题区 */}
@@ -299,8 +244,7 @@ function WelcomePhase({
       {hasProgress && (
         <button
           onClick={() => {
-            localStorage.removeItem('big-five-answers');
-            localStorage.removeItem('big-five-page');
+            reset();
             window.location.reload();
           }}
           className="w-full py-2 text-sm text-[#8A7E6A] hover:text-[#4A3728]"
@@ -361,10 +305,6 @@ function TestingPhase({
             return (
               <button
                 key={p}
-                onClick={() => {
-                  // 允许跳转到已答过的页或当前页
-                  // 简化：不限制
-                }}
                 className={`h-2.5 rounded-full transition-all ${
                   isActive
                     ? 'w-6 bg-[#C9A15A]'
