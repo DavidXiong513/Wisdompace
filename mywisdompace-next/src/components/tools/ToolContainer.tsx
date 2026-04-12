@@ -4,6 +4,7 @@ import React, { Component, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getToolDefinition, getToolStatusText, type ToolStatus } from '@/lib/tools';
 import { useToolStateStore } from '@/stores/toolStateStore';
+import { ToolPlaceholder } from '@/components/ToolPlaceholder';
 
 // ── Error Boundary ─────────────────────────────────────────────────────────
 
@@ -121,12 +122,16 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
         </p>
 
         {/* Tool component or placeholder */}
-        {def.status === 'ready' && def.component ? (
+        {toolId === 'personality-test-cards' ? (
+          <ToolPlaceholder toolId={toolId} />
+        ) : def.status === 'ready' && def.component ? (
           <def.component
             toolId={toolId}
             initialData={getToolState(toolId)?.data}
             onSave={(data) => saveToolState(toolId, data)}
           />
+        ) : def.status === 'ready' ? (
+          <ToolPlaceholder toolId={toolId} />
         ) : (
           <div
             className="rounded-md py-6 text-center text-xs"

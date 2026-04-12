@@ -31,6 +31,12 @@ export const tools: Record<string, ToolInfo> = {
     status: "developing",
     description: "选择并管理你的身份标签",
   },
+  "personality-test-cards": {
+    id: "personality-test-cards",
+    name: "性格自测工具",
+    status: "ready",
+    description: "通过 MBTI 和大五人格测试，从不同角度认识自己的性格特质。",
+  },
   "role-stripper": {
     id: "role-stripper",
     name: "角色剥离器",

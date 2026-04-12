@@ -181,12 +181,6 @@ export function initAssessment(roles: { id: string; name: string }[]): RoleAsses
   }));
 }
 
-/** 计算重视程度权重（5点量表归一化为百分比） */
-function calcImportanceWeight(assessments: RoleAssessment[]): number {
-  const total = assessments.reduce((sum, a) => sum + a.importance, 0);
-  return total > 0 ? total / (assessments.length * 5) : 0;
-}
-
 // ==================== 偏差分析 ==================== //
 
 function analyzeDeviations(assessments: RoleAssessment[]): DeviationItem[] {
@@ -224,12 +218,10 @@ function generateCoreRoleInterpretation(
   assessment: RoleAssessment,
   rank: 1 | 2 | 3,
   totalHours: number,
-  allAssessments: RoleAssessment[],
 ): CoreRoleInterpretation {
   const timePercent = totalHours > 0 ? (assessment.hoursPerWeek / totalHours) * 100 : 0;
   // 反转：排名越靠前星越多（第一核心3颗、第二核心2颗、第三核心1颗）
   const stars = '⭐'.repeat(4 - rank);
-  const importanceText = ['几乎不在意', '不太重要', '一般', '比较重要', '非常重要'][assessment.importance - 1] ?? '一般';
 
   // 根据排名和投入生成不同深度的解读
   const baseInterpretation: Record<number, string> = {
@@ -278,8 +270,6 @@ function analyzeExtremeSituation(
     roleCount: hasHours,
     message: `你目前填写的角色数量较少（${hasHours}个有实际投入的角色）。这可能是因为你正处在人生的特殊阶段，也可能是因为社会角色对你而言本身就不那么重要。无论哪种情况，都值得你花一点时间思考：在这些角色之外，是否还有未被提及的身份？`,
   };
-
-  const totalHours = assessments.reduce((sum, a) => sum + a.hoursPerWeek, 0);
 
   let extremeAnalysis = '';
   if (hasHours === 0) {
@@ -402,7 +392,7 @@ export function generateReport(assessments: RoleAssessment[]): RolePieChartRepor
     .slice(0, 3);
 
   const coreRoles: CoreRoleInterpretation[] = coreAssessments.map((a, idx) =>
-    generateCoreRoleInterpretation(a, (idx + 1) as 1 | 2 | 3, totalHours, assessments),
+    generateCoreRoleInterpretation(a, (idx + 1) as 1 | 2 | 3, totalHours),
   );
 
   // 偏差分析

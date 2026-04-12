@@ -3,6 +3,7 @@
 import React from 'react';
 import { useAuthStore } from '@/stores/authStore';
 import { QueryProvider } from '@/components/providers/QueryProvider';
+import '@/i18n/config';
 
 /**
  * 聚合所有 Client Provider

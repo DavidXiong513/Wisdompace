@@ -224,7 +224,7 @@ function WelcomePage() {
 
 // ==================== 阶段一：选择角色 ==================== //
 function SelectRolesPage() {
-  const { selectedRoles, toggleRole, addCustomRole, removeRole, setPhase, assessments } =
+  const { selectedRoles, toggleRole, addCustomRole, setPhase } =
     useRolePieChartStore();
   const [customInput, setCustomInput] = useState('');
   const [showCustom, setShowCustom] = useState(false);
@@ -256,7 +256,7 @@ function SelectRolesPage() {
 
       <div className="mb-5 rounded-xl border border-[#E8D9C2] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
         <p className="text-sm leading-relaxed" style={{ color: THEME.textSecondary }}>
-          想想你目前承担的各种角色。不要只想到"工作"和"家庭"这种大词——要具体：比如"母亲"、"团队领导"、"朋友"、"照顾者"……
+          想想你目前承担的各种角色。不要只想到&ldquo;工作&rdquo;和&ldquo;家庭&rdquo;这种大词&mdash;&mdash;要具体：比如&ldquo;母亲&rdquo;、&ldquo;团队领导&rdquo;、&ldquo;朋友&rdquo;、&ldquo;照顾者&rdquo;&hellip;&hellip;
           <br />
           <span className="mt-1 block">
             勾选你实际承担的角色，可从列表选择，也可自行添加。
@@ -872,9 +872,7 @@ function TimePage() {
 
 // ==================== 阶段四：报告页 ==================== //
 function ReportPage() {
-  const { assessments, reset, setPhase } = useRolePieChartStore();
-  const [showAlert, setShowAlert] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'deviation' | 'insights'>('overview');
+  const { assessments, reset } = useRolePieChartStore();
 
   const report = useMemo<RolePieChartReport | null>(() => {
     if (assessments.length === 0) return null;

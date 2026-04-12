@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { ChapterToc } from "@/components/ChapterToc";
 import ChapterTopNav from "@/components/ChapterTopNav";
-import { ToolPlaceholder } from "@/components/ToolPlaceholder";
+import { ChapterToc } from "@/components/ChapterToc";
+import { ChapterReader } from "@/components/chapter/ChapterReader";
+import { ScrollToTopButton } from "@/components/chapter/ScrollToTopButton";
 import { getChapterBySlug, chapters } from "@/data/chapters";
 
 export function generateStaticParams() {
@@ -38,121 +39,62 @@ export default async function ChapterPage({ params }: Props) {
   const chapterIndex = chapters.findIndex((c) => c.slug === chapter.slug);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F6E9D2] via-[#F2E3C2] to-[#FAF7F1]">
-      <ChapterTopNav />
-      <main className="mx-auto max-w-6xl px-4 pb-16 pt-10 sm:pt-12">
-        <header className="mt-6 rounded-3xl border border-black/10 bg-white/80 p-8 text-center shadow-[0_20px_40px_rgba(42,32,23,0.15)] sm:p-12">
-
-          <p className="text-xs font-medium tracking-[0.22em] text-[#7A6A52]">
-            {chapterIndex >= 0 ? `CHAPTER ${chapterIndex + 1}` : "CHAPTER"}
-          </p>
-          <h1 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-[#2F2A24] sm:text-5xl">
-            {chapter.title}
-          </h1>
-          <p className="mt-3 text-pretty text-base text-[#6A6256] sm:text-lg">
-            {chapter.subtitle}
-          </p>
-          <p className="mx-auto mt-4 max-w-2xl text-pretty text-sm leading-7 text-[#6A6256]">
-            {chapter.description}
-          </p>
-        </header>
-
-        <div className="mt-10 grid gap-8 lg:grid-cols-[200px_1fr]">
-          <ChapterToc chapterSlug={chapter.slug} sections={chapter.sections} variant="sidebar" />
-
-
-          <div className="space-y-10">
-            {chapter.sections.map((s, idx) => {
-              const isSummary = s.id === "summary";
-              const reverse = idx % 2 === 1;
-
-              if (isSummary) {
-                return (
-                  <section
-                    key={s.id}
-                    id={s.id}
-                    className="scroll-mt-28 rounded-3xl border border-black/10 bg-white/80 p-8 text-center shadow-sm sm:p-12"
-                  >
-                    <h2 className="text-2xl font-semibold text-[#2F2A24] sm:text-3xl">
-                      {s.title}
-                    </h2>
-
-                    <div className="mx-auto mt-5 max-w-3xl space-y-4 text-sm leading-7 text-[#6A6256] sm:text-base">
-                      {s.paragraphs.map((p, pIdx) => (
-                        <p key={pIdx}>{p}</p>
-                      ))}
-                    </div>
-
-                    {s.questions?.length ? (
-                      <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-black/10 bg-[#F8F2E6] p-6 text-left">
-                        <div className="text-sm font-semibold text-[#2F2A24]">
-                          思考题：
-                        </div>
-                        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-[#6A6256]">
-                          {s.questions.map((q) => (
-                            <li key={q}>{q}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    ) : null}
-                  </section>
-                );
-              }
-
-              return (
-                <section
-                  key={s.id}
-                  id={s.id}
-                  className="scroll-mt-28 rounded-3xl border border-black/10 bg-white/80 p-7 shadow-sm sm:p-10"
-                >
-                  <div
-                    className={
-                      "grid gap-6 lg:grid-cols-2 lg:items-center " +
-                      (reverse ? "lg:[&>*:first-child]:order-2" : "")
-                    }
-                  >
-                    <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-black/10 bg-gradient-to-br from-[#F8F2E6] to-white">
-                      <div className="flex h-full w-full items-center justify-center text-sm text-[#8A7E6A]">
-                        配图更新中...
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex items-start justify-between gap-4">
-                        <h2 className="text-xl font-semibold text-[#2F2A24] sm:text-2xl">
-                          {s.title}
-                        </h2>
-                        <div className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#C7A96A]" />
-                      </div>
-
-                      <div className="mt-4 space-y-4 text-sm leading-7 text-[#6A6256] sm:text-base">
-                        {s.paragraphs.map((p, pIdx) => (
-                          <p key={pIdx}>{p}</p>
-                        ))}
-                      </div>
-
-                      {s.toolId ? <ToolPlaceholder toolId={s.toolId} /> : null}
-                    </div>
-                  </div>
-                </section>
-              );
-            })}
+    <div className="relative min-h-screen bg-[#F5F0E8]">
+      {/* 背景纹理装饰 */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-center bg-cover bg-no-repeat opacity-30"
+        style={{ backgroundImage: "url('/images/hero-subbackground.webp')" }}
+        aria-hidden
+      />
+      
+      <div className="relative z-10">
+        <ChapterTopNav />
+        
+        <main className="mx-auto max-w-[min(1800px,96vw)] px-6 pb-20 pt-8 sm:pt-10">
+          {/* 目录导航 - 兼容旧版 UI 结构 */}
+          <div className="lg:fixed lg:left-6 lg:top-32 lg:w-64">
+             <ChapterToc chapterSlug={chapter.slug} sections={chapter.sections} variant="sidebar" />
           </div>
-        </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-6">
-          <a
-            href="#"
-            className="rounded-full border border-black/10 bg-white/80 px-4 py-2 text-sm text-[#6A6256] shadow-sm transition hover:-translate-y-0.5 hover:text-[#2F2A24]"
-          >
-            回到顶部
-          </a>
-        </div>
-        <div className="mx-auto mt-10 max-w-3xl pb-6 text-center text-xs text-[#7A6A52]">
-          网站制作：思考熊 | 内容来源：《一生的整理》（全网同名：借假修真的思考熊）
-        </div>
+          <div className="lg:ml-[280px]">
+            <div className="mx-auto w-full max-w-[min(1316px,92vw)]">
+              <div className="flex flex-col gap-8">
+                {/* 章节头部卡片 */}
+                <header className="rounded-xl border border-[#E8E4DD] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)] sm:p-12">
+                  <p className="text-xs font-medium tracking-[0.22em] text-[#7A6A52] uppercase">
+                    {chapterIndex >= 0 ? `Chapter ${chapterIndex + 1}` : "Chapter"}
+                  </p>
+                  <h1 className="mt-4 text-3xl font-bold tracking-tight text-[#4A3728] sm:text-4xl lg:text-5xl">
+                    {chapter.title}
+                  </h1>
+                  <p className="mt-3 text-lg font-medium text-[#6A6256]">
+                    {chapter.subtitle}
+                  </p>
+                  <div className="mx-auto mt-6 h-[2px] w-16 bg-[#C9A15A]" />
+                  <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-[#8A7E6A]">
+                    {chapter.description}
+                  </p>
+                </header>
 
-      </main>
+                {/* 章节核心内容渲染器 (带进度追踪) */}
+                <div className="chapter-content-sections">
+                   <ChapterReader chapter={chapter} />
+                </div>
+
+                {/* 底部版权信息 */}
+                <div className="mt-10 border-t border-[#E8E4DD] pt-10 text-center">
+                  <p className="text-xs text-[#8A7E6A] tracking-wider uppercase">
+                    内容来源：《一生的整理》 · 全网同名：借假修真的思考熊
+                  </p>
+                  <div className="mt-4 flex justify-center">
+                    <ScrollToTopButton />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
