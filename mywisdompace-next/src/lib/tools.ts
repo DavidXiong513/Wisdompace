@@ -16,7 +16,7 @@ export const tools: Record<string, ToolInfo> = {
   "role-pie-chart": {
     id: "role-pie-chart",
     name: "人生角色饼图",
-    status: "developing",
+    status: "ready",
     description: "帮助你梳理生活中的各种角色分配",
   },
   "identity-portrait": {

@@ -11,7 +11,6 @@ const tocItems = [
   { id: "career-values", label: "生涯价值观测评" },
   { id: "ability-assessment", label: "社会能力自测" },
   { id: "social-roles", label: "我的社会角色" },
-  { id: "identity-tags", label: "身份的标签" },
   { id: "true-self", label: "剥去角色后的自己" },
   { id: "summary", label: "重新认识自己" },
 ];
@@ -49,13 +48,13 @@ export default function ChapterOnePage() {
                   <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
                   <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
                     <p className="indent-[2em]">
-                      在人生的某个时刻，我们突然意识到：自己已经走了很远，却很少真正停下来看看自己。
+                      在人生的某个时刻，我们突然意识到：自己已经走了很远，却很少真正停下来看看自己。日子一天天过去，我们忙着回应外界的需求，却渐渐听不见内心的声音。
                     </p>
                     <p className="indent-[2em]">
-                      我们被推着向前走，被各种期待、责任、角色所定义。我们是谁？我们想要什么？这些问题似乎越来越模糊。
+                      我们被推着向前走，被各种期待、责任、角色所定义。我们是谁？我们想要什么？这些问题似乎越来越模糊。有人说，最远的旅程是从头脑到心灵——而这段旅程的第一步，就是停下来。
                     </p>
                     <p className="indent-[2em]">
-                      这一章，邀请你停下来，重新认识自己。不是为了改变什么，而是为了看见——看见那些被忽略的部分，看见真实的自己。
+                      这一章，邀请你停下来，重新认识自己。不是为了改变什么，而是为了看见——看见那些被忽略的部分，看见真实的自己。下面的每一项测评，都是一面镜子，它们不会告诉你答案，但会帮助你更清晰地照见自己的轮廓。
                     </p>
                   </div>
                 </section>
@@ -244,44 +243,64 @@ export default function ChapterOnePage() {
                   <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
                   <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
                     <p className="indent-[2em]">
-                      我们从出生起，就被赋予了各种角色：孩子、学生、员工、父母、伴侣...
+                      我们从出生起，就被赋予了各种角色：孩子、学生、员工、父母、伴侣……有些角色是命运的安排，有些是我们主动选择的结果。每一个角色都在我们的生命中留下了痕迹，占据着时间和心力。
                     </p>
                     <p className="indent-[2em]">
-                      这些角色塑造了我们，也在某种程度上限制了我们。我们习惯了用角色来定义自己，却忘记了在这些角色之外，还有一个&quot;我&quot;。
+                      但你有没有想过：这些角色中，哪些是你真正看重的？哪些又只是在消耗你？你花最多时间的角色，是不是你内心最在意的那个？很多人在不知不觉中，把最好的精力给了最不重要的角色，而真正珍视的却总被搁置。
                     </p>
                     <p className="indent-[2em]">
-                      这个练习，帮助你梳理自己承担的各种角色，看看它们在你的生命中占据了多少空间。
+                      「人生角色饼图」将帮助你梳理自己承担的各种社会角色，从<strong>重视程度</strong>和<strong>时间分配</strong>两个维度进行评估，让你直观地看到：你的时间和心力，究竟花在了哪里——以及它们是否花在了你真正在意的地方。
                     </p>
                   </div>
-                  <div className="mt-6 rounded-lg border border-[#E8E4DD] bg-[#FAF8F3] p-6 text-center text-[#7A6A52]">
-                    工具开发中...
+                  {/* 人生角色饼图 */}
+                  <div className="mt-6">
+                    <Link
+                      href="/tools/role-pie-chart"
+                      className="group relative flex items-center gap-5 overflow-hidden rounded-2xl border border-black/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+                    >
+                      {/* 背景渐变装饰 */}
+                      <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-gradient-to-br from-[#E8B878] to-[#C87941] opacity-10 blur-2xl transition-opacity group-hover:opacity-20" />
+
+                      {/* 图标 */}
+                      <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#FDF5EE] to-white text-3xl shadow-sm">
+                        🥧
+                      </div>
+
+                      {/* 文字内容 */}
+                      <div className="relative min-w-0">
+                        <h3 className="text-xl font-semibold text-[#2F2A24] transition-colors group-hover:text-[#C87941]">
+                          人生角色饼图
+                        </h3>
+                        <p className="mt-1 text-sm font-medium text-[#8A7E6A]">
+                          Life Role Pie Chart
+                        </p>
+                        <p className="mt-2 text-sm leading-relaxed text-[#6A6256]">
+                          选择你的社会角色，评估重视程度与时间分配，发现你生命中真正的重心。
+                        </p>
+                      </div>
+
+                      {/* 开始测评按钮 */}
+                      <div className="relative ml-auto flex shrink-0 items-center gap-1 rounded-full bg-[#FDF5EE] px-4 py-2 text-sm font-medium text-[#C87941] transition-all group-hover:bg-[#C87941] group-hover:text-white">
+                        开始测评
+                        <svg
+                          className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </div>
+                    </Link>
                   </div>
                 </section>
 
-                {/* 身份的标签 */}
-                <section
-                  id="identity-tags"
-                  className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
-                >
-                  <h2 className="text-[24px] font-bold text-[#4A3728]">
-                    身份的标签
-                  </h2>
-                  <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
-                  <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
-                    <p className="indent-[2em]">
-                      我们身上的标签，有些是自己贴的，有些是别人给的。聪明的、笨拙的、优秀的、平凡的、坚强的、脆弱的...
-                    </p>
-                    <p className="indent-[2em]">
-                      这些标签，有些已经内化成了我们自我认知的一部分。但它们真的是我们吗？
-                    </p>
-                    <p className="indent-[2em]">
-                      这个练习，帮助你识别身上的标签，并思考哪些标签是你认同的，哪些是你想要卸下的。
-                    </p>
-                  </div>
-                  <div className="mt-6 rounded-lg border border-[#E8E4DD] bg-[#FAF8F3] p-6 text-center text-[#7A6A52]">
-                    工具开发中...
-                  </div>
-                </section>
+
 
                 {/* 剥去角色后的自己 */}
                 <section
@@ -294,13 +313,13 @@ export default function ChapterOnePage() {
                   <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
                   <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
                     <p className="indent-[2em]">
-                      如果你去掉所有的社会角色，去掉所有的标签，你还剩下什么？
+                      如果你去掉所有的社会角色——不是谁的父母、不是谁的伴侣、不是谁的下属或上司——你还剩下什么？
                     </p>
                     <p className="indent-[2em]">
-                      这个问题可能会让你感到不安，也可能会让你感到释然。无论如何，这是认识自己的重要一步。
+                      这个问题可能会让你感到不安，也可能会让你感到释然。有人发现自己其实很空虚，所有的意义都寄托在了角色上；有人则发现，去掉角色之后，反而触碰到了最真实的渴望和热爱。
                     </p>
                     <p className="indent-[2em]">
-                      这个练习，帮助你尝试剥离角色和标签，看见那个最底层的自己。
+                      无论结果如何，这都是认识自己的重要一步。当你清楚地知道「角色之外的我」是什么样子，你才能更有意识地选择：哪些角色值得全力以赴，哪些可以轻轻放下。
                     </p>
                   </div>
                   <div className="mt-6 rounded-lg border border-[#E8E4DD] bg-[#FAF8F3] p-6 text-center text-[#7A6A52]">
@@ -319,10 +338,13 @@ export default function ChapterOnePage() {
                   <div className="mt-3 h-[3px] w-10 bg-[#4A3728]" />
                   <div className="mt-4 space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
                     <p className="indent-[2em]">
-                      通过这一章的练习，你可能对自己有了新的认识。这些认识可能并不完整，也可能并不准确，但它们是一个开始。
+                      通过这一章的练习，你可能对自己有了新的认识。也许你发现了性格中未曾留意的面向，也许你重新审视了哪些价值观真正驱动着你的选择，也许你第一次看到了角色和时间之间的落差。
                     </p>
                     <p className="indent-[2em]">
-                      认识自己是一个持续的过程，不是一次就能完成的。保持耐心，保持好奇。
+                      这些认识可能并不完整，也可能并不准确——但这正是自我认识的常态。它不是一道可以得出标准答案的数学题，而是一段持续的旅程。保持耐心，保持好奇，也保持对自己的善意。
+                    </p>
+                    <p className="indent-[2em]">
+                      带着这些新的发现，继续前行。下一章，我们将一起探索如何在看清自己之后，更积极地活出想要的人生。
                     </p>
                   </div>
                   <div className="mt-6 rounded-lg border border-[#E8E4DD] bg-[#FAF8F3] p-6">
@@ -331,7 +353,7 @@ export default function ChapterOnePage() {
                     </div>
                     <ul className="list-disc space-y-2 pl-5 text-sm text-[#6A6256]">
                       <li>哪个社会角色让你感到最累？为什么？</li>
-                      <li>哪个标签是你最想要卸下的？</li>
+                      <li>在你的角色饼图中，时间和重视程度的落差最大的是哪个角色？</li>
                       <li>如果用一个词来形容剥去角色后的自己，你会用什么词？</li>
                       <li>你希望如何重新定义自己？</li>
                     </ul>
