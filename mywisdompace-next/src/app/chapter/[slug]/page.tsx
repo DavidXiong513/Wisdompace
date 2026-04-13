@@ -36,7 +36,8 @@ export default async function ChapterPage({ params }: Props) {
   const chapter = getChapterBySlug(slug);
   if (!chapter) notFound();
 
-  const chapterIndex = chapters.findIndex((c) => c.slug === chapter.slug);
+  const realChapters = chapters.filter((c) => !['read-instructions'].includes(c.slug));
+  const chapterIndex = realChapters.findIndex((c) => c.slug === chapter.slug);
 
   return (
     <div className="relative min-h-screen bg-[#F5F0E8]">
