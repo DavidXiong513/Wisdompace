@@ -9,6 +9,8 @@ import {
 } from '@/lib/tools';
 import PersonalityTestCards from '@/components/PersonalityTestCards';
 import { RolePieChartCard } from '@/components/RolePieChartCard';
+import CareerValuesCard from '@/components/CareerValuesCard';
+import AbilityCard from '@/components/AbilityCard';
 
 // ── Error Boundary ─────────────────────────────────────────────────────────
 
@@ -93,6 +95,12 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
       )}
       {toolId === 'role-pie-chart' && (
         <RolePieChartCard />
+      )}
+      {toolId === 'career-values-card' && (
+        <CareerValuesCard />
+      )}
+      {toolId === 'ability-card' && (
+        <AbilityCard />
       )}
       {/* Developing / Maintenance tools */}
       {(def.status === 'developing' || def.status === 'maintenance') && (
