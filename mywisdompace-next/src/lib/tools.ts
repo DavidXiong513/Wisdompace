@@ -13,6 +13,12 @@ export type ToolInfo = {
 
 // 参考旧站 tools-placeholder.js 的定义（不引入 emoji，保持克制）。
 export const tools: Record<string, ToolInfo> = {
+  "life-clock": {
+    id: "life-clock",
+    name: "生命余光",
+    status: "ready",
+    description: "看见时间的刻度，直面生命的有限，激发积极生活的紧迫感。",
+  },
   "role-pie-chart": {
     id: "role-pie-chart",
     name: "人生角色饼图",

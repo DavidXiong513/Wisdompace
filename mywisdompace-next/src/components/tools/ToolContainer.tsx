@@ -11,6 +11,7 @@ import PersonalityTestCards from '@/components/PersonalityTestCards';
 import { RolePieChartCard } from '@/components/RolePieChartCard';
 import CareerValuesCard from '@/components/CareerValuesCard';
 import AbilityCard from '@/components/AbilityCard';
+import { ToolPlaceholder } from '@/components/ToolPlaceholder';
 
 // ── Error Boundary ─────────────────────────────────────────────────────────
 
@@ -87,23 +88,32 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     );
   }
 
+  // 特殊处理：使用统一占位逻辑的工具
+  const usePlaceholder = [
+    'life-clock', 
+    'preparedness-slider', 
+    'framework-grid', 
+    'reminder-list',
+    'three-questions-tool'
+  ].includes(toolId);
+
   return (
     <ToolErrorBoundary toolId={toolId}>
-      {/* Ready tools: render matching card style */}
-      {toolId === 'personality-test-cards' && (
-        <PersonalityTestCards />
+      {/* 优先使用重构后的 ToolPlaceholder */}
+      {usePlaceholder ? (
+        <ToolPlaceholder toolId={toolId} />
+      ) : (
+        <>
+          {/* 兼容旧有硬编码逻辑 */}
+          {toolId === 'personality-test-cards' && <PersonalityTestCards />}
+          {toolId === 'role-pie-chart' && <RolePieChartCard />}
+          {toolId === 'career-values-card' && <CareerValuesCard />}
+          {toolId === 'ability-card' && <AbilityCard />}
+        </>
       )}
-      {toolId === 'role-pie-chart' && (
-        <RolePieChartCard />
-      )}
-      {toolId === 'career-values-card' && (
-        <CareerValuesCard />
-      )}
-      {toolId === 'ability-card' && (
-        <AbilityCard />
-      )}
-      {/* Developing / Maintenance tools */}
-      {(def.status === 'developing' || def.status === 'maintenance') && (
+
+      {/* Developing / Maintenance tools (if not handled by placeholder) */}
+      {!usePlaceholder && (def.status === 'developing' || def.status === 'maintenance') && (
         <PendingCard toolId={toolId} />
       )}
     </ToolErrorBoundary>
