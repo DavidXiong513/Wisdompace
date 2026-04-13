@@ -73,6 +73,7 @@ export default function ChapterTopNav({
                 <li key={item.href} className="min-w-0">
                   <Link
                     href={item.href}
+                    scroll={false}
                     aria-current={isActive ? "page" : undefined}
                     className={`flex w-full flex-col items-center rounded-md px-2 py-2.5 transition duration-300 lg:px-3 ${
                       isActive
@@ -128,6 +129,7 @@ export default function ChapterTopNav({
                   <li key={item.href}>
                     <Link
                       href={item.href}
+                      scroll={false}
                       onClick={() => setIsMenuOpen(false)}
                       aria-current={isActive ? "page" : undefined}
                       className={`flex items-center justify-between rounded-md px-3 py-2 transition duration-300 ${
@@ -160,6 +162,7 @@ export default function ChapterTopNav({
           {prevChapter ? (
             <Link
               href={`/chapter/${prevChapter.slug}`}
+              scroll={false}
               className="flex items-center gap-1 text-[#F5EDE0]/80 transition hover:text-[#F5EDE0]"
             >
               ← {prevChapter.title}
@@ -168,6 +171,7 @@ export default function ChapterTopNav({
           {nextChapter ? (
             <Link
               href={`/chapter/${nextChapter.slug}`}
+              scroll={false}
               className="flex items-center gap-1 text-[#F5EDE0]/80 transition hover:text-[#F5EDE0]"
             >
               {nextChapter.title} →
