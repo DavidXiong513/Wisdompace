@@ -1,8 +1,7 @@
 import ChapterTopNav from "@/components/ChapterTopNav";
 import ReadInstructionsToc from "@/app/chapter/read-instructions/ReadInstructionsToc";
 import PreparednessSlider from "@/app/chapter/read-instructions/PreparednessSlider";
-import ScrollTopButton from "@/app/chapter/read-instructions/ScrollTopButton";
-
+import { ScrollToTopButton } from "@/components/chapter/ScrollToTopButton";
 
 const tocItems = [
   { id: "origin", label: "缘起" },
@@ -33,7 +32,7 @@ const reminderCards = [
   },
   {
     title: "② 坦诚细致，对己负责",
-    desc: "本网站的内容并不是一份需要对他人展示的答卷。所有问题，最终只服务于你自己，并且帮助你逐步形成生命的自洽。因此，在填写与思考的过程中，请尽量对自己保持充分的坦诚。不需要为了给谁看而写得好看，也不需要迎合任何“应该如此”的期待。哪怕答案并不光彩、不够体面，甚至尚未想清楚、显得不够成熟和完善——但只要它是真实的，这便已足够。",
+    desc: "本网站的内容并不是一份需要对他人展示的答卷。所有问题，最终只服务于你自己，并且帮助你逐步形成生命的自洽。因此，在填写与思考的过程中，请尽量对自己保持充分的坦诚。不需要为了给谁看而写得好看，也不需要迎合任何\"应该如此\"的期待。哪怕答案并不光彩、不够体面，甚至尚未想清楚、显得不够成熟和完善——但只要它是真实的，这便已足够。",
   },
   {
     title: "③ 反复修改，允许变化",
@@ -41,7 +40,7 @@ const reminderCards = [
   },
   {
     title: "④ 定期复盘，照见变化",
-    desc: "如果条件允许，你可以为自己设定一个“复盘周期”。譬如半年或一年一次，或在人生发生重要变化或重大事件之后，再去重新翻看一下曾经的记录。你不必强迫自己马上要得出结论或写上新的东西，可以先只是看看：细细观察哪些地方已发生了改变，哪些地方相关的问题依然存在。这本身，就是一种极其珍贵的穿越时空的自我对话。",
+    desc: "如果条件允许，你可以为自己设定一个\"复盘周期\"。譬如半年或一年一次，或在人生发生重要变化或重大事件之后，再去重新翻看一下曾经的记录。你不必强迫自己马上要得出结论或写上新的东西，可以先只是看看：细细观察哪些地方已发生了改变，哪些地方相关的问题依然存在。这本身，就是一种极其珍贵的穿越时空的自我对话。",
   },
   {
     title: "⑤ 妥善保管，尊重边界",
@@ -52,22 +51,43 @@ const reminderCards = [
 export default function ReadInstructionsPage() {
   return (
     <div className="relative min-h-screen bg-[#F5F0E8]">
+      {/* 背景纹理装饰 */}
       <div
         className="pointer-events-none absolute inset-0 bg-center bg-cover bg-no-repeat opacity-30"
         style={{ backgroundImage: "url('/images/hero-subbackground.webp')" }}
         aria-hidden
       />
+      
       <div className="relative z-10">
-        <ChapterTopNav
-          containerClassName="max-w-[min(1800px,96vw)] px-6"
-          navClassName="md:ml-0 md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[min(1316px,92vw)] md:flex md:items-center"
-          navListClassName="w-[940px] max-w-none lg:ml-[80px] xl:ml-[185px] 2xl:ml-[220px]"
-        />
+        <ChapterTopNav />
+        
         <main className="mx-auto max-w-[min(1800px,96vw)] px-6 pb-20 pt-8 sm:pt-10">
-          <ReadInstructionsToc items={tocItems} />
+          {/* 左侧固定目录导航 — 与章节页一致 */}
+          <div className="lg:fixed lg:left-6 lg:top-32 lg:w-64">
+            <ReadInstructionsToc items={tocItems} />
+          </div>
+
           <div className="lg:ml-[280px]">
             <div className="mx-auto w-full max-w-[min(1316px,92vw)]">
               <div className="flex flex-col gap-8">
+                {/* 头部卡片 — 与章节页一致 */}
+                <header className="rounded-xl border border-[#E8E4DD] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)] sm:p-12">
+                  <p className="text-xs font-medium tracking-[0.22em] text-[#7A6A52] uppercase">
+                    Prologue
+                  </p>
+                  <h1 className="mt-4 text-3xl font-bold tracking-tight text-[#4A3728] sm:text-4xl lg:text-5xl">
+                    阅读说明
+                  </h1>
+                  <p className="mt-3 text-lg font-medium text-[#6A6256]">
+                    在开始探索之前
+                  </p>
+                  <div className="mx-auto mt-6 h-[2px] w-16 bg-[#C9A15A]" />
+                  <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-[#8A7E6A]">
+                    了解本书的缘起与初衷、整体框架结构，以及在使用过程中需要留意的几点提醒。
+                  </p>
+                </header>
+
+                {/* 正文内容区域 */}
                 <section
                   id="origin"
                   className="scroll-mt-24 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7 lg:p-10"
@@ -90,11 +110,11 @@ export default function ReadInstructionsPage() {
                       一些看似毫无征兆的中年同龄人生病与离世的事件愈发增多；单身、不婚不育、丁克、离异与孤寡家庭结构已开始逐渐变得常态化；互联网上各自媒体平台关于生命意义的焦虑与迷茫不断蔓延；以及，家中两方奔八的父母亲们，也正在一年年、一天天地走在衰老的路上……
                     </p>
                     <p className="indent-[2em]">
-                      这些现实，让我越来越难以继续告诉自己：“这件事，可以再等等。”
+                      这些现实，让我越来越难以继续告诉自己：&ldquo;这件事，可以再等等。&rdquo;
                     </p>
                   </div>
                   <div className="my-6 rounded-[6px] border-l-[4px] border-[#4A3728] bg-[#F0E8DC] px-6 py-5 text-[17px] font-medium text-[#4A3728]">
-                    “这件事，可以再等等。”
+                    &ldquo;这件事，可以再等等。&rdquo;
                   </div>
                 </section>
 
@@ -111,24 +131,24 @@ export default function ReadInstructionsPage() {
                       创建这个网站，并不是因为我已经参透了生死，从而来给大家煲些所谓的人生鸡汤……
                     </p>
                     <p className="indent-[2em]">
-                      恰恰相反，是因为我一次又一次地意识到：我们绝大多数人，对“无常”的准备，几乎为零。
+                      恰恰相反，是因为我一次又一次地意识到：我们绝大多数人，对&ldquo;无常&rdquo;的准备，几乎为零。
                     </p>
                     <p className="indent-[2em]">
                       我们习惯为学业、职业、家庭、资产做出详尽的长期规划，却很少正面去回答一个更基础的问题：
                     </p>
                   </div>
                   <div className="my-6 rounded-[6px] border-l-[4px] border-[#4A3728] bg-[#F0E8DC] px-6 py-5 text-[17px] font-medium text-[#4A3728]">
-                    “如果人生不能按预期的计划继续，我是否提前为自己预留过应对无常的空间？”
+                    &ldquo;如果人生不能按预期的计划继续，我是否提前为自己预留过应对无常的空间？&rdquo;
                   </div>
                   <div className="space-y-4 text-[17px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
                     <p className="indent-[2em]">
-                      现实中，真正让人崩溃的，往往不是“生死无常”本身，而是在这类事情发生时——毫无预想、毫无交代、毫无共识、毫无选择权。
+                      现实中，真正让人崩溃的，往往不是&ldquo;生死无常&rdquo;本身，而是在这类事情发生时——毫无预想、毫无交代、毫无共识、毫无选择权。
                     </p>
                     <p className="indent-[2em]">
                       于是，决定被仓促做出，责任被情绪裹挟，混乱被留给了最亲近的人。
                     </p>
                     <p className="indent-[2em]">
-                      这个网站，与其说是“关于死亡”，不如说更像是一份“关于我们如何认真回顾此生的使用说明书”。
+                      这个网站，与其说是&ldquo;关于死亡&rdquo;，不如说更像是一份&ldquo;关于我们如何认真回顾此生的使用说明书&rdquo;。
                     </p>
                     <p className="indent-[2em]">
                       它关心的是：
@@ -151,7 +171,7 @@ export default function ReadInstructionsPage() {
                     </p>
                   </div>
                   <div className="my-6 rounded-[6px] border-l-[4px] border-[#4A3728] bg-[#F0E8DC] px-6 py-5 text-[17px] font-medium text-[#4A3728]">
-                    “如果此生无法被预测和控制，那我是否至少可以，提前在因地做一些让自己身体与心灵得到安顿的筹备？”
+                    &ldquo;如果此生无法被预测和控制，那我是否至少可以，提前在因地做一些让自己身体与心灵得到安顿的筹备？&rdquo;
                   </div>
                 </section>
 
@@ -210,7 +230,7 @@ export default function ReadInstructionsPage() {
                       在这个单身、不婚、不育、家庭结构不断变化的时代，我们越来越不能假设：总会有人替我们收拾残局。
                     </p>
                     <p className="indent-[2em]">
-                      也正因如此，提前为自己搭建一套“人生与终局”的准备系统，不再是悲观，而是一种成熟。
+                      也正因如此，提前为自己搭建一套&ldquo;人生与终局&rdquo;的准备系统，不再是悲观，而是一种成熟。
                     </p>
                     <p className="indent-[2em]">
                       如果你对以上这些内容产生了共鸣，很可能内心敏锐的你早已意识到：面对无常，逃避并不会让事情更轻松。
@@ -223,7 +243,7 @@ export default function ReadInstructionsPage() {
                     </p>
                   </div>
                   <div className="my-6 rounded-[6px] border-l-[4px] border-[#4A3728] bg-[#F0E8DC] px-6 py-5 text-[17px] font-medium text-[#4A3728]">
-                    “我已经认真地活过，也已经为无常，做好了该做的整理与筹备。”
+                    &ldquo;我已经认真地活过，也已经为无常，做好了该做的整理与筹备。&rdquo;
                   </div>
                 </section>
 
@@ -245,11 +265,11 @@ export default function ReadInstructionsPage() {
                     <p className="indent-[2em]">但需要郑重说明的是：</p>
                   </div>
                   <div className="my-6 rounded-[6px] border-l-[4px] border-[#4A3728] bg-[#F0E8DC] px-6 py-5 text-[17px] font-medium text-[#4A3728]">
-                    “无论我们提供多少辅助，真正的思考与整理，始终只能由你自己完成。”
+                    &ldquo;无论我们提供多少辅助，真正的思考与整理，始终只能由你自己完成。&rdquo;
                   </div>
                   <div className="space-y-4 text-[16px] leading-[1.85] tracking-[-0.01em] text-[#3D3D3D]">
                     <p className="indent-[2em]">
-                      这些练习，并不是为了“完成任务”，而是一次次认真对待自己人生的过程。
+                      这些练习，并不是为了&ldquo;完成任务&rdquo;，而是一次次认真对待自己人生的过程。
                     </p>
                   </div>
                 </section>
@@ -281,11 +301,20 @@ export default function ReadInstructionsPage() {
                     如果你在使用过程中感到长时间的强烈不适或情绪困扰，请优先照顾好自己，并考虑寻求身边的专业人士进行相关支持。
                   </p>
                 </section>
+
+                {/* 底部版权信息 — 与章节页一致 */}
+                <div className="mt-10 border-t border-[#E8E4DD] pt-10 text-center">
+                  <p className="text-xs text-[#8A7E6A] tracking-wider uppercase">
+                    内容来源：《一生的整理》· 全网同名：借假修真的思考熊
+                  </p>
+                  <div className="mt-4 flex justify-center">
+                    <ScrollToTopButton />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </main>
-        <ScrollTopButton />
       </div>
     </div>
   );
