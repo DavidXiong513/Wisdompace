@@ -37,6 +37,18 @@ export const tools: Record<string, ToolInfo> = {
     status: "ready",
     description: "通过 MBTI 和大五人格测试，从不同角度认识自己的性格特质。",
   },
+  "career-values-card": {
+    id: "career-values-card",
+    name: "生涯价值观测评",
+    status: "ready",
+    description: "14种职业价值取向 → 筛选 → 排序 → 锁定3个核心价值观。",
+  },
+  "ability-card": {
+    id: "ability-card",
+    name: "社会能力自评",
+    status: "ready",
+    description: "42项核心能力扫描，基于麦肯锡社会能力体系，发现优势与潜力。",
+  },
   "role-stripper": {
     id: "role-stripper",
     name: "角色剥离器",
