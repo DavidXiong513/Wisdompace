@@ -1,73 +1,66 @@
 'use client';
 
-import React, { Component, type ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import { getToolDefinition, getToolStatusText, type ToolStatus } from '@/lib/tools';
-import { useToolStateStore } from '@/stores/toolStateStore';
-import { ToolPlaceholder } from '@/components/ToolPlaceholder';
+import { useState, type ReactNode } from 'react';
+import Link from 'next/link';
+import {
+  getToolDefinition,
+  getToolStatusText,
+  getToolInfo,
+} from '@/lib/tools';
+import PersonalityTestCards from '@/components/PersonalityTestCards';
+import { RolePieChartCard } from '@/components/RolePieChartCard';
 
 // ── Error Boundary ─────────────────────────────────────────────────────────
 
-interface ErrorBoundaryState { hasError: boolean }
+function ToolErrorBoundary({ children, toolId }: { children: ReactNode; toolId: string }) {
+  const [hasError, setHasError] = useState(false);
 
-class ToolErrorBoundary extends Component<
-  { children: ReactNode; toolId: string },
-  ErrorBoundaryState
-> {
-  constructor(props: { children: ReactNode; toolId: string }) {
-    super(props);
-    this.state = { hasError: false };
+  if (hasError) {
+    return (
+      <div className="rounded-lg border border-red/20 bg-red/5 p-4 text-sm text-red">
+        工具加载失败，请刷新页面重试。
+      </div>
+    );
   }
 
-  static getDerivedStateFromError(): ErrorBoundaryState {
-    return { hasError: true };
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div
-          className="rounded-lg p-4 text-sm"
-          style={{
-            background: 'var(--wp-bg-alt)',
-            border:     '1px solid var(--wp-border)',
-            color:      'var(--wp-ink-muted)',
-          }}
-        >
-          工具加载失败，请刷新页面重试。
-        </div>
-      );
-    }
-    return this.props.children;
-  }}
-
-// ── Status badge ───────────────────────────────────────────────────────────
-
-const STATUS_STYLES: Record<ToolStatus, { bg: string; color: string }> = {
-  developing:  { bg: 'rgba(176,141,87,0.12)', color: 'var(--wp-gold)' },
-  ready:       { bg: 'rgba(82,196,26,0.10)',  color: '#52c41a' },
-  maintenance: { bg: 'rgba(154,142,122,0.12)', color: 'var(--wp-ink-muted)' },
-};
-
-function StatusBadge({ status, label }: { status: ToolStatus; label: string }) {
-  const style = STATUS_STYLES[status];
   return (
-    <div
-      className="inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium"
-      style={{ background: style.bg, color: style.color, border: `1px solid ${style.color}30` }}
-    >
-      <span
-        style={{
-          width: 6, height: 6, borderRadius: '50%',
-          background: style.color, display: 'inline-block',
-        }}
-      />
-      {label} · {getToolStatusText(status)}
+    <ErrorCatcher onError={() => setHasError(true)}>
+      {children}
+    </ErrorCatcher>
+  );
+}
+
+function ErrorCatcher({ children, onError }: { children: ReactNode; onError: () => void }) {
+  return <>{children}</>;
+}
+
+// ── Pending Card (developing / maintenance) ───────────────────────────────
+
+function PendingCard({ toolId }: { toolId: string }) {
+  const info = getToolInfo(toolId);
+  const statusText = info ? getToolStatusText(info.status) : '开发中';
+
+  return (
+    <div className="mt-8 rounded-xl border border-black/8 bg-white p-6 shadow-sm">
+      <div className="flex items-center gap-3">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F5F0E8] text-xl">
+          🚧
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-[#2F2A24]">
+            {info?.name ?? toolId}
+          </h3>
+          <p className="text-sm text-[#8A7E6A]">{statusText}</p>
+        </div>
+      </div>
+      <p className="mt-3 text-sm leading-relaxed text-[#6A6256]">
+        {info?.description}
+      </p>
     </div>
   );
 }
 
-// ── ToolContainer ──────────────────────────────────────────────────────────
+// ── ToolContainer ─────────────────────────────────────────────────────────
 
 interface ToolContainerProps {
   toolId: string;
@@ -75,72 +68,36 @@ interface ToolContainerProps {
 
 /**
  * ToolContainer
- * Looks up the tool in TOOL_REGISTRY and renders:
- * - A status badge if status is 'developing' or 'maintenance'
- * - The actual tool component if status is 'ready'
- * Wrapped in an error boundary so a broken tool never crashes the page.
+ * Renders tools embedded in chapter pages.
+ * - personality-test-cards → MBTI + Big Five cards (ready)
+ * - role-pie-chart → role pie chart entry card (ready)
+ * - developing/maintenance → placeholder card
  */
 export function ToolContainer({ toolId }: ToolContainerProps) {
   const def = getToolDefinition(toolId);
-  const { getToolState, saveToolState } = useToolStateStore();
-  const { t } = useTranslation('common');
 
+  // Unknown tool
   if (!def) {
     return (
-      <div
-        className="rounded-lg p-3 text-xs"
-        style={{ color: 'var(--wp-ink-muted)', background: 'var(--wp-bg-alt)' }}
-      >
-        {t('tool.unknown')}：{toolId}
+      <div className="mt-8 rounded-xl bg-white p-6 shadow-sm">
+        <p className="text-sm text-gray-400">未知工具：{toolId}</p>
       </div>
     );
   }
 
   return (
     <ToolErrorBoundary toolId={toolId}>
-      <div
-        className="rounded-xl p-4"
-        style={{
-          background: 'var(--wp-card-bg)',
-          border:     '1px solid var(--wp-border)',
-        }}
-      >
-        {/* Tool header */}
-        <div className="mb-3 flex items-center justify-between">
-          <span
-            className="text-sm font-semibold"
-            style={{ fontFamily: 'var(--wp-font-serif)', color: 'var(--wp-ink)' }}
-          >
-            {def.label}
-          </span>
-          <StatusBadge status={def.status} label={def.label ?? def.name} />
-        </div>
-
-        {/* Description */}
-        <p className="mb-3 text-xs" style={{ color: 'var(--wp-ink-muted)', lineHeight: 1.6 }}>
-          {def.description}
-        </p>
-
-        {/* Tool component or placeholder */}
-        {toolId === 'personality-test-cards' ? (
-          <ToolPlaceholder toolId={toolId} />
-        ) : def.status === 'ready' && def.component ? (
-          <def.component
-            toolId={toolId}
-            initialData={getToolState(toolId)?.data}
-            onSave={(data) => saveToolState(toolId, data)}
-          />
-        ) : def.status === 'ready' ? (
-          <ToolPlaceholder toolId={toolId} />
-        ) : (
-          <div
-            className="rounded-md py-6 text-center text-xs"
-            style={{ background: 'var(--wp-bg-alt)', color: 'var(--wp-ink-muted)' }}
-          >
-            {def.status === 'maintenance' ? t('tool.underMaintenance') : t('tool.comingSoon')}
-          </div>
-        )}
-      </div>
+      {/* Ready tools: render matching card style */}
+      {toolId === 'personality-test-cards' && (
+        <PersonalityTestCards />
+      )}
+      {toolId === 'role-pie-chart' && (
+        <RolePieChartCard />
+      )}
+      {/* Developing / Maintenance tools */}
+      {(def.status === 'developing' || def.status === 'maintenance') && (
+        <PendingCard toolId={toolId} />
+      )}
     </ToolErrorBoundary>
   );
 }
