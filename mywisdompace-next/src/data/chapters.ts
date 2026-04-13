@@ -42,16 +42,6 @@ export const chapters: Chapter[] = [
         toolId: "personality-test-cards",
       },
       {
-        id: "social-roles",
-        title: "我的社会角色",
-        paragraphs: [
-          "我们从出生起，就被赋予了各种角色：孩子、学生、员工、父母、伴侣...",
-          "这些角色塑造了我们，也在某种程度上限制了我们。我们习惯了用角色来定义自己，却忘记了在这些角色之外，还有一个\"我\"。",
-          "这个练习，帮助你梳理自己承担的各种角色，看看它们在你的生命中占据了多少空间。",
-        ],
-        toolId: "role-pie-chart",
-      },
-      {
         id: "career-values",
         title: "生涯价值观测评",
         paragraphs: [
@@ -70,6 +60,16 @@ export const chapters: Chapter[] = [
           "你将发现自己的优势区、潜力区和待提升区——这比单纯知道\"我是INTJ\"或\"开放性高\"更有行动指导意义。",
         ],
         toolId: "ability-card",
+      },
+      {
+        id: "social-roles",
+        title: "我的社会角色",
+        paragraphs: [
+          "我们从出生起，就被赋予了各种角色：孩子、学生、员工、父母、伴侣...",
+          "这些角色塑造了我们，也在某种程度上限制了我们。我们习惯了用角色来定义自己，却忘记了在这些角色之外，还有一个\"我\"。",
+          "这个练习，帮助你梳理自己承担的各种角色，看看它们在你的生命中占据了多少空间。",
+        ],
+        toolId: "role-pie-chart",
       },
       {
         id: "true-self",
