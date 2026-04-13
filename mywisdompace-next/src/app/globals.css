@@ -19,9 +19,8 @@ body {
   height: 100%;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* scroll-behavior: smooth 已移除 — 改由 ScrollToTopOnRouteChange 在 providers.tsx 中按需控制
+   原因：全局 smooth 在 Next.js 软导航时会干扰 window.scrollTo(0,0)，导致页面停在随机位置 */
 
 body {
   background-color: var(--color-bg-page);

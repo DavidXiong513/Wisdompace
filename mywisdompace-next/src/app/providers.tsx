@@ -1,40 +1,64 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { useAuthStore } from '@/stores/authStore';
 import { QueryProvider } from '@/components/providers/QueryProvider';
 import '@/i18n/config';
 
 /**
- * 路由切换时自动滚动到页面顶部
+ * 路由切换时强制滚动到页面顶部
  *
- * Next.js App Router 的 <Link> 默认 scroll=true，但以下场景会失效：
- * 1. 同一动态路由段软导航（如 /chapter/chapter-1 → /chapter/chapter-2）
- * 2. 全局 scroll-behavior: smooth 导致 scrollTo 变成动画，与 DOM 更新冲突
+ * Next.js App Router 软导航（尤其是同一段动态路由如 /chapter/chapter-1 → /chapter/chapter-2）
+ * 不会自动重置滚动位置。
  *
- * 修复方式：
- * - 先临时关闭 smooth scroll → 立即跳转到顶部 → 恢复 smooth scroll
- * - 同时设置 document.documentElement.scrollTop = 0 作为双保险
+ * 修复策略：
+ * 1. 全局 scroll-behavior: smooth 已从 globals.css 移除（它是导致随机位置的核心元凶）
+ * 2. useLayoutEffect 在 DOM 绘制前同步执行 scrollTo(0,0)
+ * 3. 双重 rAF 确保在 Next.js 完成页面渲染后再次确认位置
+ * 4. 100ms 兜底 setTimeout 防止极端情况
  */
 function ScrollToTopOnRouteChange() {
   const pathname = usePathname();
+  const isScrollingRef = useRef(false);
 
-  useEffect(() => {
-    // 临时禁用 smooth scroll
-    const html = document.documentElement;
-    const prevBehavior = html.style.scrollBehavior;
-    html.style.scrollBehavior = 'auto';
+  const forceScrollToTop = useCallback(() => {
+    if (isScrollingRef.current) return;
+    isScrollingRef.current = true;
 
-    // 双保险：两种方式同时设置
-    html.scrollTop = 0;
+    // 多种方式同时设置，覆盖所有浏览器行为
+    document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 
-    // 恢复 smooth scroll（下一帧，避免影响本次跳转）
+    // 双重 rAF：等 Next.js 完成新页面渲染后再次确认
     requestAnimationFrame(() => {
-      html.style.scrollBehavior = prevBehavior || '';
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+      requestAnimationFrame(() => {
+        document.documentElement.scrollTop = 0;
+        isScrollingRef.current = false;
+      });
     });
+  }, []);
+
+  // useLayoutEffect：在浏览器绘制前同步执行，比 useEffect 更可靠
+  useLayoutEffect(() => {
+    forceScrollToTop();
+  }, [pathname, forceScrollToTop]);
+
+  // 兜底：渲染后 100ms 再确认一次
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (document.documentElement.scrollTop > 10) {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }
+    }, 100);
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   return null;
