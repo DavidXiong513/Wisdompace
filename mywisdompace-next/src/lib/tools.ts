@@ -37,6 +37,24 @@ export const tools: Record<string, ToolInfo> = {
     status: "ready",
     description: "通过 MBTI 和大五人格测试，从不同角度认识自己的性格特质。",
   },
+  "preparedness-slider": {
+    id: "preparedness-slider",
+    name: "预备自测",
+    status: "ready",
+    description: "自测你对人生重大事项的准备程度。",
+  },
+  "framework-grid": {
+    id: "framework-grid",
+    name: "人生框架",
+    status: "ready",
+    description: "了解本站两大部分与四大篇章的逻辑框架。",
+  },
+  "reminder-list": {
+    id: "reminder-list",
+    name: "使用提醒",
+    status: "ready",
+    description: "在使用本站工具过程中的五点重要提醒。",
+  },
   "career-values-card": {
     id: "career-values-card",
     name: "生涯价值观测评",
