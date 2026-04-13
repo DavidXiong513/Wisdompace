@@ -85,6 +85,12 @@ export const tools: Record<string, ToolInfo> = {
     status: "developing",
     description: "发现生活中的趣味与意义",
   },
+  "three-questions-tool": {
+    id: "three-questions-tool",
+    name: "三思清单",
+    status: "ready",
+    description: "通过价值观、心理预期、稀缺性三个维度的追问，辅助你理清重大人生决策。",
+  },
   "choice-maker": {
     id: "choice-maker",
     name: "主动选择练习",

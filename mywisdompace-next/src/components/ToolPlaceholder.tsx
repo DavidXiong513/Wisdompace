@@ -122,6 +122,41 @@ function LifeClockEntry() {
   );
 }
 
+// ── 三思清单入口卡片 ──
+function ThreeQuestionsEntry() {
+  return (
+    <Link
+      href="/tools/three-questions"
+      className="group mt-8 block overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+    >
+      <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
+        {/* 左侧图标/视觉 */}
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FDF5EE] text-4xl shadow-inner transition-transform group-hover:scale-110">
+          ⚖️
+        </div>
+        
+        {/* 中间文字 */}
+        <div className="flex-1 text-center sm:text-left">
+          <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            三思清单 · 重大决策
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
+            面对人生重大抉择，通过价值观、心理预期、稀缺性三个维度的深度追问，帮你做出不留遗憾的人生交代。
+          </p>
+        </div>
+
+        {/* 右侧动作 */}
+        <div className="flex items-center gap-2 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D] group-hover:px-8">
+          开启深思
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 // 生产环境检测
 const isDev = process.env.NODE_ENV === "development";
 
@@ -134,6 +169,11 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
   // 特殊处理：生命余光入口
   if (toolId === "life-clock") {
     return <LifeClockEntry />;
+  }
+
+  // 特殊处理：三思清单入口
+  if (toolId === "three-questions-tool") {
+    return <ThreeQuestionsEntry />;
   }
 
   // 特殊处理：预备自测滑块
