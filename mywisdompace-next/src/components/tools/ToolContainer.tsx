@@ -84,7 +84,8 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'preparedness-slider', 
     'framework-grid', 
     'reminder-list',
-    'three-questions-tool'
+    'three-questions-tool',
+    'emotional-assessment',
   ].includes(toolId);
 
   return (

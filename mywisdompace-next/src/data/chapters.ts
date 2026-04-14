@@ -182,7 +182,7 @@ export const chapters: Chapter[] = [
         title: "情绪状态自测",
         paragraphs: [
           "在谈论『积极』之前，我们也要客观地了解当下的自己。情绪的阴影或长期的紧张，有时会悄无声息地遮蔽生活中的阳光。",
-          "我们为你准备了一个<a href='/tools/emotional-assessment' class='text-[#C87941] font-semibold hover:underline transition-colors'>「情绪、紧张与压力」三维综合测评</a>，它能帮助你从更专业的维度识别潜在的心理风险。",
+          "我们为你准备了一个「情绪、紧张与压力」三维综合测评，它能帮助你从更专业的维度识别潜在的心理风险。",
           "这不是为了确诊某种疾病，而是为了让你在主动选择之前，先对自己的身心底盘有一个清醒的认知。",
         ],
         toolId: "emotional-assessment",

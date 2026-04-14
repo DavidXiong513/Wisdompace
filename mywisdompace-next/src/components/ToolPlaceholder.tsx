@@ -161,7 +161,7 @@ function ThreeQuestionsEntry() {
 function DepressionAssessmentEntry() {
   return (
     <Link
-      href="/tools/emotional-stress-test"
+      href="/tools/emotional-assessment"
       className="group mt-8 block overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
     >
       <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
@@ -212,7 +212,7 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
   }
 
   // 特殊处理：情绪与压力测评入口
-  if (toolId === "emotional-stress-test") {
+  if (toolId === "emotional-assessment" || toolId === "emotional-stress-test") {
     return <DepressionAssessmentEntry />;
   }
 

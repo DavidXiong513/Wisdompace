@@ -89,24 +89,23 @@ export const useEmotionalAssessmentStore = create<EmotionalAssessmentState>()(
       name: 'wp-emotional-assessment-storage',
       // 自定义 storage：OOM 防护（role-pie-chart 教训）
       storage: {
-        getItem: (): string | null => {
+        getItem: (name) => {
           try {
-            const raw = localStorage.getItem('wp-emotional-assessment-storage');
+            const raw = localStorage.getItem(name);
             if (!raw) return null;
-            const parsed = JSON.parse(raw);
-            // 容量检查
             if (raw.length > 500000) return null; // > 500KB 视为异常
-            // 结构校验
+            const parsed = JSON.parse(raw);
             if (!parsed?.state || typeof parsed.state !== 'object') return null;
-            return raw;
+            // 结构校验通过，返回 StorageValue 格式
+            return { state: parsed.state, version: parsed.version ?? 0 };
           } catch {
             return null; // 坏数据直接丢弃，回退初始状态
           }
         },
-        setItem: (_name: string, value: string): void => {
-          localStorage.setItem('wp-emotional-assessment-storage', value);
+        setItem: (_name, value) => {
+          localStorage.setItem('wp-emotional-assessment-storage', JSON.stringify(value));
         },
-        removeItem: () => {
+        removeItem: (_name: string): void => {
           localStorage.removeItem('wp-emotional-assessment-storage');
         },
       },
