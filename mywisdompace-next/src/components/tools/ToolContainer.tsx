@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
-import Link from 'next/link';
+import { type ReactNode } from 'react';
 import {
   getToolDefinition,
   getToolStatusText,
@@ -15,25 +14,16 @@ import { ToolPlaceholder } from '@/components/ToolPlaceholder';
 
 // ── Error Boundary ─────────────────────────────────────────────────────────
 
-function ToolErrorBoundary({ children, toolId }: { children: ReactNode; toolId: string }) {
-  const [hasError, setHasError] = useState(false);
-
-  if (hasError) {
-    return (
-      <div className="rounded-lg border border-red/20 bg-red/5 p-4 text-sm text-red">
-        工具加载失败，请刷新页面重试。
-      </div>
-    );
-  }
-
+function ToolErrorBoundary({ children }: { children: ReactNode }) {
+  // 简易边界，由于删除了原有的 onError，此处暂时只作为透传组件
   return (
-    <ErrorCatcher onError={() => setHasError(true)}>
+    <ErrorCatcher>
       {children}
     </ErrorCatcher>
   );
 }
 
-function ErrorCatcher({ children, onError }: { children: ReactNode; onError: () => void }) {
+function ErrorCatcher({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
@@ -98,7 +88,7 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
   ].includes(toolId);
 
   return (
-    <ToolErrorBoundary toolId={toolId}>
+    <ToolErrorBoundary>
       {/* 优先使用重构后的 ToolPlaceholder */}
       {usePlaceholder ? (
         <ToolPlaceholder toolId={toolId} />

@@ -7,13 +7,31 @@ interface Props {
   result: LifeClockResult;
 }
 
+const TimeUnit = ({ value, label }: { value: number; label: string }) => (
+  <div className="flex flex-col items-center group">
+    <div className="relative">
+      <div className="absolute -inset-2 bg-[#C9A15A]/5 rounded-lg blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="relative text-3xl font-bold tabular-nums text-[#B45309] sm:text-4xl lg:text-5xl">
+        {String(value).padStart(2, '0')}
+      </div>
+    </div>
+    <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#C9A15A] mt-2">
+      {label}
+    </div>
+  </div>
+);
+
 export function LifeCountdown({ result }: Props) {
   const [now, setNow] = useState(new Date());
+  const [endTime, setEndTime] = useState<Date | null>(null);
 
-  // 计算确切的结束时间戳
-  const endTime = useMemo(() => {
-    const birth = new Date(result.age === 0 ? Date.now() : Date.now() - result.age * 365.25 * 24 * 60 * 60 * 1000);
-    return new Date(birth.getTime() + result.expectedLifespan * 365.25 * 24 * 60 * 60 * 1000);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const current = Date.now();
+      const birth = new Date(result.age === 0 ? current : current - result.age * 365.25 * 24 * 60 * 60 * 1000);
+      setEndTime(new Date(birth.getTime() + result.expectedLifespan * 365.25 * 24 * 60 * 60 * 1000));
+    }, 0);
+    return () => clearTimeout(timer);
   }, [result.expectedLifespan, result.age]);
 
   useEffect(() => {
@@ -22,6 +40,7 @@ export function LifeCountdown({ result }: Props) {
   }, []);
 
   const timeLeft = useMemo(() => {
+    if (!endTime) return { years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
     const diff = endTime.getTime() - now.getTime();
     if (diff <= 0) return { years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
 
@@ -34,20 +53,6 @@ export function LifeCountdown({ result }: Props) {
 
     return { years, months, days, hours, minutes, seconds };
   }, [endTime, now]);
-
-  const TimeUnit = ({ value, label }: { value: number; label: string }) => (
-    <div className="flex flex-col items-center group">
-      <div className="relative">
-        <div className="absolute -inset-2 bg-[#C9A15A]/5 rounded-lg blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
-        <div className="relative text-3xl font-bold tabular-nums text-[#B45309] sm:text-4xl lg:text-5xl">
-          {String(value).padStart(2, '0')}
-        </div>
-      </div>
-      <div className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#C9A15A] mt-2">
-        {label}
-      </div>
-    </div>
-  );
 
   return (
     <div className="rounded-2xl border-2 border-[#C9A15A]/20 bg-white p-8 shadow-[0_8px_30px_rgb(201,161,90,0.08)] sm:p-10">

@@ -37,9 +37,8 @@ function SectionCard({ section }: { section: ChapterSection }) {
               textAlign:  'justify',
               fontFamily: 'var(--wp-font-sans)',
             }}
-          >
-            {para}
-          </p>
+            dangerouslySetInnerHTML={{ __html: para }}
+          />
         ))}
       </div>
 

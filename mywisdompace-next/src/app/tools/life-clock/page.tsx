@@ -7,9 +7,10 @@ import { LifeClockForm } from '@/components/tools/life-clock/LifeClockForm';
 import { LifeCountdown } from '@/components/tools/life-clock/LifeCountdown';
 import { LifeMonthGrid } from '@/components/tools/life-clock/LifeMonthGrid';
 import { usePersistHydrated } from '@/lib/hooks/usePersistHydrated';
+import { LifeClockResult } from '@/types/life-clock';
 
 // ==================== 结果展示子页面 ==================== //
-function ResultView({ result, reset }: { result: any, reset: () => void }) {
+function ResultView({ result, reset }: { result: LifeClockResult, reset: () => void }) {
   return (
     <div className="animate-in fade-in zoom-in-95 duration-700">
       <div className="space-y-8">

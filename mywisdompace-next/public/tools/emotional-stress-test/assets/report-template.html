@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心理情绪压力综合评估报告</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 30px;
+        }
+        
+        .report-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .report-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 50px;
+            text-align: center;
+        }
+        
+        .report-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .report-header h1 i {
+            font-size: 3rem;
+        }
+        
+        .report-meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .assessment-card {
+            background: white;
+            margin: 30px 50px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border-top: 8px solid;
+        }
+        
+        .assessment-card.level-1 { border-color: #28a745; }
+        .assessment-card.level-2 { border-color: #007bff; }
+        .assessment-card.level-3 { border-color: #ffc107; }
+        .assessment-card.level-4 { border-color: #fd7e14; }
+        .assessment-card.level-5 { border-color: #e67e22; }
+        
+        .assessment-level {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .level-1 .assessment-level { color: #28a745; }
+        .level-2 .assessment-level { color: #007bff; }
+        .level-3 .assessment-level { color: #ffc107; }
+        .level-4 .assessment-level { color: #fd7e14; }
+        .level-5 .assessment-level { color: #e67e22; }
+        
+        .assessment-description {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 25px;
+        }
+        
+        .score-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 50px;
+        }
+        
+        .score-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            border-left: 6px solid;
+        }
+        
+        .emotion-card { border-left-color: #3498db; }
+        .les-card { border-left-color: #27ae60; }
+        
+        .score-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .score-value {
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .emotion-card .score-value { color: #3498db; }
+        .les-card .score-value { color: #27ae60; }
+        
+        .score-interpretation {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #495057;
+        }
+        
+        .dimension-analysis {
+            margin: 40px 50px;
+        }
+        
+        .dimension-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .dimension-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .dimension-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dimension-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        
+        .recommendations {
+            margin: 40px 50px;
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            padding: 35px;
+            border-radius: 15px;
+        }
+        
+        .recommendation-list {
+            margin-top: 25px;
+        }
+        
+        .recommendation-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .recommendation-item:hover {
+            transform: translateX(10px);
+        }
+        
+        .rec-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .disclaimer {
+            margin: 40px 50px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: #6c757d;
+            border-left: 5px solid #6c757d;
+        }
+        
+        .report-footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 50px;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        @media print {
+            body { background: white; padding: 0; }
+            .report-container { box-shadow: none; margin: 0; }
+            .report-header { background: #667eea !important; -webkit-print-color-adjust: exact; }
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .report-header { padding: 30px 20px; }
+            .report-header h1 { font-size: 2rem; flex-direction: column; gap: 10px; }
+            .assessment-card, .score-cards, .dimension-analysis,
+            .recommendations, .disclaimer { margin: 20px; }
+            .score-cards { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <div class="report-header">
+            <h1>
+                <i class="fas fa-heartbeat"></i>
+                心理情绪压力综合评估报告
+            </h1>
+            <p style="font-size: 1.2rem; opacity: 0.9; max-width: 800px; margin: 0 auto;">
+                基于情绪状态自评 + 紧张状态自评 + 生活压力事件回顾的综合评估
+            </p>
+            <div class="report-meta">
+                <div><i class="far fa-calendar-alt"></i> 评估日期：<span id="report-date">2026-04-05</span></div>
+                <div><i class="far fa-clock"></i> 报告编号：<span id="report-id">EMA-20260405-001</span></div>
+            </div>
+        </div>
+        
+        <div class="assessment-card level-3" id="assessment-card">
+            <h2><i class="fas fa-chart-pie"></i> 综合评估结果</h2>
+            <div class="assessment-level" id="assessment-level">等级3</div>
+            <div class="assessment-description" id="assessment-description">值得关注 - 建议关注并采取适当调节措施</div>
+        </div>
+        
+        <div class="score-cards">
+            <div class="score-card emotion-card">
+                <h3><i class="fas fa-brain"></i> 情绪状态评估结果</h3>
+                <div class="score-value" id="emotion-score">55分</div>
+                <div style="font-size: 1.1rem; color: #495057; margin: 10px 0;">
+                    <i class="fas fa-chart-line"></i> 标准分：<span id="emotion-standard">68.75</span>分
+                </div>
+                <div class="score-interpretation" id="emotion-interpretation">
+                    <strong>稍有波动</strong><br>
+                    在情绪感受方面有轻微波动，建议关注心理状态。
+                </div>
+            </div>
+            
+            <div class="score-card les-card">
+                <h3><i class="fas fa-calendar-alt"></i> 生活压力评估结果</h3>
+                <div class="score-value" id="les-score">168分</div>
+                <div style="font-size: 1.1rem; color: #495057; margin: 10px 0;">
+                    <i class="fas fa-list-ol"></i> 事件数量：<span id="les-count">5</span>项
+                </div>
+                <div class="score-interpretation" id="les-interpretation">
+                    <strong>有一定压力</strong><br>
+                    过去一年经历了一定压力的生活事件。
+                </div>
+            </div>
+        </div>
+        
+        <div class="dimension-analysis">
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">
+                <i class="fas fa-chart-pie"></i> 状态维度分析
+            </h2>
+            <div class="dimension-grid">
+                <div class="dimension-item">
+                    <div class="dimension-icon"><i class="fas fa-smile"></i></div>
+                    <h4>情绪感受</h4>
+                    <p style="color: #666; margin-top: 8px;">稍有波动</p>
+                </div>
+                <div class="dimension-item">
+                    <div class="dimension-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h4>认知功能</h4>
+                    <p style="color: #666; margin-top: 8px;">基本正常</p>
+                </div>
+                <div class="dimension-item">
+                    <div class="dimension-icon"><i class="fas fa-bed"></i></div>
+                    <h4>躯体反应</h4>
+                    <p style="color: #666; margin-top: 8px;">稍有不适</p>
+                </div>
+                <div class="dimension-item">
+                    <div class="dimension-icon"><i class="fas fa-users"></i></div>
+                    <h4>人际功能</h4>
+                    <p style="color: #666; margin-top: 8px;">基本正常</p>
+                </div>
+                <div class="dimension-item">
+                    <div class="dimension-icon"><i class="fas fa-tasks"></i></div>
+                    <h4>日常功能</h4>
+                    <p style="color: #666; margin-top: 8px;">基本维持</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="recommendations">
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">
+                <i class="fas fa-hands-helping"></i> 个性化建议与行动计划
+            </h2>
+            <div class="recommendation-list" id="recommendations">
+                <div class="recommendation-item">
+                    <div class="rec-number">1</div>
+                    <div>
+                        <strong>建立规律作息</strong><br>
+                        每天固定时间起床、睡觉，保证7-8小时睡眠
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="rec-number">2</div>
+                    <div>
+                        <strong>适度有氧运动</strong><br>
+                        每周3-5次，每次30分钟快走或慢跑
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="rec-number">3</div>
+                    <div>
+                        <strong>情绪日记记录</strong><br>
+                        每天记录情绪变化和触发因素
+                    </div>
+                </div>
+                <div class="recommendation-item">
+                    <div class="rec-number">4</div>
+                    <div>
+                        <strong>考虑专业咨询</strong><br>
+                        可以预约专业心理咨询师进行初步评估
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="disclaimer">
+            <h4><i class="fas fa-info-circle"></i> 重要声明</h4>
+            <p style="margin-top: 10px; line-height: 1.6;">
+                1. 本报告基于您提供的自评信息生成，仅供参考，不能替代专业诊断。<br>
+                2. 如状态持续2周以上或影响日常生活，建议及时就医。<br>
+                3. 您的评估数据仅保存在本地浏览器中，不会上传到任何服务器。
+            </p>
+        </div>
+        
+        <div class="report-footer">
+            <p>心理情绪压力自测 v3.0.0</p>
+            <p>情绪状态自评 + 紧张状态自评 + 生活压力事件回顾</p>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-redo"></i> 重新评估</a>
+                <a href="#"><i class="fas fa-print"></i> 打印报告</a>
+                <a href="#"><i class="fas fa-download"></i> 保存报告</a>
+                <a href="#"><i class="fas fa-question-circle"></i> 使用帮助</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('report-date').textContent = new Date().toLocaleDateString('zh-CN');
+        
+        const reportId = 'EMA-' + new Date().toISOString().slice(0,10).replace(/-/g, '') + '-' + 
+                        Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        document.getElementById('report-id').textContent = reportId;
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const emotionScore = urlParams.get('emotion') || '55';
+        const lesScore = urlParams.get('les') || '168';
+        const assessmentLevel = urlParams.get('level') || '3';
+        
+        document.getElementById('emotion-score').textContent = emotionScore + '分';
+        document.getElementById('les-score').textContent = lesScore + '分';
+        
+        const emotionStandard = (parseFloat(emotionScore) * 1.25).toFixed(2);
+        document.getElementById('emotion-standard').textContent = emotionStandard;
+        
+        const levelNames = ['等级1', '等级2', '等级3', '等级4', '等级5'];
+        const levelDescriptions = [
+            '状态良好 - 保持良好生活习惯',
+            '稍有波动 - 适当关注心理状态',
+            '值得关注 - 建议关注并采取适当调节措施',
+            '建议调节 - 建议寻求专业咨询',
+            '建议关注 - 建议与专业人士聊聊'
+        ];
+        
+        const levelIndex = Math.min(Math.max(parseInt(assessmentLevel) - 1, 0), 4);
+        document.getElementById('assessment-level').textContent = levelNames[levelIndex];
+        document.getElementById('assessment-description').textContent = levelDescriptions[levelIndex];
+        
+        const assessmentCard = document.getElementById('assessment-card');
+        assessmentCard.className = `assessment-card level-${parseInt(assessmentLevel)}`;
+        
+        let emotionInterpretation = '';
+        if (emotionStandard < 40) {
+            emotionInterpretation = '<strong>良好</strong><br>当前情绪状态良好，继续保持。';
+        } else if (emotionStandard < 50) {
+            emotionInterpretation = '<strong>稍有波动</strong><br>情绪状态有轻微波动，建议适当关注。';
+        } else if (emotionStandard < 60) {
+            emotionInterpretation = '<strong>值得关注</strong><br>情绪状态值得关注，建议适当调节。';
+        } else {
+            emotionInterpretation = '<strong>建议关注</strong><br>情绪状态需要关注，建议寻求专业帮助。';
+        }
+        document.getElementById('emotion-interpretation').innerHTML = emotionInterpretation;
+        
+        let lesInterpretation = '';
+        if (lesScore < 150) {
+            lesInterpretation = '<strong>压力较低</strong><br>过去一年生活压力较小。';
+        } else if (lesScore < 300) {
+            lesInterpretation = '<strong>有一定压力</strong><br>过去一年经历了一定压力的生活事件。';
+        } else {
+            lesInterpretation = '<strong>压力较大</strong><br>过去一年生活压力较大，建议积极应对。';
+        }
+        document.getElementById('les-interpretation').innerHTML = lesInterpretation;
+    </script>
+</body>
+</html>

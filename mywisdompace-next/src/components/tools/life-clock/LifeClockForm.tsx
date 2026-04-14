@@ -175,7 +175,7 @@ export function LifeClockForm() {
               ].map(opt => (
                 <button
                   key={opt.id}
-                  onClick={() => updateBadHabits(opt.id as any, !input.badHabits[opt.id as keyof typeof input.badHabits])}
+                  onClick={() => updateBadHabits(opt.id as keyof typeof input.badHabits, !input.badHabits[opt.id as keyof typeof input.badHabits])}
                   className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm transition-all ${input.badHabits[opt.id as keyof typeof input.badHabits] ? 'border-[#C87941] bg-[#FDF5EE] text-[#C87941]' : 'border-[#E8D9C2] text-[#8A7E6A]'}`}
                 >
                   <span>{opt.label}</span>

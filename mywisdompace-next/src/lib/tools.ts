@@ -19,6 +19,12 @@ export const tools: Record<string, ToolInfo> = {
     status: "ready",
     description: "看见时间的刻度，直面生命的有限，激发积极生活的紧迫感。",
   },
+  "emotional-assessment": {
+    id: "emotional-assessment",
+    name: "情绪与压力测评",
+    status: "ready",
+    description: "三维综合评估：情绪、紧张与生活压力，发现隐藏的心理状态。",
+  },
   "role-pie-chart": {
     id: "role-pie-chart",
     name: "人生角色饼图",

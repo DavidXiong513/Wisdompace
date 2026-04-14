@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { DecisionSession, Answer, DecisionResult } from '@/types/three-questions';
+import { DecisionSession, DecisionResult } from '@/types/three-questions';
 import { calculateDecisionResult } from '@/lib/three-questions/engine';
 import { getScenarioById } from '@/data/three-questions/bank';
 
