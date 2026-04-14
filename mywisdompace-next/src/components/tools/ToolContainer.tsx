@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import {
   getToolDefinition,
   getToolStatusText,
@@ -14,17 +14,50 @@ import { ToolPlaceholder } from '@/components/ToolPlaceholder';
 
 // ── Error Boundary ─────────────────────────────────────────────────────────
 
-function ToolErrorBoundary({ children }: { children: ReactNode }) {
-  // 简易边界，由于删除了原有的 onError，此处暂时只作为透传组件
-  return (
-    <ErrorCatcher>
-      {children}
-    </ErrorCatcher>
-  );
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error?: Error;
 }
 
-function ErrorCatcher({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+class ToolErrorBoundary extends React.Component<{ children: ReactNode }, ErrorBoundaryState> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Tool error caught:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="mt-8 rounded-xl border border-red-200 bg-red-50 p-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-lg">
+              ⚠️
+            </div>
+            <div>
+              <h3 className="text-base font-semibold text-red-800">工具加载失败</h3>
+              <p className="text-sm text-red-600">请刷新页面重试，或联系管理员</p>
+            </div>
+          </div>
+          <button
+            onClick={() => this.setState({ hasError: false })}
+            className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+          >
+            重试
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
 }
 
 // ── Pending Card (developing / maintenance) ───────────────────────────────

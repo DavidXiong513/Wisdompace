@@ -12,6 +12,7 @@ interface ThreeQuestionsState {
   createSession: (scenarioId: string, title: string) => string;
   updateAnswer: (sessionId: string, questionId: string, score: number) => void;
   completeSession: (sessionId: string) => void;
+  reopenSession: (sessionId: string) => void;
   deleteSession: (sessionId: string) => void;
   setActiveSession: (id: string | null) => void;
   
@@ -27,7 +28,10 @@ export const useThreeQuestionsStore = create<ThreeQuestionsState>()(
       activeSessionId: null,
 
       createSession: (scenarioId, title) => {
-        const id = crypto.randomUUID();
+        // 兼容性处理：crypto.randomUUID 可能在某些浏览器不可用
+        const id = typeof crypto !== 'undefined' && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         const newSession: DecisionSession = {
           id,
           scenarioId,
@@ -61,9 +65,18 @@ export const useThreeQuestionsStore = create<ThreeQuestionsState>()(
 
       completeSession: (sessionId) => {
         set((state) => ({
-          sessions: state.sessions.map(s => 
+          sessions: state.sessions.map(s =>
             s.id === sessionId ? { ...s, isCompleted: true, updatedAt: new Date().toISOString() } : s
           )
+        }));
+      },
+
+      reopenSession: (sessionId) => {
+        set((state) => ({
+          sessions: state.sessions.map(s =>
+            s.id === sessionId ? { ...s, isCompleted: false, updatedAt: new Date().toISOString() } : s
+          ),
+          activeSessionId: sessionId
         }));
       },
 

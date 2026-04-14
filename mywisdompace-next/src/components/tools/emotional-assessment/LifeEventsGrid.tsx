@@ -78,14 +78,15 @@ export function LifeEventsGrid() {
         ))}
       </div>
 
-      <div className="sticky bottom-4 mt-10 rounded-2xl bg-white/90 p-4 backdrop-blur-md border border-[#E8D9C2]/50 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)]">
+      <div className="sticky bottom-4 mt-10 rounded-2xl bg-white/90 p-4 backdrop-blur-md border border-[#E8D9C2]/50 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.05)] pb-[max(1rem,env(safe-area-inset-bottom))]">
         <div className="mb-4 flex items-center justify-between px-2 text-sm">
           <span className="text-[#8A7E6A]">已选择</span>
           <span className="font-bold text-[#C87941]">{selectedEvents.length} 项</span>
         </div>
         <button
           onClick={() => store.calculateAndSetResult()}
-          className="w-full rounded-xl bg-[#4A3728] py-4 text-center text-sm font-semibold text-white shadow-md transition-opacity hover:opacity-90"
+          disabled={selectedEvents.length === 0}
+          className="w-full rounded-xl bg-[#4A3728] py-4 text-center text-sm font-semibold text-white shadow-md transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           生成综合评估报告 →
         </button>

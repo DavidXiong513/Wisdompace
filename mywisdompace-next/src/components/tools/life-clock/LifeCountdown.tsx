@@ -27,12 +27,13 @@ export function LifeCountdown({ result }: Props) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const current = Date.now();
-      const birth = new Date(result.age === 0 ? current : current - result.age * 365.25 * 24 * 60 * 60 * 1000);
-      setEndTime(new Date(birth.getTime() + result.expectedLifespan * 365.25 * 24 * 60 * 60 * 1000));
+      // 计算预计的死亡时间：当前时间 + 剩余年数对应的毫秒数
+      // 这样更准确，不依赖于可能不精确的 birthDate
+      const remainingMs = result.remainingYears * 365.25 * 24 * 60 * 60 * 1000;
+      setEndTime(new Date(Date.now() + remainingMs));
     }, 0);
     return () => clearTimeout(timer);
-  }, [result.expectedLifespan, result.age]);
+  }, [result.remainingYears]);
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);

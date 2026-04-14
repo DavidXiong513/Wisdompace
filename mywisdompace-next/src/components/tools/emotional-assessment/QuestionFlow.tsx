@@ -48,6 +48,9 @@ export function QuestionFlow({ type }: Props) {
       // 防连击：正在过渡中则忽略
       if (transitioning.current) return;
 
+      // 如果是最后一题，立即跳转，不延迟
+      const isLastQuestion = currentIndex === total - 1;
+
       // 先存答案
       if (type === 'emotion') {
         store.setEmotionAnswer(currentQuestion.id, value);
@@ -55,7 +58,13 @@ export function QuestionFlow({ type }: Props) {
         store.setTensionAnswer(currentQuestion.id, value);
       }
 
-      // 锁定 + 短暂延迟后跳转（150ms 比 300ms 更跟手）
+      if (isLastQuestion) {
+        // 最后一题立即跳转，避免延迟感
+        goToNext();
+        return;
+      }
+
+      // 锁定 + 短暂延迟后跳转（150ms 更跟手）
       transitioning.current = true;
       setTimeout(() => {
         goToNext();
@@ -65,7 +74,7 @@ export function QuestionFlow({ type }: Props) {
         }, 200);
       }, 150);
     },
-    [type, store, currentQuestion, goToNext],
+    [type, store, currentQuestion, goToNext, currentIndex, total],
   );
 
   const handlePrev = () => {
@@ -126,7 +135,7 @@ export function QuestionFlow({ type }: Props) {
       </div>
 
       {/* 底部导航 */}
-      <div className="mt-8 flex justify-between">
+      <div className="mt-8 flex items-center justify-between">
         <button
           onClick={handlePrev}
           disabled={currentIndex === 0 || transitioning.current}
@@ -138,7 +147,26 @@ export function QuestionFlow({ type }: Props) {
         >
           ← 上一题
         </button>
-        <span className="text-xs text-[#8A7E6A]/50">请基于最近一周的感受</span>
+
+        {currentIndex === total - 1 && (
+          <button
+            onClick={() => {
+              // 最后一题，手动触发跳转到下一部分
+              if (type === 'emotion') {
+                store.setStep('tension');
+              } else {
+                store.setStep('life_events');
+              }
+            }}
+            className="rounded-full bg-[#C87941] px-6 py-2 text-sm font-bold text-white shadow-md transition-all hover:bg-[#A85E2D]"
+          >
+            {type === 'emotion' ? '完成情绪部分 →' : '完成紧张部分 →'}
+          </button>
+        )}
+
+        {currentIndex !== total - 1 && (
+          <span className="text-xs text-[#8A7E6A]/50">请基于最近一周的感受</span>
+        )}
       </div>
     </div>
   );

@@ -196,9 +196,10 @@ export function LifeClockForm() {
               min="1"
               max="5"
               step="1"
-              value={input.psychologicalState === 2 ? 1 : 5} // 简单映射：2(忧虑)为1, 1(乐观)为5
+              value={input.psychologicalState === 2 ? 1 : 5} // 1=忧虑, 5=乐观
               onChange={(e) => {
                 const val = parseInt(e.target.value);
+                // 1-2分映射为忧虑(2)，3-5分映射为乐观(1)
                 updateInput({ psychologicalState: val <= 2 ? 2 : 1 });
               }}
               className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-[#E8D9C2] accent-[#C87941]"
@@ -220,9 +221,10 @@ export function LifeClockForm() {
             上一步
           </button>
         )}
-        <button 
+        <button
           onClick={step === 4 ? calculate : nextStep}
-          className="flex-[2] rounded-xl bg-[#C87941] py-3.5 text-sm font-semibold text-white shadow-md transition-opacity hover:opacity-90"
+          disabled={step === 1 && !input.birthDate}
+          className="flex-[2] rounded-xl bg-[#C87941] py-3.5 text-sm font-semibold text-white shadow-md transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {step === 4 ? '开启生命余光 →' : '下一步'}
         </button>

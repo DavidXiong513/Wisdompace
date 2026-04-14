@@ -95,8 +95,9 @@ export function QuestionFlow({ scenario, initialAnswers, onUpdate, onComplete, o
           >
             ← 上一题
           </button>
-          
-          {isLast && currentAnswer > 0 && (
+
+          {/* 显示完成按钮当：1) 在最后一题且已回答，或 2) 所有问题都已回答 */}
+          {(isLast && currentAnswer > 0) && (
             <button
               onClick={onComplete}
               className="rounded-full bg-[#4A3728] px-8 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-black"
