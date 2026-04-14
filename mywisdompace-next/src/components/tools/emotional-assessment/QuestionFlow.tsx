@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useEmotionalAssessmentStore } from '@/stores/emotionalAssessmentStore';
-import { EmotionTensionQuestion } from '@/types/emotional-assessment';
 import { EMOTION_QUESTIONS, TENSION_QUESTIONS } from '@/data/emotional-assessment/bank';
 
 interface Props {
@@ -23,58 +22,60 @@ export function QuestionFlow({ type }: Props) {
   const total = questions.length;
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [animateKey, setAnimateKey] = useState(0);
-
-  // Initialize progress if already answered partially
-  useEffect(() => {
-    const answeredCount = Object.keys(currentAnswers).length;
-    if (answeredCount > 0 && answeredCount < total) {
-      // Find the first unanswered question
-      for (let i = 0; i < total; i++) {
-        if (!currentAnswers[questions[i].id]) {
-          setCurrentIndex(i);
-          break;
-        }
-      }
-    } else if (answeredCount === total) {
-      setCurrentIndex(total - 1);
-    }
-  }, [currentAnswers, questions, total]);
+  // 防止连击：正在过渡时锁定点击
+  const transitioning = useRef(false);
 
   const currentQuestion = questions[currentIndex];
-  const progress = ((currentIndex) / total) * 100;
+  // 进度：当前是第几题（1-based），让进度条从 ~5% 到 100%
+  const progress = ((currentIndex + 1) / total) * 100;
   const title = type === 'emotion' ? '第一部分：情绪自评' : '第二部分：紧张自评';
 
-  const handleSelect = (value: number) => {
-    if (type === 'emotion') {
-      store.setEmotionAnswer(currentQuestion.id, value);
-    } else {
-      store.setTensionAnswer(currentQuestion.id, value);
-    }
-
+  const goToNext = useCallback(() => {
     if (currentIndex < total - 1) {
-      setTimeout(() => {
-        setCurrentIndex((prev) => prev + 1);
-        setAnimateKey((prev) => prev + 1); // trigger animation
-      }, 300);
+      setCurrentIndex((prev) => prev + 1);
     } else {
-      // Completed this section
-      setTimeout(() => {
-        if (type === 'emotion') {
-          store.setStep('tension');
-        } else {
-          store.setStep('life_events');
-        }
-      }, 500);
+      // 本部分最后1题 → 切换到下一个 step
+      if (type === 'emotion') {
+        store.setStep('tension');
+      } else {
+        store.setStep('life_events');
+      }
     }
-  };
+  }, [currentIndex, total, type, store]);
+
+  const handleSelect = useCallback(
+    (value: number) => {
+      // 防连击：正在过渡中则忽略
+      if (transitioning.current) return;
+
+      // 先存答案
+      if (type === 'emotion') {
+        store.setEmotionAnswer(currentQuestion.id, value);
+      } else {
+        store.setTensionAnswer(currentQuestion.id, value);
+      }
+
+      // 锁定 + 短暂延迟后跳转（150ms 比 300ms 更跟手）
+      transitioning.current = true;
+      setTimeout(() => {
+        goToNext();
+        // 解锁（比动画稍晚一点，防止动画中再点）
+        setTimeout(() => {
+          transitioning.current = false;
+        }, 200);
+      }, 150);
+    },
+    [type, store, currentQuestion, goToNext],
+  );
 
   const handlePrev = () => {
-    if (currentIndex > 0) {
+    if (currentIndex > 0 && !transitioning.current) {
       setCurrentIndex((prev) => prev - 1);
-      setAnimateKey((prev) => prev + 1);
     }
   };
+
+  // 当前选项是否已被选中（用于高亮）
+  const selectedValue = currentAnswers[currentQuestion.id] ?? null;
 
   return (
     <div className="mx-auto max-w-xl rounded-2xl border border-[#E8D9C2] bg-white p-6 shadow-sm sm:p-8">
@@ -84,18 +85,18 @@ export function QuestionFlow({ type }: Props) {
         <div className="flex items-center gap-4">
           <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#F0E8DC]">
             <div
-              className="h-full bg-[#C87941] transition-all duration-500 ease-out"
+              className="h-full bg-[#C87941] transition-all duration-300 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-xs font-bold text-[#C87941]">
+          <span className="text-xs font-bold tabular-nums text-[#C87941]">
             {currentIndex + 1} / {total}
           </span>
         </div>
       </div>
 
       {/* 题干展示区 */}
-      <div key={animateKey} className="animate-in fade-in slide-in-from-right-4 duration-300">
+      <div className="animate-in fade-in duration-200">
         <div className="mb-10 min-h-[120px] rounded-xl bg-[#FAFAF8] p-6 text-center shadow-inner flex items-center justify-center border border-[#E8D9C2]/30">
           <h2 className="text-xl font-bold leading-relaxed text-[#4A3728]">
             {currentQuestion.content}
@@ -105,16 +106,17 @@ export function QuestionFlow({ type }: Props) {
         {/* 选项区 */}
         <div className="space-y-3">
           {OPTIONS.map((opt) => {
-            const isSelected = currentAnswers[currentQuestion.id] === opt.value;
+            const isSelected = selectedValue === opt.value;
             return (
               <button
                 key={opt.value}
                 onClick={() => handleSelect(opt.value)}
-                className={`w-full rounded-xl border p-4 text-center text-sm font-medium transition-all ${
+                disabled={transitioning.current}
+                className={`w-full rounded-xl border p-4 text-center text-sm font-medium transition-all duration-150 ${
                   isSelected
-                    ? 'border-[#C87941] bg-[#FDF5EE] text-[#C87941] shadow-sm'
-                    : 'border-[#E8D9C2] bg-white text-[#6A6256] hover:bg-[#FAFAF8] hover:border-[#C87941]/50'
-                }`}
+                    ? 'border-[#C87941] bg-[#FDF5EE] text-[#C87941] shadow-sm scale-[1.01]'
+                    : 'border-[#E8D9C2] bg-white text-[#6A6256] hover:bg-[#FAFAF8] hover:border-[#C87941]/50 active:scale-[0.98]'
+                } ${transitioning.current ? 'opacity-60 pointer-events-none' : ''}`}
               >
                 {opt.label}
               </button>
@@ -127,10 +129,12 @@ export function QuestionFlow({ type }: Props) {
       <div className="mt-8 flex justify-between">
         <button
           onClick={handlePrev}
-          disabled={currentIndex === 0}
-          className={`text-sm font-medium ${
-            currentIndex === 0 ? 'text-transparent cursor-default' : 'text-[#8A7E6A] hover:text-[#C87941]'
-          }`}
+          disabled={currentIndex === 0 || transitioning.current}
+          className={`text-sm font-medium transition-colors ${
+            currentIndex === 0
+              ? 'text-transparent cursor-default'
+              : 'text-[#8A7E6A] hover:text-[#C87941]'
+          } ${transitioning.current ? 'pointer-events-none opacity-50' : ''}`}
         >
           ← 上一题
         </button>
