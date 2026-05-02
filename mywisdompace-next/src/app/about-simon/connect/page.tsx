@@ -34,11 +34,32 @@ const FORM_FIELDS = [
    ───────────────────────────────────── */
 export default function ConnectPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Phase 3: 对接后端
-    setSubmitted(true);
+    setLoading(true);
+    setError("");
+
+    try {
+      const form = e.currentTarget;
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: new FormData(form),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "提交失败，请稍后重试");
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "网络异常，请稍后重试");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -90,10 +111,15 @@ export default function ConnectPage() {
 
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-[var(--as-primary-600)] py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--as-primary-700)]"
+                  disabled={loading}
+                  className="w-full rounded-lg bg-[var(--as-primary-600)] py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--as-primary-700)] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  发送消息
+                  {loading ? "发送中..." : "发送消息"}
                 </button>
+
+                {error && (
+                  <p className="text-center text-sm text-red-500">{error}</p>
+                )}
 
                 <p className="text-center text-xs text-[var(--as-gray-400)]">
                   🔒 你的信息仅用于沟通回复，不会用于其他用途
