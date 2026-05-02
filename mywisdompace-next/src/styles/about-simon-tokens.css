@@ -1,0 +1,169 @@
+/* ============================================================
+   About-Simon 子站 Design Tokens
+   --as-* prefix (独立于主站 --wp-* 体系)
+   基于: Simon_IP_Website_Design_System_v2.0.md
+   ============================================================ */
+
+:root {
+  /* ── Brand Primary (暖棕色系) ── */
+  --as-primary-900: #3D1F0F;
+  --as-primary-800: #5C2D18;
+  --as-primary-700: #7A3D21;
+  --as-primary-600: #8B4513;
+  --as-primary-500: #A0522D;
+  --as-primary-400: #B87333;
+  --as-primary-300: #CD853F;
+  --as-primary-200: #DEB887;
+  --as-primary-100: #F5E6D3;
+  --as-primary-50:  #FAF5EF;
+
+  /* ── Semantic Colors ── */
+  --as-accent:       #AB1942;
+  --as-accent-hover: #8B1535;
+  --as-accent-light: #F8E8EC;
+  --as-success:      #2E7D32;
+  --as-info:         #1565C0;
+  --as-warning:      #F57C00;
+
+  /* ── Neutral / Gray ── */
+  --as-gray-900: #2C1810;
+  --as-gray-800: #4A372E;
+  --as-gray-700: #5D4037;
+  --as-gray-600: #795548;
+  --as-gray-500: #8D6E63;
+  --as-gray-400: #A1887F;
+  --as-gray-300: #BCAAA4;
+  --as-gray-200: #D7CCC8;
+  --as-gray-100: #E8DED5;
+  --as-gray-50:  #F5F0EB;
+
+  /* ── Background ── */
+  --as-bg-primary:   #FAF8F5;
+  --as-bg-secondary: #F5F0EB;
+  --as-bg-card:      #FFFFFF;
+  --as-bg-overlay:   rgba(44, 24, 16, 0.5);
+
+  /* ── Typography ── */
+  --as-font-serif: "Noto Serif SC", "Source Han Serif SC",
+    "Source Han Serif CN", "Songti SC", "STSong", serif;
+  --as-font-sans: "Noto Sans SC", "Source Han Sans SC",
+    "Source Han Sans CN", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", system-ui, sans-serif;
+
+  /* ── Spacing Scale ── */
+  --as-space-1:  0.25rem;
+  --as-space-2:  0.5rem;
+  --as-space-3:  0.75rem;
+  --as-space-4:  1rem;
+  --as-space-5:  1.25rem;
+  --as-space-6:  1.5rem;
+  --as-space-8:  2rem;
+  --as-space-10: 2.5rem;
+  --as-space-12: 3rem;
+  --as-space-16: 4rem;
+  --as-space-20: 5rem;
+  --as-space-24: 6rem;
+  --as-space-32: 8rem;
+
+  /* ── Border Radius ── */
+  --as-radius-sm: 4px;
+  --as-radius-md: 8px;
+  --as-radius-lg: 12px;
+  --as-radius-xl: 16px;
+  --as-radius-2xl: 24px;
+  --as-radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --as-shadow-sm: 0 1px 2px rgba(44, 24, 16, 0.05);
+  --as-shadow-md: 0 4px 6px -1px rgba(44, 24, 16, 0.08);
+  --as-shadow-lg: 0 10px 15px -3px rgba(44, 24, 16, 0.1);
+  --as-shadow-xl: 0 20px 25px -5px rgba(44, 24, 16, 0.1);
+  --as-shadow-card: 0 2px 8px rgba(44, 24, 16, 0.06);
+  --as-shadow-card-hover: 0 8px 24px rgba(44, 24, 16, 0.12);
+
+  /* ── Transitions ── */
+  --as-transition-fast: 150ms ease;
+  --as-transition-base: 250ms ease;
+  --as-transition-slow: 400ms ease;
+  --as-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --as-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── 带侧栏页面的左偏移 ── */
+.as-with-sidebar {
+  /* 桌面端为固定侧栏留出空间 */
+}
+@media (min-width: 1024px) {
+  .as-with-sidebar {
+    margin-left: 176px;
+  }
+}
+
+/* ── About-Simon 专用工具类 ── */
+.as-section {
+  padding: 2.5rem 0;
+  scroll-margin-top: 4.5rem;
+}
+
+.as-section-alt {
+  padding: 2.5rem 0;
+  background-color: var(--as-bg-secondary);
+  scroll-margin-top: 4.5rem;
+}
+
+.as-container {
+  margin: 0 auto;
+  max-width: 72rem;
+  padding-left: var(--as-space-4);
+  padding-right: var(--as-space-4);
+}
+
+@media (min-width: 640px) {
+  .as-container {
+    padding-left: var(--as-space-6);
+    padding-right: var(--as-space-6);
+  }
+}
+
+.as-serif {
+  font-family: var(--as-font-serif);
+}
+
+/* ── 标题装饰线 ── */
+.as-heading-line {
+  position: relative;
+  display: inline-block;
+}
+.as-heading-line::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--as-primary-400), var(--as-primary-200));
+}
+
+/* ── 卡片基础 ── */
+.as-card {
+  border-radius: var(--as-radius-lg);
+  background: var(--as-bg-card);
+  box-shadow: var(--as-shadow-card);
+  transition: box-shadow var(--as-transition-base),
+    transform var(--as-transition-base);
+}
+.as-card:hover {
+  box-shadow: var(--as-shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .as-card {
+    transition: none;
+  }
+  .as-card:hover {
+    transform: none;
+  }
+}

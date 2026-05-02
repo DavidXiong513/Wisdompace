@@ -72,7 +72,9 @@ function ScrollToTopOnRouteChange() {
  */
 export function Providers({ children }: { children: React.ReactNode }) {
   // 初始化 Supabase Auth session（在 Client Component 顶层调用一次即可）
-  useAuthStore.getState().initSession();
+  useEffect(() => {
+    useAuthStore.getState().initSession();
+  }, []);
 
   return (
     <QueryProvider>
