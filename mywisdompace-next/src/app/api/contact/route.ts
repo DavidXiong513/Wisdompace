@@ -31,60 +31,45 @@ function createTransporter() {
   return nodemailer.createTransport({
     host,
     port,
-    secure: port === 465, // 465 用 SSL，587 用 TLS
+    secure: port === 465,
     auth: { user, pass },
   });
 }
 
 /* ─────────────────────────────────────
-   构建 HTML 格式邮件正文（确保中文编码正确）
+   构建 HTML 格式邮件正文
    ───────────────────────────────────── */
 function buildEmailHtml(data: Record<string, string>): string {
   const rows = Object.entries(FIELD_LABELS)
     .map(([key, label]) => {
       const value = data[key]?.trim();
       if (!value) return "";
-      return `<tr>
-        <td style="padding: 4px 12px 4px 0; white-space: nowrap; vertical-align: top; color: #8D6E63; font-size: 13px;">${label}</td>
-        <td style="padding: 4px 0; color: #2C1810; font-size: 13px;">${value.replace(/\n/g, "<br>")}</td>
-      </tr>`;
+      const escaped = value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
+      return "<tr><td style=\"padding:4px 12px 4px 0;white-space:nowrap;vertical-align:top;color:#8D6E63;font-size:13px;\">" + label + "</td><td style=\"padding:4px 0;color:#2C1810;font-size:13px;\">" + escaped + "</td></tr>";
     })
     .filter(Boolean)
-    .join("\n");
+    .join("");
 
   const time = new Date().toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" });
 
-  return `<!DOCTYPE html>
-<html lang="zh-CN">
-<head><meta charset="utf-8"></head>
-<body style="margin:0;padding:0;background:#F5F0EB;font-family:'PingFang SC','Microsoft YaHei',sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0EB;padding:20px;">
-    <tr>
-      <td align="center">
-        <table width="520" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden;">
-          <tr>
-            <td style="background:#8B4513;padding:20px 24px;">
-              <h1 style="margin:0;font-size:18px;font-weight:600;color:#fff;">思考熊 · 新的咨询消息</h1>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:20px 24px;">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                ${rows}
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:12px 24px;border-top:1px solid #E8DED5;font-size:12px;color:#A1887F;">
-              收到时间：${time}
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`;
+  return [
+    "<!DOCTYPE html>",
+    "<html lang=\"zh-CN\">",
+    "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head>",
+    "<body style=\"margin:0;padding:0;background:#F5F0EB;font-family:sans-serif;\">",
+    "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#F5F0EB;padding:20px;\">",
+    "<tr><td align=\"center\">",
+    "<table width=\"520\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden;\">",
+    "<tr><td style=\"background:#8B4513;padding:20px 24px;\"><h1 style=\"margin:0;font-size:18px;font-weight:600;color:#fff;\">&#x601D;&#x8003;&#x718A; &#xB7; &#x65B0;&#x7684;&#x54A8;&#x8BE2;&#x6D88;&#x606F;</h1></td></tr>",
+    "<tr><td style=\"padding:20px 24px;\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">",
+    rows,
+    "</table></td></tr>",
+    "<tr><td style=\"padding:12px 24px;border-top:1px solid #E8DED5;font-size:12px;color:#A1887F;\">&#x6536;&#x5230;&#x65F6;&#x95F4;&#xFF1A;" + time + "</td></tr>",
+    "</table>",
+    "</td></tr>",
+    "</table>",
+    "</body></html>",
+  ].join("");
 }
 
 /* ─────────────────────────────────────
@@ -103,7 +88,7 @@ export async function POST(request: NextRequest) {
     const missing = required.filter((key) => !data[key]?.trim());
     if (missing.length > 0) {
       return NextResponse.json(
-        { error: `缺少必填字段: ${missing.map((k) => FIELD_LABELS[k] || k).join("、")}` },
+        { error: "缺少必填字段: " + missing.map((k) => FIELD_LABELS[k] || k).join("、") },
         { status: 400 }
       );
     }
@@ -113,10 +98,14 @@ export async function POST(request: NextRequest) {
     const mailTo = process.env.MAIL_TO || "1318952797@qq.com";
 
     await transporter.sendMail({
-      from: `"思考熊咨询表单" <${process.env.SMTP_USER}>`,
+      from: "\"=?UTF-8?B?" + Buffer.from("思考熊咨询表单").toString("base64") + "?=\" <" + process.env.SMTP_USER + ">",
       to: mailTo,
-      subject: "思考熊咨询 - " + (data.name?.trim() || "新消息"),
+      subject: "=?UTF-8?B?" + Buffer.from("思考熊咨询 - " + (data.name?.trim() || "新消息")).toString("base64") + "?=",
       html: buildEmailHtml(data),
+      textEncoding: "base64",
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+      },
     });
 
     return NextResponse.json({ success: true });
