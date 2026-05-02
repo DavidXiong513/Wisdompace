@@ -13,7 +13,7 @@ const FIELD_LABELS: Record<string, string> = {
   interest: "感兴趣的方向",
   company: "公司/组织",
   email: "联系邮箱",
-  phone: "联系电话",
+  phone: "联系微信",
   budget: "预算范围",
   message: "你想说的",
 };
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
 
     // 验证必填字段
-    const required = ["name", "identity", "interest", "email", "message"];
+    const required = ["name", "identity", "interest", "phone", "budget", "message"];
     const missing = required.filter((key) => !data[key]?.trim());
     if (missing.length > 0) {
       return NextResponse.json(

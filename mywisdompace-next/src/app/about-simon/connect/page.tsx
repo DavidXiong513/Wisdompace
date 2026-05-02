@@ -23,9 +23,9 @@ const FORM_FIELDS = [
   { name: "identity", label: "你的身份", placeholder: "企业HR / 职场人 / 创业者 / 学生 / 其他", type: "text", required: true },
   { name: "interest", label: "感兴趣的方向", placeholder: "组织变革 / 生涯规划 / MBTI测评 / 内容合作 / 其他", type: "text", required: true },
   { name: "company", label: "公司/组织", placeholder: "所在公司或组织（选填）", type: "text", required: false },
-  { name: "email", label: "联系邮箱", placeholder: "方便我回复你的邮箱", type: "email", required: true },
-  { name: "phone", label: "联系电话", placeholder: "手机号（选填）", type: "tel", required: false },
-  { name: "budget", label: "预算范围", placeholder: "对咨询服务的大致预算（选填）", type: "text", required: false },
+  { name: "email", label: "联系邮箱", placeholder: "方便我回复你的邮箱（选填）", type: "email", required: false },
+  { name: "phone", label: "联系微信", placeholder: "你的微信号，方便我联系你", type: "text", required: true },
+  { name: "budget", label: "预算范围", placeholder: "对咨询服务的大致预算", type: "text", required: true },
   { name: "message", label: "你想说的", placeholder: "简单描述你的需求或想法，我会尽快回复", type: "textarea", required: true },
 ];
 
