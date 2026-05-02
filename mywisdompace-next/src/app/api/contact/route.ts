@@ -90,26 +90,15 @@ export async function POST(request: NextRequest) {
 
     const textBody = buildEmailText(data);
 
-    // 手动构建 MIME，纯文本 + base64 编码
-    const boundary = "----=_Part_" + Date.now();
-    const textBase64 = Buffer.from(textBody, "utf-8").toString("base64");
-
-    const rawMessage = [
-      "MIME-Version: 1.0",
-      "Content-Type: text/plain; charset=utf-8",
-      "Content-Transfer-Encoding: base64",
-      "From: =?UTF-8?B?" + Buffer.from("思考熊咨询表单").toString("base64") + "?= <" + process.env.SMTP_USER + ">",
-      "To: " + mailTo,
-      "Subject: =?UTF-8?B?" + Buffer.from("思考熊咨询 - " + (data.name?.trim() || "新消息")).toString("base64") + "?=",
-      "",
-      textBase64,
-      "",
-    ].join("\r\n");
-
+    // 关键：让 nodemailer 自己生成 MIME，不要手动构建 raw
+    // 同时禁用 QP 编码，强制用 base64
     await transporter.sendMail({
       from: "\"=?UTF-8?B?" + Buffer.from("思考熊咨询表单").toString("base64") + "?=\" <" + process.env.SMTP_USER + ">",
       to: mailTo,
-      raw: rawMessage,
+      subject: "=?UTF-8?B?" + Buffer.from("思考熊咨询 - " + (data.name?.trim() || "新消息")).toString("base64") + "?=",
+      text: textBody,
+      // 禁用 quoted-printable，强制 base64
+      encoding: "base64",
     });
 
     return NextResponse.json({ success: true });
