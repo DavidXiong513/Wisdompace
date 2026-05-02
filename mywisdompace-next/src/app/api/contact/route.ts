@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 /* ─────────────────────────────────────
-   表单字段中文映射（用于邮件正文）
+   表单字段中文映射
    ───────────────────────────────────── */
 const FIELD_LABELS: Record<string, string> = {
   name: "你的称呼",
@@ -14,6 +14,104 @@ const FIELD_LABELS: Record<string, string> = {
   budget: "预算范围",
   message: "你想说的",
 };
+
+/* ─────────────────────────────────────
+   将中文字符串转为 HTML 数字实体
+   彻底规避编码问题
+   ───────────────────────────────────── */
+function toEntities(str: string): string {
+  return Array.from(str)
+    .map((ch) => {
+      const code = ch.codePointAt(0) || 0;
+      return code > 127 ? "&#" + code + ";" : ch;
+    })
+    .join("");
+}
+
+/* ─────────────────────────────────────
+   构建 HTML 邮件正文（全部用数字实体）
+   ───────────────────────────────────── */
+function buildEmailHtml(data: Record<string, string>): string {
+  const rows = Object.entries(FIELD_LABELS)
+    .map(([key, label]) => {
+      const value = data[key]?.trim();
+      if (!value) return "";
+      const safe = toEntities(value).replace(/\n/g, "<br>");
+      return (
+        "<tr><td style=\"padding:4px 12px 4px 0;white-space:nowrap;vertical-align:top;color:#8D6E63;font-size:13px;\">" +
+        toEntities(label) +
+        "</td><td style=\"padding:4px 0;color:#2C1810;font-size:13px;\">" +
+        safe +
+        "</td></tr>"
+      );
+    })
+    .filter(Boolean)
+    .join("");
+
+  const time = toEntities(
+    new Date().toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" })
+  );
+
+  return [
+    "<!DOCTYPE html>",
+    "<html><head><meta charset=\"utf-8\"></head>",
+    "<body style=\"margin:0;padding:0;background:#F5F0EB;font-family:sans-serif;\">",
+    "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#F5F0EB;padding:20px;\">",
+    "<tr><td align=\"center\">",
+    "<table width=\"520\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden;\">",
+    "<tr><td style=\"background:#8B4513;padding:20px 24px;\"><h1 style=\"margin:0;font-size:18px;font-weight:600;color:#fff;\">" +
+      toEntities("思考熊 · 新的咨询消息") +
+      "</h1></td></tr>",
+    "<tr><td style=\"padding:20px 24px;\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">",
+    rows,
+    "</table></td></tr>",
+    "<tr><td style=\"padding:12px 24px;border-top:1px solid #E8DED5;font-size:12px;color:#A1887F;\">" +
+      toEntities("收到时间：") +
+      time +
+      "</td></tr>",
+    "</table></td></tr></table>",
+    "</body></html>",
+  ].join("");
+}
+
+/* ─────────────────────────────────────
+   手动构建 base64 编码的 MIME 消息
+   确保 QQ 邮箱能正确解析中文
+   ───────────────────────────────────── */
+function buildMimeMessage(
+  from: string,
+  to: string,
+  subject: string,
+  htmlBody: string
+): string {
+  const boundary = "----=_Part_" + Date.now();
+  const htmlBase64 = Buffer.from(htmlBody, "utf-8").toString("base64");
+
+  const lines = [
+    "MIME-Version: 1.0",
+    "Content-Type: multipart/alternative; boundary=\"" + boundary + "\"",
+    "From: " + from,
+    "To: " + to,
+    "Subject: " + subject,
+    "",
+    "--" + boundary,
+    "Content-Type: text/plain; charset=utf-8",
+    "Content-Transfer-Encoding: base64",
+    "",
+    Buffer.from("请使用支持 HTML 的邮件客户端查看此邮件。", "utf-8").toString("base64"),
+    "",
+    "--" + boundary,
+    "Content-Type: text/html; charset=utf-8",
+    "Content-Transfer-Encoding: base64",
+    "",
+    htmlBase64,
+    "",
+    "--" + boundary + "--",
+    "",
+  ];
+
+  return lines.join("\r\n");
+}
 
 /* ─────────────────────────────────────
    QQ 邮箱 SMTP 传输器
@@ -37,42 +135,6 @@ function createTransporter() {
 }
 
 /* ─────────────────────────────────────
-   构建 HTML 格式邮件正文
-   ───────────────────────────────────── */
-function buildEmailHtml(data: Record<string, string>): string {
-  const rows = Object.entries(FIELD_LABELS)
-    .map(([key, label]) => {
-      const value = data[key]?.trim();
-      if (!value) return "";
-      const escaped = value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
-      return "<tr><td style=\"padding:4px 12px 4px 0;white-space:nowrap;vertical-align:top;color:#8D6E63;font-size:13px;\">" + label + "</td><td style=\"padding:4px 0;color:#2C1810;font-size:13px;\">" + escaped + "</td></tr>";
-    })
-    .filter(Boolean)
-    .join("");
-
-  const time = new Date().toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" });
-
-  return [
-    "<!DOCTYPE html>",
-    "<html lang=\"zh-CN\">",
-    "<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head>",
-    "<body style=\"margin:0;padding:0;background:#F5F0EB;font-family:sans-serif;\">",
-    "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#F5F0EB;padding:20px;\">",
-    "<tr><td align=\"center\">",
-    "<table width=\"520\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden;\">",
-    "<tr><td style=\"background:#8B4513;padding:20px 24px;\"><h1 style=\"margin:0;font-size:18px;font-weight:600;color:#fff;\">&#x601D;&#x8003;&#x718A; &#xB7; &#x65B0;&#x7684;&#x54A8;&#x8BE2;&#x6D88;&#x606F;</h1></td></tr>",
-    "<tr><td style=\"padding:20px 24px;\"><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">",
-    rows,
-    "</table></td></tr>",
-    "<tr><td style=\"padding:12px 24px;border-top:1px solid #E8DED5;font-size:12px;color:#A1887F;\">&#x6536;&#x5230;&#x65F6;&#x95F4;&#xFF1A;" + time + "</td></tr>",
-    "</table>",
-    "</td></tr>",
-    "</table>",
-    "</body></html>",
-  ].join("");
-}
-
-/* ─────────────────────────────────────
    POST /api/contact
    ───────────────────────────────────── */
 export async function POST(request: NextRequest) {
@@ -93,19 +155,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 发送邮件
     const transporter = createTransporter();
     const mailTo = process.env.MAIL_TO || "1318952797@qq.com";
 
+    const fromName = "=?UTF-8?B?" + Buffer.from("思考熊咨询表单").toString("base64") + "?=";
+    const fromAddr = fromName + " <" + process.env.SMTP_USER + ">";
+    const subject = "=?UTF-8?B?" + Buffer.from("思考熊咨询 - " + (data.name?.trim() || "新消息")).toString("base64") + "?=";
+    const html = buildEmailHtml(data);
+
+    // 使用自定义 MIME 消息，强制 base64 编码 HTML 内容
+    const rawMessage = buildMimeMessage(fromAddr, mailTo, subject, html);
+
     await transporter.sendMail({
-      from: "\"=?UTF-8?B?" + Buffer.from("思考熊咨询表单").toString("base64") + "?=\" <" + process.env.SMTP_USER + ">",
+      from: fromAddr,
       to: mailTo,
-      subject: "=?UTF-8?B?" + Buffer.from("思考熊咨询 - " + (data.name?.trim() || "新消息")).toString("base64") + "?=",
-      html: buildEmailHtml(data),
-      textEncoding: "base64",
-      headers: {
-        "Content-Type": "text/html; charset=utf-8",
-      },
+      raw: rawMessage,
     });
 
     return NextResponse.json({ success: true });
