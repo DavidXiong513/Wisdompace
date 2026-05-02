@@ -44,9 +44,17 @@ export default function ConnectPage() {
 
     try {
       const form = e.currentTarget;
+      // 改用 JSON 发送，避免 FormData 的编码问题
+      const formData = new FormData(form);
+      const jsonData: Record<string, string> = {};
+      formData.forEach((value, key) => {
+        jsonData[key] = value.toString();
+      });
+
       const res = await fetch("/api/contact", {
         method: "POST",
-        body: new FormData(form),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(jsonData),
       });
 
       if (!res.ok) {

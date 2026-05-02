@@ -45,7 +45,7 @@ function buildEmailText(data: Record<string, string>): string {
 }
 
 /* ─────────────────────────────────────
-   调用 Python 脚本发送邮件（通过 stdin 传 JSON）
+   调用 Python 脚本发送邮件
    ───────────────────────────────────── */
 function sendMailViaPython(payload: {
   to: string;
@@ -57,7 +57,15 @@ function sendMailViaPython(payload: {
   return new Promise((resolve, reject) => {
     const scriptPath = path.join(process.cwd(), "scripts", "send_mail.py");
     const py = spawn("python3", [scriptPath], {
-      env: { ...process.env, PYTHONIOENCODING: "utf-8" },
+      env: {
+        ...process.env,
+        PYTHONIOENCODING: "utf-8",
+        MAIL_TO: payload.to,
+        SMTP_USER: payload.user,
+        SMTP_PASS: payload.pass,
+        MAIL_SUBJECT: payload.subject,
+        MAIL_BODY: payload.body,
+      },
     });
 
     let stdout = "";
@@ -88,23 +96,17 @@ function sendMailViaPython(payload: {
     });
 
     py.on("error", (err) => reject(err));
-
-    // 通过 stdin 写入 JSON，避免命令行参数编码问题
-    py.stdin.write(JSON.stringify(payload), "utf-8");
-    py.stdin.end();
   });
 }
 
 /* ─────────────────────────────────────
    POST /api/contact
+   接收 JSON 而不是 form-data，避免编码问题
    ───────────────────────────────────── */
 export async function POST(request: NextRequest) {
   try {
-    const data: Record<string, string> = {};
-    const formData = await request.formData();
-    formData.forEach((value, key) => {
-      data[key] = value.toString();
-    });
+    // 改用 JSON 接收，避免 formData() 的编码问题
+    const data = await request.json();
 
     // 验证必填字段
     const required = ["name", "identity", "interest", "email", "message"];
