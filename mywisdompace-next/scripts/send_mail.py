@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 发送咨询表单邮件到 QQ 邮箱
-由 Next.js API Route 通过环境变量调用，彻底避免管道编码问题
+由 Next.js API Route 通过临时文件调用，零编码问题
 """
 import os
 import sys
@@ -25,14 +25,22 @@ def send_email(to_email: str, smtp_user: str, smtp_pass: str, subject: str, body
 
 if __name__ == "__main__":
     try:
+        # 从命令行参数读取临时文件路径
+        filepath = sys.argv[1]
+        with open(filepath, "r", encoding="utf-8") as f:
+            payload = json.load(f)
+
         send_email(
-            os.environ["MAIL_TO"],
-            os.environ["SMTP_USER"],
-            os.environ["SMTP_PASS"],
-            os.environ["MAIL_SUBJECT"],
-            os.environ["MAIL_BODY"],
+            payload["to"],
+            payload["user"],
+            payload["pass"],
+            payload["subject"],
+            payload["body"],
         )
         print(json.dumps({"success": True}))
+
+        # 清理临时文件
+        os.remove(filepath)
     except Exception as e:
         print(json.dumps({"success": False, "error": str(e)}))
         sys.exit(1)
