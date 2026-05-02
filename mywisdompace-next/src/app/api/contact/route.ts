@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { spawn } from "child_process";
+import path from "path";
 
 /* ─────────────────────────────────────
    表单字段中文映射
@@ -44,23 +45,40 @@ function buildEmailText(data: Record<string, string>): string {
 }
 
 /* ─────────────────────────────────────
-   QQ 邮箱 SMTP 传输器
+   调用 Python 脚本发送邮件
    ───────────────────────────────────── */
-function createTransporter() {
-  const host = process.env.SMTP_HOST;
-  const port = Number(process.env.SMTP_PORT) || 465;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+function sendMailViaPython(
+  to: string,
+  user: string,
+  pass: string,
+  subject: string,
+  body: string
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const scriptPath = path.join(process.cwd(), "scripts", "send_mail.py");
+    const py = spawn("python3", [scriptPath, to, user, pass, subject, body], {
+      env: { ...process.env, PYTHONIOENCODING: "utf-8" },
+    });
 
-  if (!host || !user || !pass) {
-    throw new Error("SMTP 环境变量未配置");
-  }
+    let stdout = "";
+    let stderr = "";
 
-  return nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465,
-    auth: { user, pass },
+    py.stdout.on("data", (d) => {
+      stdout += d.toString();
+    });
+    py.stderr.on("data", (d) => {
+      stderr += d.toString();
+    });
+
+    py.on("close", (code) => {
+      if (code === 0 && stdout.trim() === "OK") {
+        resolve();
+      } else {
+        reject(new Error(stderr || "Python script exited with code " + code));
+      }
+    });
+
+    py.on("error", (err) => reject(err));
   });
 }
 
@@ -85,21 +103,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const transporter = createTransporter();
     const mailTo = process.env.MAIL_TO || "1318952797@qq.com";
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
 
-    const textBody = buildEmailText(data);
+    if (!smtpUser || !smtpPass) {
+      return NextResponse.json(
+        { error: "SMTP 环境变量未配置" },
+        { status: 500 }
+      );
+    }
 
-    // 关键：让 nodemailer 自己生成 MIME，不要手动构建 raw
-    // 同时禁用 QP 编码，强制用 base64
-    await transporter.sendMail({
-      from: "\"=?UTF-8?B?" + Buffer.from("思考熊咨询表单").toString("base64") + "?=\" <" + process.env.SMTP_USER + ">",
-      to: mailTo,
-      subject: "=?UTF-8?B?" + Buffer.from("思考熊咨询 - " + (data.name?.trim() || "新消息")).toString("base64") + "?=",
-      text: textBody,
-      // 禁用 quoted-printable，强制 base64
-      encoding: "base64",
-    });
+    const subject = "思考熊咨询 - " + (data.name?.trim() || "新消息");
+    const body = buildEmailText(data);
+
+    await sendMailViaPython(mailTo, smtpUser, smtpPass, subject, body);
 
     return NextResponse.json({ success: true });
   } catch (error) {
