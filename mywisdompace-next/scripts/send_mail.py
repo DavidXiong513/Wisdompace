@@ -25,7 +25,10 @@ def send_email(to_email: str, smtp_user: str, smtp_pass: str, subject: str, body
 
 if __name__ == "__main__":
     try:
-        payload = json.loads(sys.stdin.read())
+        # 必须用 buffer 读取原始字节再 decode('utf-8')
+        # 避免 Windows 上用 GBK 解码导致中文乱码
+        raw = sys.stdin.buffer.read().decode("utf-8")
+        payload = json.loads(raw)
         send_email(
             payload["to"],
             payload["user"],
