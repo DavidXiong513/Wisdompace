@@ -45,18 +45,18 @@ function buildEmailText(data: Record<string, string>): string {
 }
 
 /* ─────────────────────────────────────
-   调用 Python 脚本发送邮件
+   调用 Python 脚本发送邮件（通过 stdin 传 JSON）
    ───────────────────────────────────── */
-function sendMailViaPython(
-  to: string,
-  user: string,
-  pass: string,
-  subject: string,
-  body: string
-): Promise<void> {
+function sendMailViaPython(payload: {
+  to: string;
+  user: string;
+  pass: string;
+  subject: string;
+  body: string;
+}): Promise<void> {
   return new Promise((resolve, reject) => {
     const scriptPath = path.join(process.cwd(), "scripts", "send_mail.py");
-    const py = spawn("python3", [scriptPath, to, user, pass, subject, body], {
+    const py = spawn("python3", [scriptPath], {
       env: { ...process.env, PYTHONIOENCODING: "utf-8" },
     });
 
@@ -71,14 +71,27 @@ function sendMailViaPython(
     });
 
     py.on("close", (code) => {
-      if (code === 0 && stdout.trim() === "OK") {
-        resolve();
+      if (code === 0) {
+        try {
+          const result = JSON.parse(stdout.trim());
+          if (result.success) {
+            resolve();
+          } else {
+            reject(new Error(result.error || "Unknown error"));
+          }
+        } catch {
+          reject(new Error("Invalid JSON from Python: " + stdout));
+        }
       } else {
         reject(new Error(stderr || "Python script exited with code " + code));
       }
     });
 
     py.on("error", (err) => reject(err));
+
+    // 通过 stdin 写入 JSON，避免命令行参数编码问题
+    py.stdin.write(JSON.stringify(payload), "utf-8");
+    py.stdin.end();
   });
 }
 
@@ -114,10 +127,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const subject = "思考熊咨询 - " + (data.name?.trim() || "新消息");
-    const body = buildEmailText(data);
-
-    await sendMailViaPython(mailTo, smtpUser, smtpPass, subject, body);
+    await sendMailViaPython({
+      to: mailTo,
+      user: smtpUser,
+      pass: smtpPass,
+      subject: "思考熊咨询 - " + (data.name?.trim() || "新消息"),
+      body: buildEmailText(data),
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
