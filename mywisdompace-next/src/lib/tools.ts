@@ -111,9 +111,15 @@ export const tools: Record<string, ToolInfo> = {
   },
   "choice-rights": {
     id: "choice-rights",
-    name: "选择权思考",
+    name: "生前预嘱",
     status: "developing",
-    description: "思考你的选择权与安排",
+    description: "提前明确医疗意愿与临终安排，让家人更安心",
+  },
+  "ta-worth-trust": {
+    id: "ta-worth-trust",
+    name: "Ta值得托付吗？",
+    status: "developing",
+    description: "系统评估你的意定人是否值得托付——TA理解你的价值观吗？TA有压力下决策的能力吗？",
   },
   "goodbye-list": {
     id: "goodbye-list",

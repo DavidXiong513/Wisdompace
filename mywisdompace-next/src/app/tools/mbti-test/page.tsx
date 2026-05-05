@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { useTestStore } from '@/stores/testStore';
+import { useSaveAssessment } from '@/lib/hooks/useAssessments';
+import { useAuthStore } from '@/stores/authStore';
 import {
   loadAllMBTIData,
   getPageQuestions,
@@ -27,6 +29,7 @@ export default function MBTITestPage() {
   const [result, setResult] = useState<TestResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [resultTab, setResultTab] = useState<'bestPerformance' | 'characteristics' | 'othersView' | 'growthAreas'>('bestPerformance');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   const {
     currentPage,
@@ -37,14 +40,22 @@ export default function MBTITestPage() {
     answeredCount,
   } = useTestStore();
 
+  const user = useAuthStore((s) => s.user);
+  const saveAssessment = useSaveAssessment();
+
   // 加载数据
   useEffect(() => {
-    loadAllMBTIData().then(({ questions, scoringRules, personalityTypes }) => {
-      setQuestions(questions);
-      setScoringRules(scoringRules);
-      setPersonalityTypes(personalityTypes);
-      setLoading(false);
-    });
+    loadAllMBTIData()
+      .then(({ questions, scoringRules, personalityTypes }) => {
+        setQuestions(questions);
+        setScoringRules(scoringRules);
+        setPersonalityTypes(personalityTypes);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('[MBTI] Failed to load test data:', err);
+        setLoading(false);
+      });
   }, []);
 
   // 如果有已有答案，自动跳到答题页
@@ -85,7 +96,31 @@ export default function MBTITestPage() {
     setResult(testResult);
     setPhase('result');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [answers, scoringRules, personalityTypes]);
+
+    // 已登录用户：保存测评结果到云端
+    if (user) {
+      setSaveStatus('saving');
+      saveAssessment.mutate(
+        {
+          type: 'mbti',
+          result: {
+            type: testResult.type,
+            typeName: testResult.typeName,
+            scores: testResult.scores,
+            dominant: testResult.typeData.dominant,
+            auxiliary: testResult.typeData.auxiliary,
+            tertiary: testResult.typeData.tertiary,
+            inferior: testResult.typeData.inferior,
+            answeredAt: new Date().toISOString(),
+          },
+        },
+        {
+          onSuccess: () => setSaveStatus('saved'),
+          onError: () => setSaveStatus('error'),
+        }
+      );
+    }
+  }, [answers, scoringRules, personalityTypes, user, saveAssessment]);
 
   const handleRestart = useCallback(() => {
     resetTest();
@@ -146,6 +181,8 @@ export default function MBTITestPage() {
             resultTab={resultTab}
             onTabChange={setResultTab}
             onRestart={handleRestart}
+            saveStatus={saveStatus}
+            isLoggedIn={!!user}
           />
         )}
       </main>
@@ -419,11 +456,15 @@ function ResultPhase({
   resultTab,
   onTabChange,
   onRestart,
+  saveStatus,
+  isLoggedIn,
 }: {
   result: TestResult;
   resultTab: 'bestPerformance' | 'characteristics' | 'othersView' | 'growthAreas';
   onTabChange: (tab: typeof resultTab) => void;
   onRestart: () => void;
+  saveStatus: 'idle' | 'saving' | 'saved' | 'error';
+  isLoggedIn: boolean;
 }) {
   const pairs = getDimensionPairs(result.scores);
 
@@ -439,6 +480,25 @@ function ResultPhase({
             {result.typeName}
           </div>
         </div>
+
+        {/* 云端保存状态 */}
+        {isLoggedIn ? (
+          <div className="text-xs mt-2">
+            {saveStatus === 'saving' && (
+              <span className="text-stone-400">正在保存结果到云端…</span>
+            )}
+            {saveStatus === 'saved' && (
+              <span className="text-green-600">✓ 结果已保存到云端</span>
+            )}
+            {saveStatus === 'error' && (
+              <span className="text-red-500">保存失败，请检查网络</span>
+            )}
+          </div>
+        ) : (
+          <div className="text-xs text-stone-400 mt-2">
+            登录后可保存测评结果，随时查看历史记录
+          </div>
+        )}
       </div>
 
       {/* 维度柱状图 */}

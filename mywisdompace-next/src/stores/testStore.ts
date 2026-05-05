@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { TestState } from '@/types/mbti';
+import { syncToolState, fetchToolState } from '@/lib/sync-tool-state';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -37,12 +38,26 @@ export const useTestStore = create<TestStoreState>()(
           answers: { ...state.answers, [questionId]: answer },
           lastUpdated: Date.now(),
         }));
+        // 防抖同步到云端
+        const currentState = get();
+        syncToolState('tool-state', 'mbti-test', {
+          answers: currentState.answers,
+          currentPage: currentState.currentPage,
+          lastUpdated: currentState.lastUpdated,
+        });
       },
 
       setCurrentPage: (page) => {
         set({
           currentPage: page,
           lastUpdated: Date.now(),
+        });
+        // 防抖同步到云端
+        const currentState = get();
+        syncToolState('tool-state', 'mbti-test', {
+          answers: currentState.answers,
+          currentPage: currentState.currentPage,
+          lastUpdated: currentState.lastUpdated,
         });
       },
 
@@ -73,6 +88,32 @@ export const useTestStore = create<TestStoreState>()(
         return true;
       },
     }),
-    { name: 'mbti-test-state' }
+    {
+      name: 'mbti-test-state',
+      onRehydrateStorage: () => (state, error) => {
+        if (error || !state) return;
+        // 水合完成后，尝试从云端拉取并合并
+        fetchToolState('tool-state', 'mbti-test').then((cloudState) => {
+          if (!cloudState) return;
+          const cloud = cloudState as { answers?: Record<number, 'A' | 'B'>; currentPage?: number; lastUpdated?: number };
+          const localTime = state.lastUpdated ?? 0;
+          const cloudTime = cloud.lastUpdated ?? 0;
+
+          if (cloudTime > localTime) {
+            // 云端较新，覆盖本地
+            if (cloud.answers) {
+              Object.entries(cloud.answers).forEach(([qId, ans]) => {
+                state.setAnswer(Number(qId), ans);
+              });
+            }
+            if (typeof cloud.currentPage === 'number') {
+              state.setCurrentPage(cloud.currentPage);
+            }
+          }
+        }).catch(() => {
+          // 忽略拉取错误
+        });
+      },
+    }
   )
 );

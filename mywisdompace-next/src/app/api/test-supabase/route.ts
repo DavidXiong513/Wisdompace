@@ -1,10 +1,10 @@
-// 测试 Supabase 连接（使用统一客户端模块）
-import { createClient } from '@/lib/supabase/client'
+// 测试 Supabase 连接（使用服务端客户端）
+import { createClient } from '@/lib/supabase/server'
 
 // GET 请求时测试连接
 export async function GET() {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     // 尝试查询数据库版本，验证连接
     const { data, error } = await supabase.rpc('version')
@@ -14,7 +14,7 @@ export async function GET() {
       if (error.message.includes('function') || error.code === '42883') {
         return Response.json({
           status: '✅ Supabase 连接成功！',
-          message: '数据库已连接，统一客户端模块工作正常',
+          message: '数据库已连接，服务端客户端模块工作正常',
         })
       }
       return Response.json(

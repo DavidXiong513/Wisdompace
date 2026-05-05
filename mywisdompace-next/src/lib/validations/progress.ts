@@ -2,9 +2,12 @@ import { z } from 'zod';
 
 /** 进度分类枚举 */
 export const ProgressCategoryEnum = z.enum([
-  'chapter-read',    // 章节阅读
-  'tool-completed',  // 测评/工具完成
-  'milestone',       // 人生里程碑
+  'chapter-read',      // 章节阅读
+  'tool-completed',    // 测评/工具完成
+  'milestone',         // 人生里程碑
+  'reflection-answer', // 思考题回答
+  'tool-state',        // 工具中间状态
+  'preference',        // 用户偏好设置
   // 未来扩展
 ]);
 

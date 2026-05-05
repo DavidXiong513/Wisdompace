@@ -60,5 +60,6 @@ function mapError(msg: string): string {
   if (msg.includes('invalid_email')) return '邮箱格式不正确';
   if (msg.includes('Password should be at least 6 characters')) return '密码长度至少 6 位';
   if (msg.includes('rate limit')) return '操作过于频繁，请稍后再试';
+  if (msg.includes('fetch failed') || msg.includes('NetworkError')) return '网络连接异常，请检查网络后重试';
   return msg || '注册失败，请稍后再试';
 }

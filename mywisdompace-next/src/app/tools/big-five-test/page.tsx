@@ -14,6 +14,8 @@ import {
 } from '@/lib/big-five-data';
 import { useBigFiveStore } from '@/lib/big-five-store';
 import { usePersistHydrated } from '@/lib/hooks/usePersistHydrated';
+import { useSaveAssessment } from '@/lib/hooks/useAssessments';
+import { useAuthStore } from '@/stores/authStore';
 import type {
   BigFiveQuestion,
   DimensionInterpretation,
@@ -37,19 +39,27 @@ export default function BigFiveTestPage() {
   } = useBigFiveStore();
 
   const hydrated = usePersistHydrated(useBigFiveStore);
+  const user = useAuthStore((s) => s.user);
+  const saveAssessment = useSaveAssessment();
 
   const [questions, setQuestions] = useState<BigFiveQuestion[]>([]);
   const [interpretations, setInterpretations] = useState<Record<string, DimensionInterpretation>>({});
   const [loading, setLoading] = useState(true);
   const [activeDimTab, setActiveDimTab] = useState<BigFiveDimensionKey>('extraversion');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   // 加载题库数据（静态 JSON，不随用户状态改变）
   useEffect(() => {
-    loadAllBigFiveData().then(({ questions, interpretations }) => {
-      setQuestions(questions);
-      setInterpretations(interpretations);
-      setLoading(false);
-    });
+    loadAllBigFiveData()
+      .then(({ questions, interpretations }) => {
+        setQuestions(questions);
+        setInterpretations(interpretations);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('[BigFive] Failed to load test data:', err);
+        setLoading(false);
+      });
   }, []);
 
   const totalPages = useMemo(() => getTotalPages(questions.length), [questions]);
@@ -78,8 +88,32 @@ export default function BigFiveTestPage() {
       setResult(r);
       setPhase('result');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // 已登录用户：保存测评结果到云端
+      if (user) {
+        setSaveStatus('saving');
+        saveAssessment.mutate(
+          {
+            type: 'big-five',
+            result: {
+              dimensionScores: r.dimensionScores.map((d) => ({
+                key: d.key,
+                name: d.name,
+                percentage: d.percentage,
+                label: d.label,
+              })),
+              matchedProfiles: r.matchedProfiles,
+              completedAt: r.completedAt,
+            },
+          },
+          {
+            onSuccess: () => setSaveStatus('saved'),
+            onError: () => setSaveStatus('error'),
+          }
+        );
+      }
     }
-  }, [currentPage, totalPages, answers, questions, interpretations, setCurrentPage, setResult, setPhase]);
+  }, [currentPage, totalPages, answers, questions, interpretations, setCurrentPage, setResult, setPhase, user, saveAssessment]);
 
   // 上一页
   const goPrevPage = useCallback(() => {
@@ -164,6 +198,8 @@ export default function BigFiveTestPage() {
             onReset={resetTest}
             activeTab={activeDimTab}
             onTabChange={setActiveDimTab}
+            saveStatus={saveStatus}
+            isLoggedIn={!!user}
           />
         )}
       </main>
@@ -383,11 +419,15 @@ function ResultPhase({
   onReset,
   activeTab,
   onTabChange,
+  saveStatus,
+  isLoggedIn,
 }: {
   result: BigFiveTestResult;
   onReset: () => void;
   activeTab: BigFiveDimensionKey;
   onTabChange: (key: BigFiveDimensionKey) => void;
+  saveStatus: 'idle' | 'saving' | 'saved' | 'error';
+  isLoggedIn: boolean;
 }) {
   const activeScore = result.dimensionScores.find((d) => d.key === activeTab)!;
   const activeColor = DIMENSION_COLORS[activeTab];
@@ -401,6 +441,25 @@ function ResultPhase({
         <p className="mt-1 text-sm text-[#8A7E6A]">
           测试完成于 {new Date(result.completedAt).toLocaleDateString('zh-CN')}
         </p>
+
+        {/* 云端保存状态 */}
+        {isLoggedIn ? (
+          <div className="text-xs mt-2">
+            {saveStatus === 'saving' && (
+              <span className="text-stone-400">正在保存结果到云端…</span>
+            )}
+            {saveStatus === 'saved' && (
+              <span className="text-green-600">✓ 结果已保存到云端</span>
+            )}
+            {saveStatus === 'error' && (
+              <span className="text-red-500">保存失败，请检查网络</span>
+            )}
+          </div>
+        ) : (
+          <div className="text-xs text-stone-400 mt-2">
+            登录后可保存测评结果，随时查看历史记录
+          </div>
+        )}
       </div>
 
       {/* 五维度总览柱状图 */}

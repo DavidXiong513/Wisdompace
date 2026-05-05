@@ -46,5 +46,6 @@ function mapError(msg: string): string {
   if (msg.includes('Invalid login credentials')) return '邮箱或密码错误';
   if (msg.includes('Email not confirmed')) return '请先验证邮箱';
   if (msg.includes('rate limit')) return '操作过于频繁，请稍后再试';
+  if (msg.includes('fetch failed') || msg.includes('NetworkError')) return '网络连接异常，请检查网络后重试';
   return msg || '登录失败，请稍后再试';
 }

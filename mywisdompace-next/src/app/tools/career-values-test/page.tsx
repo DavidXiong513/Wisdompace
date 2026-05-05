@@ -1,3 +1,4 @@
+'use no memo';
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -144,7 +145,7 @@ function ExplorePage() {
           <strong className="text-[#4A3728]">至少展开阅读5个</strong>后，你就可以进入下一阶段。
         </p>
         <div className="mt-3 text-right text-xs text-[#8A7E6A]">
-          已阅读 {expandedCount}/15
+          已阅读 {expandedCount}/14
         </div>
       </div>
 
@@ -734,9 +735,16 @@ function ReportPage() {
   const eliminated15to8 = getValuesByIds(report.eliminatedPath.from14to8);
   const eliminated8to3 = getValuesByIds(report.eliminatedPath.from8to3);
 
-  // 高亮造句中的价值观词
+  // 高亮造句中的价值观词（先转义 HTML，再替换价值观名称为 mark 标签）
   const highlightSentence = (text: string) => {
-    let result = text;
+    // 先转义用户输入中的 HTML 特殊字符，防止 XSS
+    const escaped = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;');
+    let result = escaped;
     const values = getValuesByIds(ranked3.filter(Boolean));
     values.forEach(v => {
       const regex = new RegExp(v.name, 'g');
@@ -790,7 +798,7 @@ function ReportPage() {
 
         {/* 15 → 8 */}
         <div className="mb-4">
-          <div className="mb-2 text-xs font-medium text-[#8A7E6A]">15 → 8（被排除的7个）</div>
+          <div className="mb-2 text-xs font-medium text-[#8A7E6A]">14 → 8（被排除的6个）</div>
           <div className="flex flex-wrap gap-1.5">
             {eliminated15to8.map(v => (
               <span key={v.id} className="inline-flex items-center gap-1 rounded-full bg-[#F0EBE0] px-2.5 py-1 text-xs text-[#8A7E6A] line-through opacity-60">

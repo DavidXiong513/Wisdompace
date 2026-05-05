@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useAbilityStore } from '@/lib/ability-store';
 import { usePersistHydrated } from '@/lib/hooks/usePersistHydrated';
+import { useAuthStore } from '@/stores/authStore';
+import { useSaveAssessment } from '@/lib/hooks/useAssessments';
 import {
   getAllAbilities,
   getAbilityByIndex,
@@ -776,6 +778,35 @@ function MiniGrid({ cells, tip }: {
 function ReportPage() {
   const { answers, name, years, reset } = useAbilityStore();
   const report = useMemo(() => generateReport(answers), [answers]);
+  const user = useAuthStore((s) => s.user);
+  const saveAssessment = useSaveAssessment();
+  const hasSavedRef = useRef(false);
+
+  // 保存结果到云端
+  useEffect(() => {
+    if (!user || !report || hasSavedRef.current) return;
+    hasSavedRef.current = true;
+    saveAssessment.mutate({
+      type: 'ability',
+      result: {
+        quadrants: {
+          strengthCount: report.quadrants.strength.length,
+          potentialCount: report.quadrants.potential.length,
+          reserveCount: report.quadrants.reserve.length,
+          abandonCount: report.quadrants.abandon.length,
+          topStrengths: report.quadrants.strength.slice(0, 5).map((a) => a.name),
+          topPotentials: report.quadrants.potential.slice(0, 5).map((a) => a.name),
+        },
+        domainStats: report.domainStats.map((ds) => ({
+          domain: ds.domain.name,
+          avgProf: Number(ds.avgProf.toFixed(2)),
+          avgInte: Number(ds.avgInte.toFixed(2)),
+        })),
+        completedAt: new Date().toISOString(),
+      },
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, report]);
 
   const handleExportMD = () => {
     if (!report) return;
@@ -822,6 +853,13 @@ function ReportPage() {
           <span>📈 {years || '未填写'}年</span>
           <span>📅 {new Date().toLocaleDateString('zh-CN')}</span>
         </div>
+        {user && (
+          <div className="mt-2 text-[11px] text-[#8A7E6A]">
+            {saveAssessment.isPending && '正在保存结果…'}
+            {saveAssessment.isSuccess && '✓ 结果已保存到云端'}
+            {saveAssessment.isError && '保存失败，请检查网络'}
+          </div>
+        )}
       </div>
 
       {/* 四象限 */}
@@ -995,6 +1033,7 @@ function ReportPage() {
 export default function AbilityTestPage() {
   const phase = useAbilityStore((state) => state.phase);
   const hydrated = usePersistHydrated(useAbilityStore);
+  const hasProgress = Object.keys(useAbilityStore.getState().answers).length > 0;
 
   if (!hydrated) {
     return (
@@ -1025,9 +1064,22 @@ export default function AbilityTestPage() {
       </div>
 
       {/* 恢复进度提示 */}
-      {phase !== 'welcome' && phase !== 'evaluate' && phase !== 'batch-summary' && phase !== 'review' && phase !== 'report' && phase !== 'anchor' && (
+      {phase === 'welcome' && hasProgress && (
         <div className="mx-auto mt-4 max-w-2xl rounded-lg border border-[#FFC107] bg-[#FFF8E1] p-3 text-center text-xs text-[#5D4A3A]">
-          你上次已填写部分数据。继续完成测评，或点击&ldquo;重新测评&rdquo;开始。
+          你上次已填写部分数据。
+          <button
+            onClick={() => {
+              const store = useAbilityStore.getState();
+              if (Object.keys(store.answers).length >= 42) {
+                store.setPhase('review');
+              } else {
+                store.setPhase('evaluate');
+              }
+            }}
+            className="ml-1 font-semibold text-[#6B9A68] underline"
+          >
+            继续测评
+          </button>
         </div>
       )}
 

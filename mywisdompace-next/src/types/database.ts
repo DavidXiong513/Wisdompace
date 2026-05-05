@@ -17,9 +17,12 @@ export type AssessmentType =
   | string;
 
 export type ProgressCategory =
-  | 'chapter-read'    // 章节阅读进度
-  | 'tool-completed'  // 测评/工具完成情况
-  | 'milestone'       // 人生里程碑
+  | 'chapter-read'      // 章节阅读进度
+  | 'tool-completed'    // 测评/工具完成情况
+  | 'milestone'         // 人生里程碑
+  | 'reflection-answer' // 思考题回答
+  | 'tool-state'        // 工具中间状态
+  | 'preference'        // 用户偏好设置
   // 未来扩展
   | string;
 

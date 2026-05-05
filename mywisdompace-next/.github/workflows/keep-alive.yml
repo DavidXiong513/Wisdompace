@@ -1,0 +1,32 @@
+name: Supabase Keep-Alive
+
+on:
+  # 每 2 天运行一次（10:00 UTC = 18:00 北京时间，避免免费计划闲置暂停）
+  schedule:
+    - cron: '0 10 */2 * *'
+  # 也支持手动触发
+  workflow_dispatch:
+
+jobs:
+  wake-up:
+    name: Wake Up Supabase
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          echo "🔄 Pinging Supabase (REST)..."
+          curl -s -o /dev/null -w "HTTP %{http_code}\n" \
+            "https://enubvdkirskacmtuzgys.supabase.co/rest/v1/" \
+            -H "apikey: sb_publishable_VydeLYXhD1jxpsJUnqvnSQ_UFA4BMyD" \
+            --connect-timeout 15 --max-time 30
+
+      - name: Ping Supabase Auth API
+        run: |
+          echo "🔄 Pinging Supabase (Auth)..."
+          curl -s -o /dev/null -w "HTTP %{http_code}\n" \
+            "https://enubvdkirskacmtuzgys.supabase.co/auth/v1/user" \
+            -H "apikey: sb_publishable_VydeLYXhD1jxpsJUnqvnSQ_UFA4BMyD" \
+            --connect-timeout 15 --max-time 30
+
+      - name: Log completion
+        run: echo "✅ Keep-alive ping completed at $(date -u '+%Y-%m-%d %H:%M UTC')"

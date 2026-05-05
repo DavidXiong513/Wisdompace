@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl *)",
+      "Bash(ping -n 1 enubvdkirskacmtuzgys.supabase.co)",
+      "Bash(npx next *)",
+      "Bash(tasklist)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(mkdir -p \"D:/aicode/Forclaude/memory\")",
+      "Bash(cp \"C:/Users/13189/.claude/projects/D--aicode-mywisdompace/memory/project_20260505_session.md\" \"D:/aicode/Forclaude/memory/\")",
+      "Bash(cp \"C:/Users/13189/.claude/projects/D--aicode-mywisdompace/memory/MEMORY.md\" \"D:/aicode/Forclaude/memory/\")"
+    ]
+  }
+}
