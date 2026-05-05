@@ -95,7 +95,7 @@ export function ResultReport() {
               重新测评
             </button>
             <Link
-              href="/chapter/chapter-2#stress-management"
+              href="/chapter/chapter-2#emotional-check"
               className="flex-1 rounded-xl bg-[#C87941] py-3.5 text-center text-sm font-semibold text-white shadow-md transition-opacity hover:opacity-90"
             >
               返回：压力与调节 →

@@ -96,11 +96,11 @@ const CONTENT_SECTIONS = [
 const PODCASTS = [
   {
     title: "【菩提科普】主题播客",
-    desc: "以佛学智慧为镜，照见生老病死、爱别离、怨憎会、求不得、五阴炽盛八苦的真相。每一次对苦的直面，都是觉悟的开始。不是在讲经，是在陪你一起思考如何离苦得乐。",
+    desc: "以佛学智慧为镜，照见生老病死八苦的真相。不是在讲经，是在陪你一起思考如何离苦得乐。",
   },
   {
     title: "【一生的整理】主题播客",
-    desc: "整理的不是物品，是人生。从看见自己，积极生活，再到清楚交代，好好告别——用播客的形式，呈现「一生的整理」这个网站的完整脉络。每期一个话题，陪你踏出智慧下一步。",
+    desc: "整理的不是物品，是人生。从看见自己到好好告别——每期一个话题，陪你踏出智慧下一步。",
   },
 ];
 
@@ -173,7 +173,7 @@ export default function ContentPage() {
         </div>
       </section>
 
-      {/* 五大板块 */}
+      {/* 六大板块 */}
       <section id="topics" className="as-section-alt">
         <div className="as-container">
           <div className="mb-6 text-center">
@@ -221,12 +221,12 @@ export default function ContentPage() {
               <div key="p1" className="as-card p-4 flex flex-col">
                 <h3 className="font-semibold text-[var(--as-primary-700)]">{PODCASTS[0].title}</h3>
                 <p className="mt-1 text-sm text-[var(--as-gray-500)] flex-1">{PODCASTS[0].desc}</p>
-                <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">🔗 链接待补充</span>
+                <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">已在视频号平台发布，欢迎收听</span>
               </div>,
               <div key="m1" className="as-card p-4 flex flex-col">
                 <h3 className="font-semibold text-[var(--as-primary-700)]">{MUSICS[0].title}</h3>
                 <p className="mt-1 text-sm text-[var(--as-gray-500)] flex-1">{MUSICS[0].desc}</p>
-                <span className="mt-2 inline-block text-xs text-transparent">&nbsp;</span>
+                <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">已在视频号平台发布，欢迎收听</span>
               </div>,
               <div key="l1" className="as-card p-4 flex flex-col">
                 <h3 className="font-semibold text-[var(--as-primary-700)]">{LIVES[0].title}</h3>
@@ -243,12 +243,12 @@ export default function ContentPage() {
               <div key="p2" className="as-card p-4 flex flex-col">
                 <h3 className="font-semibold text-[var(--as-primary-700)]">{PODCASTS[1].title}</h3>
                 <p className="mt-1 text-sm text-[var(--as-gray-500)] flex-1">{PODCASTS[1].desc}</p>
-                <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">🔗 链接待补充</span>
+                <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">已在视频号平台发布，欢迎收听</span>
               </div>,
               <div key="m2" className="as-card p-4 flex flex-col">
                 <h3 className="font-semibold text-[var(--as-primary-700)]">{MUSICS[1].title}</h3>
                 <p className="mt-1 text-sm text-[var(--as-gray-500)] flex-1">{MUSICS[1].desc}</p>
-                <span className="mt-2 inline-block text-xs text-transparent">&nbsp;</span>
+                <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">已在视频号平台发布，欢迎收听</span>
               </div>,
               <div key="l2" className="as-card p-4 flex flex-col">
                 <h3 className="font-semibold text-[var(--as-primary-700)]">{LIVES[1].title}</h3>

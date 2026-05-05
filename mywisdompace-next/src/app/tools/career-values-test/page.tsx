@@ -69,7 +69,7 @@ function WelcomePage() {
 
       {/* 14个价值观预览 */}
       <div className="mb-6 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7">
-        <p className="mb-3 text-xs font-medium text-[#8A7E6A]">14个叔伯职业价值观</p>
+        <p className="mb-3 text-xs font-medium text-[#8A7E6A]">14个经典职业价值观</p>
         <div className="flex flex-wrap gap-2">
           {CAREER_VALUES.map(v => (
             <span

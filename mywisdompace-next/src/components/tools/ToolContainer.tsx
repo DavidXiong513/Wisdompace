@@ -113,12 +113,13 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
 
   // 特殊处理：使用统一占位逻辑的工具
   const usePlaceholder = [
-    'life-clock', 
-    'preparedness-slider', 
-    'framework-grid', 
+    'life-clock',
+    'preparedness-slider',
+    'framework-grid',
     'reminder-list',
     'three-questions-tool',
     'emotional-assessment',
+    'choice-rights',
   ].includes(toolId);
 
   return (

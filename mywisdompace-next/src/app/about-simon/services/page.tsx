@@ -128,7 +128,7 @@ export default function ServicesPage() {
       <AboutHero
         label="Services"
         title="双轮驱动，知行合一"
-        description="一轮服务组织，一轮服务个体。即知企业的痛点，也懂打工人的心声。"
+        description="一轮服务组织，一轮服务个体。既知企业的痛点，也懂打工人的心声。"
       />
 
       {/* 双轮图示 */}

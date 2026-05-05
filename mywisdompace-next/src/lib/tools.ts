@@ -113,7 +113,7 @@ export const tools: Record<string, ToolInfo> = {
     id: "choice-rights",
     name: "生前预嘱",
     status: "developing",
-    description: "提前明确医疗意愿与临终安排，让家人更安心",
+    description: "保护您最后时刻的尊严与选择",
   },
   "ta-worth-trust": {
     id: "ta-worth-trust",

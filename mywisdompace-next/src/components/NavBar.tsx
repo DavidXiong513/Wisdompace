@@ -13,7 +13,7 @@ const NavBar = () => {
         <div>
           {/* Placeholder for logo or site title if needed in the future */}
           <Link href="/" className="text-lg font-bold text-white">
-            {/* Wisdompace */}
+            一生的整理
           </Link>
         </div>
 
