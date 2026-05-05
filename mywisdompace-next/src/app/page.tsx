@@ -41,12 +41,12 @@ export default function Home() {
 
       {/* Content */}
       <div className="relative z-10 h-full px-4 pt-20 text-white sm:px-6 sm:pt-24">
-        <div className="absolute top-[46%] left-[calc(50%+310px)] w-[min(94vw,58rem)] -translate-x-1/2 -translate-y-1/2 text-center sm:top-1/2 sm:left-[calc(64%+310px)] sm:w-[min(68rem,74vw)]">
+        <div className="absolute top-[46%] left-1/2 w-[min(94vw,58rem)] -translate-x-1/2 -translate-y-1/2 text-center sm:top-1/2 sm:left-[calc(64%+310px)] sm:w-[min(68rem,74vw)]">
           <div className="flex w-full max-w-[680px] flex-col items-center">
-            <h1 className="font-cn-serif text-shadow-lg block w-full text-center text-[4.3rem] font-bold tracking-[0.16em] leading-none text-white sm:text-[5.2rem] md:text-[6.9rem]">
+            <h1 className="font-cn-serif text-shadow-lg block w-full text-center text-[2.8rem] font-bold tracking-[0.16em] leading-none text-white sm:text-[5.2rem] md:text-[6.9rem]">
               一生的整理
             </h1>
-            <p className="text-shadow mt-6 block w-full whitespace-nowrap text-center text-lg font-semibold tracking-[0.14em] text-white/95 sm:text-[1.53rem] md:text-[1.68rem]">
+            <p className="text-shadow mt-4 block w-full text-center text-base font-semibold tracking-[0.14em] text-white/95 sm:mt-6 sm:whitespace-nowrap sm:text-[1.53rem] md:text-[1.68rem]">
               Wisdompace | A lifelong practice of living
             </p>
 

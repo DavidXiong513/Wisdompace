@@ -20,37 +20,37 @@ const SECTIONS = [
    ───────────────────────────────────── */
 const TIMELINE = [
   {
-    year: "培训师起步",
+    year: "2006-2010",
     title: "培训师起步",
     desc: "前程无忧（51JOB）培训师，乙方视角的人力启蒙，从交付中理解企业的真正需求",
   },
   {
-    year: "合资纵深",
+    year: "2010-2013",
     title: "合资纵深",
     desc: "上汽通用汽车HRBP，3万人+制造体系，在规模化组织中锤炼系统思维",
   },
   {
-    year: "外企深耕",
+    year: "2013-2017",
     title: "外企深耕",
     desc: "登士柏（全球口腔TOP1）大中国区HRD，外企体系下的人力资源纵深实践",
   },
   {
-    year: "创业历练",
+    year: "2017-2020",
     title: "创业历练",
     desc: "奕尚电商HR&Admin负责人+盟广信息HRD，从0到1的组织搭建，理解创业公司的生存法则",
   },
   {
-    year: "互联网大厂",
+    year: "2020-2021",
     title: "互联网大厂",
     desc: "携程集团旅游事业集群HRD，4万人+互联网大厂实战，拥抱速度与变化",
   },
   {
-    year: "酒旅龙头",
+    year: "2021-2023",
     title: "酒旅龙头",
     desc: "华住集团OD/OC/绩效COE总负责人+中、高端业务大HRBP Head，15万人+组织纵深操盘",
   },
   {
-    year: "乙方创业",
+    year: "2023-至今",
     title: "乙方创业",
     desc: "创立慧行足管理咨询，从甲方到乙方，生涯累积服务125+家企业客户、500+个人客户，借假修真、知行合一",
   },
@@ -92,8 +92,8 @@ const FACES = [
   },
   {
     icon: "🤝",
-    title: "作为慈善义工的我",
-    text: "慈善不是施舍，是看见。在义工服务中回归人与人最朴素的联结。付出比索取更接近自由，这是我学到的最深的道理。",
+    title: "作为生命关怀义工的我",
+    text: "生命关怀不是施舍，是看见。在健康科普与临终关怀的义工服务中，我深刻理解了「未病先防」的智慧。最深的慈悲，是在病痛来临之前教会人们好好生活。付出比索取更接近自由，这是我学到的最深的道理。",
   },
   {
     icon: "🗺️",
@@ -173,11 +173,11 @@ function HeroSection() {
       />
 
       <div className="as-container relative z-10 py-10 sm:py-14">
-        <div className="flex flex-col items-center gap-8 sm:flex-row sm:gap-12">
+        <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-12">
           {/* 左侧：头像（真实照片） */}
           <div className="flex-shrink-0 will-change-transform">
             <div
-              className="relative h-48 w-48 overflow-hidden rounded-full border-4 border-white/20 shadow-xl sm:h-56 sm:w-56"
+              className="relative h-36 w-36 overflow-hidden rounded-full border-4 border-white/20 shadow-xl sm:h-56 sm:w-56"
               style={{
                 background:
                   "linear-gradient(135deg, var(--as-primary-300) 0%, var(--as-primary-500) 100%)",
@@ -205,22 +205,22 @@ function HeroSection() {
             <p className="mt-3 text-lg leading-relaxed text-white/85 sm:text-xl">
               做组织与个体的<span className="font-semibold text-[var(--as-primary-200)]">终身整理者</span>
             </p>
-            <p className="mt-4 max-w-lg text-base leading-relaxed text-white/70">
+            <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/70 sm:text-base">
               近20年HR实战 · 千亿市值集团HRD · 国学修行智慧<br />
               既知企业组织的痛点，也懂打工人的心声
             </p>
 
             {/* CTA */}
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link scroll={false}
                 href="/about-simon/philosophy"
-                className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-[var(--as-primary-700)] shadow-lg transition hover:bg-white/90"
+                className="rounded-full bg-white px-6 py-2.5 text-center text-sm font-semibold text-[var(--as-primary-700)] shadow-lg transition hover:bg-white/90"
               >
                 了解我的理念 →
               </Link>
               <Link scroll={false}
                 href="/about-simon/connect"
-                className="rounded-full border border-white/40 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
+                className="rounded-full border border-white/40 px-6 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-white/10"
               >
                 联系我
               </Link>

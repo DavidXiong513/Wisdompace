@@ -44,15 +44,12 @@ function WelcomePage() {
         </h1>
         <p className="text-[15px] text-[#8A7E6A]">Career Values Assessment</p>
         <p className="mt-4 text-[15px] leading-relaxed text-[#6A6256]">
-          <span className="whitespace-nowrap">价值观是你做选择的底层逻辑。</span>{' '}
-          <span className="whitespace-nowrap">这项测评将帮助你梳理自己的核心价值观，</span>{' '}
-          <span className="whitespace-nowrap">看清哪些东西对你真正重要，</span>
-          <span className="whitespace-nowrap">哪些只是外界强加的期望。</span>
+          价值观是你做选择的底层逻辑。这项测评将帮助你梳理自己的核心价值观，看清哪些东西对你真正重要，哪些只是外界强加的期望。
         </p>
       </div>
 
       {/* 特性卡片 */}
-      <div className="mb-6 grid grid-cols-3 gap-3">
+      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
         {[
           { icon: '🔍', title: '发现核心驱动力', desc: '识别真正驱动你做选择的力量' },
           { icon: '⚖️', title: '理清选择逻辑', desc: '看清价值观之间的取舍关系' },

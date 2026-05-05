@@ -56,7 +56,7 @@ export function LifeCountdown({ result }: Props) {
   }, [endTime, now]);
 
   return (
-    <div className="rounded-2xl border-2 border-[#C9A15A]/20 bg-white p-8 shadow-[0_8px_30px_rgb(201,161,90,0.08)] sm:p-10">
+    <div className="rounded-2xl border-2 border-[#C9A15A]/20 bg-white p-5 shadow-[0_8px_30px_rgb(201,161,90,0.08)] sm:p-10">
       <div className="mb-8 flex items-center justify-center gap-3">
         <div className="h-px w-8 bg-gradient-to-r from-transparent to-[#C9A15A]" />
         <p className="text-center text-xs font-bold uppercase tracking-[0.3em] text-[#C9A15A]">
@@ -65,7 +65,7 @@ export function LifeCountdown({ result }: Props) {
         <div className="h-px w-8 bg-gradient-to-l from-transparent to-[#C9A15A]" />
       </div>
       
-      <div className="grid grid-cols-3 gap-y-10 sm:grid-cols-6">
+      <div className="grid grid-cols-3 gap-y-6 sm:grid-cols-6 sm:gap-y-10">
         <TimeUnit value={timeLeft.years} label="年" />
         <TimeUnit value={timeLeft.months} label="月" />
         <TimeUnit value={timeLeft.days} label="日" />

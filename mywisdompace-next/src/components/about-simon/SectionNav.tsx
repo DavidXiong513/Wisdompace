@@ -70,43 +70,69 @@ export default function SectionNav({ sections }: SectionNavProps) {
   if (sections.length === 0) return null;
 
   return (
-    <nav
-      className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-14 lg:w-[176px] lg:h-[calc(100vh-3.5rem)] lg:bg-[var(--as-bg-primary)] lg:border-r lg:border-[var(--as-gray-100)] lg:pt-6 lg:pb-8 lg:px-4 lg:overflow-y-auto lg:z-40"
-      aria-label="章节导航"
-    >
-      <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-[var(--as-gray-400)] uppercase">
-        本章导航
-      </p>
-      {sections.map((s) => {
-        const isActive = activeId === s.id;
-        return (
-          <button
-            key={s.id}
-            onClick={() => handleClick(s.id)}
-            className={`
-              group relative flex items-center rounded-md px-3 py-1.5 text-left text-sm transition-colors
-              ${
+    <>
+      {/* 移动端：顶部水平滚动导航条 */}
+      <nav
+        className="sticky top-0 z-40 flex gap-1 overflow-x-auto border-b border-[var(--as-gray-100)] bg-[var(--as-bg-primary)] px-3 py-2 lg:hidden"
+        aria-label="章节导航"
+      >
+        {sections.map((s) => {
+          const isActive = activeId === s.id;
+          return (
+            <button
+              key={s.id}
+              onClick={() => handleClick(s.id)}
+              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
                 isActive
-                  ? "font-semibold text-[var(--as-primary-700)] bg-[var(--as-primary-50)]"
-                  : "text-[var(--as-gray-500)] hover:text-[var(--as-primary-600)] hover:bg-[var(--as-primary-50)]/50"
-              }
-            `}
-          >
-            {/* 左侧色条指示器 */}
-            <span
+                  ? "bg-[var(--as-primary-600)] text-white"
+                  : "text-[var(--as-gray-500)] hover:bg-[var(--as-primary-50)] hover:text-[var(--as-primary-600)]"
+              }`}
+            >
+              {s.label}
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* 桌面端：左侧固定侧栏导航 */}
+      <nav
+        className="hidden lg:flex lg:flex-col lg:fixed lg:left-0 lg:top-14 lg:w-[176px] lg:h-[calc(100vh-3.5rem)] lg:bg-[var(--as-bg-primary)] lg:border-r lg:border-[var(--as-gray-100)] lg:pt-6 lg:pb-8 lg:px-4 lg:overflow-y-auto lg:z-40"
+        aria-label="章节导航"
+      >
+        <p className="mb-3 px-3 text-xs font-semibold tracking-wider text-[var(--as-gray-400)] uppercase">
+          本章导航
+        </p>
+        {sections.map((s) => {
+          const isActive = activeId === s.id;
+          return (
+            <button
+              key={s.id}
+              onClick={() => handleClick(s.id)}
               className={`
-                absolute left-0 top-1/2 -translate-y-1/2 w-[3px] rounded-r-full transition-all
+                group relative flex items-center rounded-md px-3 py-1.5 text-left text-sm transition-colors
                 ${
                   isActive
-                    ? "h-4 bg-[var(--as-primary-600)]"
-                    : "h-0 bg-transparent group-hover:h-2 group-hover:bg-[var(--as-primary-300)]"
+                    ? "font-semibold text-[var(--as-primary-700)] bg-[var(--as-primary-50)]"
+                    : "text-[var(--as-gray-500)] hover:text-[var(--as-primary-600)] hover:bg-[var(--as-primary-50)]/50"
                 }
               `}
-            />
-            {s.label}
-          </button>
-        );
-      })}
-    </nav>
+            >
+              {/* 左侧色条指示器 */}
+              <span
+                className={`
+                  absolute left-0 top-1/2 -translate-y-1/2 w-[3px] rounded-r-full transition-all
+                  ${
+                    isActive
+                      ? "h-4 bg-[var(--as-primary-600)]"
+                      : "h-0 bg-transparent group-hover:h-2 group-hover:bg-[var(--as-primary-300)]"
+                  }
+                `}
+              />
+              {s.label}
+            </button>
+          );
+        })}
+      </nav>
+    </>
   );
 }

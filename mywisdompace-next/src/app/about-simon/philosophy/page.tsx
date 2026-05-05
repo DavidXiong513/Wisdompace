@@ -61,11 +61,11 @@ const STAGES = [
   },
   {
     step: 3,
-    title: "借假修真",
-    subtitle: "Practice & Truth",
+    title: "积极生活",
+    subtitle: "Active Living",
     color: "var(--as-primary-600)",
-    desc: "工作、关系、财富——都是'假'的。但正是通过这些'假'的修炼，才能修出'真'的自己。",
-    methods: ["角色修炼框架", "组织道场实践", "关系镜子映射"],
+    desc: "不是要在所有领域做到满分，而是守住工作与家庭的底盘。将体能、智力、创作三大兴趣变成日常——用运动经营肉身，用阅读喂养大脑，用创作表达灵魂。阶段性成就感与持续性成长感并行，才是积极生活。",
+    methods: ["工作生活平衡", "体能兴趣", "智力兴趣", "创作兴趣", "持续成长"],
   },
   {
     step: 4,
@@ -217,7 +217,7 @@ export default function PhilosophyPage() {
               <div
                 key={stage.step}
                 className="as-card p-5"
-                style={{ marginLeft: `min(${(stage.step - 1) * 2}rem, 15%)` }}
+                style={{ marginLeft: `min(${(stage.step - 1) * 1}rem, 8%)` }}
               >
                 <div className="flex items-start gap-4">
                   <div
@@ -227,9 +227,9 @@ export default function PhilosophyPage() {
                     {stage.step}
                   </div>
                   <div>
-                    <h3 className="as-serif text-xl font-bold text-[var(--as-primary-700)]">
+                    <h3 className="as-serif text-lg font-bold text-[var(--as-primary-700)] sm:text-xl">
                       {stage.title}
-                      <span className="ml-2 text-sm font-normal text-[var(--as-gray-400)]">
+                      <span className="ml-2 text-xs font-normal text-[var(--as-gray-400)] sm:text-sm">
                         {stage.subtitle}
                       </span>
                     </h3>

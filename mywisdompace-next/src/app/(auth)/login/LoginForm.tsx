@@ -100,9 +100,9 @@ export function LoginForm() {
               />
               <span>记住我（在这台设备上保持登录）</span>
             </label>
-            <button type="button" className="cursor-not-allowed text-muted">
-              忘记密码（筹备中）
-            </button>
+            <a href="/forgot-password" className="text-[#C7A96A] hover:text-[#B58A3A] transition-colors">
+              忘记密码
+            </a>
           </div>
 
           {error ? (

@@ -1,17 +1,31 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { LifeClockResult } from '@/types/life-clock';
 
 interface Props {
   result: LifeClockResult;
 }
 
+function useColumnsPerRow() {
+  const [cols, setCols] = useState(36);
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      if (w < 480) setCols(12);
+      else if (w < 768) setCols(18);
+      else setCols(36);
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+  return cols;
+}
+
 export function LifeMonthGrid({ result }: Props) {
-  // 一个方格代表一个月。
-  // 我们按 36 个一排渲染（代表 3 年），以极致压缩垂直高度
-  const MONTHS_PER_ROW = 36;
-  
+  const MONTHS_PER_ROW = useColumnsPerRow();
+
   const gridData = useMemo(() => {
     const total = result.totalMonths;
     const past = result.pastMonths;
@@ -36,8 +50,8 @@ export function LifeMonthGrid({ result }: Props) {
   }, [result.totalMonths, result.pastMonths]);
 
   return (
-    <div className="rounded-2xl border-2 border-[#C9A15A]/20 bg-white p-6 shadow-[0_8px_30px_rgb(201,161,90,0.08)] sm:p-8">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="rounded-2xl border-2 border-[#C9A15A]/20 bg-white p-4 shadow-[0_8px_30px_rgb(201,161,90,0.08)] sm:p-8">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2 sm:mb-6">
         <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#C9A15A]">生命月度全景图</h3>
         <div className="flex gap-4">
           <div className="flex items-center gap-1.5">
@@ -57,7 +71,7 @@ export function LifeMonthGrid({ result }: Props) {
           {gridData.map((row) => (
             <div key={row.rowIndex} className="flex items-center gap-2">
               <span className="w-5 text-right text-[7px] font-bold text-[#C9A15A]/50 tabular-nums leading-none">
-                {row.rowIndex * 3}
+                {Math.floor(row.rowIndex * MONTHS_PER_ROW / 12)}
               </span>
               <div className="flex flex-1 gap-[1.5px]">
                 {row.months.map((m) => (

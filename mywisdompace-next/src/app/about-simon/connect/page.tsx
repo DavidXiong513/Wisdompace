@@ -166,15 +166,15 @@ export default function ConnectPage() {
             </h2>
           </div>
 
-          <div className="mx-auto grid max-w-xl gap-4 sm:grid-cols-4">
+          <div className="mx-auto grid max-w-xl gap-3 grid-cols-2 sm:grid-cols-4">
             {SOCIAL_LINKS.map((s) => {
               const inner = (
                 <>
-                  <span className="text-4xl">{s.icon}</span>
-                  <p className="mt-2 text-sm font-semibold text-[var(--as-primary-700)]">
+                  <span className="text-3xl sm:text-4xl">{s.icon}</span>
+                  <p className="mt-2 text-xs font-semibold text-[var(--as-primary-700)] sm:text-sm">
                     {s.platform}
                   </p>
-                  <p className="mt-1 text-xs text-[var(--as-gray-500)]">
+                  <p className="mt-1 text-[10px] text-[var(--as-gray-500)] sm:text-xs">
                     {s.id}
                   </p>
                 </>
@@ -185,14 +185,14 @@ export default function ConnectPage() {
                   href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-col items-center rounded-xl border border-[var(--as-gray-100)] bg-white p-6 text-center transition hover:border-[var(--as-primary-300)] hover:shadow-md"
+                  className="flex flex-col items-center rounded-xl border border-[var(--as-gray-100)] bg-white p-4 text-center transition hover:border-[var(--as-primary-300)] hover:shadow-md sm:p-6"
                 >
                   {inner}
                 </a>
               ) : (
                 <div
                   key={s.platform}
-                  className="flex flex-col items-center rounded-xl border border-[var(--as-gray-100)] bg-white p-6 text-center"
+                  className="flex flex-col items-center rounded-xl border border-[var(--as-gray-100)] bg-white p-4 text-center sm:p-6"
                 >
                   {inner}
                 </div>

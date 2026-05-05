@@ -673,12 +673,13 @@ function ReviewPage() {
               <div className="rounded-t-lg bg-[#E8F0E8] px-4 py-2.5 text-sm font-semibold text-[#3D6B3A]">
                 {domain.icon} {domain.name}
               </div>
-              <table className="w-full border-collapse text-sm">
+              <div className="overflow-x-auto">
+              <table className="w-full min-w-[320px] border-collapse text-sm">
                 <thead>
                   <tr className="bg-[#F5F6F8] text-left text-[11px] font-semibold text-[#8A7E6A]">
-                    <th className="px-4 py-2">能力</th>
-                    <th className="px-4 py-2">擅长度</th>
-                    <th className="px-4 py-2">喜欢度</th>
+                    <th className="px-3 py-2 sm:px-4">能力</th>
+                    <th className="px-3 py-2 sm:px-4">擅长度</th>
+                    <th className="px-3 py-2 sm:px-4">喜欢度</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -690,10 +691,10 @@ function ReviewPage() {
                         className="cursor-pointer border-b border-[#F0F0F0] transition-colors hover:bg-[#FAFBFC]"
                         onClick={() => handleJump(a.id)}
                       >
-                        <td className="px-4 py-2 font-medium text-[#6B9A68] hover:underline">
+                        <td className="px-3 py-2 font-medium text-[#6B9A68] hover:underline sm:px-4">
                           {a.name}
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-3 py-2 sm:px-4">
                           {ans ? (
                             <span className={`inline-block rounded-md px-2 py-0.5 text-[10px] font-semibold ${proTagClass(ans.p)}`}>
                               {PROF_LABELS[ans.p - 1]}
@@ -702,7 +703,7 @@ function ReviewPage() {
                             <span className="inline-block rounded-md bg-[#ECEFF1] px-2 py-0.5 text-[10px] font-semibold text-[#546E7A]">未评</span>
                           )}
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-3 py-2 sm:px-4">
                           {ans ? (
                             <span className={`inline-block rounded-md px-2 py-0.5 text-[10px] font-semibold ${intTagClass(ans.i)}`}>
                               {INTE_LABELS[ans.i - 1]}
@@ -716,6 +717,7 @@ function ReviewPage() {
                   })}
                 </tbody>
               </table>
+              </div>
             </div>
           );
         })}
@@ -823,7 +825,7 @@ function ReportPage() {
       </div>
 
       {/* 四象限 */}
-      <div className="mb-5 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7">
+      <div className="mb-5 rounded-xl border border-[#E8E4DD] bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7">
         <h2 className="mb-1 text-lg font-bold text-[#4A3728]">能力四象限</h2>
         <p className="mb-4 text-center text-[11px] text-[#8A7E6A]">
           分界标准：擅长/喜欢 ≥ 3 为&ldquo;高侧&rdquo;，≤ 2 为&ldquo;低侧&rdquo; · 每象限内按评分细分为2×2小宫格
@@ -933,12 +935,13 @@ function ReportPage() {
               <div className="rounded-md bg-[#E8F0E8] px-4 py-2 text-sm font-semibold text-[#3D6B3A]">
                 {domain.icon} {domain.name}
               </div>
-              <table className="w-full border-collapse text-sm">
+              <div className="overflow-x-auto">
+              <table className="w-full min-w-[320px] border-collapse text-sm">
                 <thead>
                   <tr className="bg-[#F5F6F8] text-left text-[11px] font-semibold text-[#8A7E6A]">
-                    <th className="px-4 py-2">能力</th>
-                    <th className="px-4 py-2">擅长度</th>
-                    <th className="px-4 py-2">喜欢度</th>
+                    <th className="px-3 py-2 sm:px-4">能力</th>
+                    <th className="px-3 py-2 sm:px-4">擅长度</th>
+                    <th className="px-3 py-2 sm:px-4">喜欢度</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -947,13 +950,13 @@ function ReportPage() {
                     if (!ans) return null;
                     return (
                       <tr key={a.id} className="border-b border-[#F0F0F0]">
-                        <td className="px-4 py-2">{a.name}</td>
-                        <td className="px-4 py-2">
+                        <td className="px-3 py-2 sm:px-4">{a.name}</td>
+                        <td className="px-3 py-2 sm:px-4">
                           <span className={`inline-block rounded-md px-2 py-0.5 text-[10px] font-semibold ${proTagClass(ans.p)}`}>
                             {PROF_LABELS[ans.p - 1]}
                           </span>
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-3 py-2 sm:px-4">
                           <span className={`inline-block rounded-md px-2 py-0.5 text-[10px] font-semibold ${intTagClass(ans.i)}`}>
                             {INTE_LABELS[ans.i - 1]}
                           </span>
@@ -963,6 +966,7 @@ function ReportPage() {
                   })}
                 </tbody>
               </table>
+              </div>
             </div>
           );
         })}

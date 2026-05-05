@@ -34,6 +34,8 @@ interface AuthState {
   register: (name: string, email: string, password: string) => Promise<{ ok: boolean; message?: string }>;
   logout: () => Promise<void>;
   initSession: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ ok: boolean; message?: string }>;
+  updatePassword: (password: string) => Promise<{ ok: boolean; message?: string }>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -101,6 +103,17 @@ export const useAuthStore = create<AuthState>()(
         // 调用 initSession 同步用户信息到 store
         await get().initSession();
         set({ error: null });
+
+        // 登录成功后，异步合并本地数据到云端（非阻塞）
+        try {
+          const { syncLocalToCloud } = await import('@/lib/sync');
+          syncLocalToCloud().catch(() => {
+            // 静默忽略同步错误，不影响登录体验
+          });
+        } catch {
+          // 动态导入失败也忽略
+        }
+
         return { ok: true };
       },
 
@@ -124,6 +137,17 @@ export const useAuthStore = create<AuthState>()(
         // 注册成功，自动登录
         await get().initSession();
         set({ error: null });
+
+        // 注册登录成功后，异步合并本地数据到云端（非阻塞）
+        try {
+          const { syncLocalToCloud } = await import('@/lib/sync');
+          syncLocalToCloud().catch(() => {
+            // 静默忽略同步错误
+          });
+        } catch {
+          // 动态导入失败也忽略
+        }
+
         return { ok: true };
       },
 
@@ -134,6 +158,42 @@ export const useAuthStore = create<AuthState>()(
         const supabase = createClient();
         await supabase.auth.signOut();
         set({ user: null, status: 'unauthenticated', error: null });
+      },
+
+      /**
+       * 发送密码重置邮件
+       */
+      resetPassword: async (email) => {
+        const supabase = createClient();
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+
+        if (error) {
+          const message = mapAuthError(error);
+          set({ error: message });
+          return { ok: false, message };
+        }
+
+        set({ error: null });
+        return { ok: true };
+      },
+
+      /**
+       * 更新密码（在重置密码页面调用，需已有有效 session）
+       */
+      updatePassword: async (password) => {
+        const supabase = createClient();
+        const { error } = await supabase.auth.updateUser({ password });
+
+        if (error) {
+          const message = mapAuthError(error);
+          set({ error: message });
+          return { ok: false, message };
+        }
+
+        set({ error: null });
+        return { ok: true };
       },
     }),
     {
@@ -176,6 +236,11 @@ function mapAuthError(error: { message?: string; code?: string }): string {
   }
   if (msg.includes('Invalid email') || msg.includes('invalid_email')) {
     return '邮箱格式不正确';
+  }
+
+  // 网络连接失败
+  if (msg.includes('fetch failed') || msg.includes('NetworkError') || msg.includes('network')) {
+    return '网络连接异常，请检查网络后重试';
   }
 
   // 通用兜底
