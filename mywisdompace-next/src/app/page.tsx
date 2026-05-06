@@ -72,7 +72,7 @@ export default function Home() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="全站搜索 性格测评、优势探索、痴呆预防..."
+                  placeholder="全站搜索 性格自测 价值观测评 能力自评 情绪 压力 寿命 生前预嘱..."
                   className="flex-1 bg-transparent text-sm text-slate-700 placeholder:text-slate-500 focus:outline-none sm:text-base"
                 />
                 <button
@@ -83,16 +83,16 @@ export default function Home() {
                 </button>
               </form>
 
-              <div className="relative left-[5px] mt-5 flex flex-wrap items-center justify-start gap-2.5 text-[0.78rem] tracking-[0.06em] text-white/90 sm:left-[1px]">
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 text-[0.78rem] tracking-[0.06em] text-white/90">
                 <span className="mr-2 inline-flex h-8 items-center leading-none">🔥 热门搜索：</span>
                 {[
-                  "老年痴呆",
-                  "人生意义",
+                  "性格自测",
+                  "价值观测评",
+                  "能力自评",
+                  "情绪",
+                  "压力",
+                  "寿命",
                   "生前预嘱",
-                  "新式养老",
-                  "老龄化",
-                  "兴趣探索",
-                  "断崖衰老",
                 ].map((tag) => (
                   <button
                     key={tag}
