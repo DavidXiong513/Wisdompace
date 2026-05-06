@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FormEvent, useMemo, useState } from 'react';
 
@@ -100,9 +101,9 @@ export function LoginForm() {
               />
               <span>记住我（在这台设备上保持登录）</span>
             </label>
-            <a href="/forgot-password" className="text-[#C7A96A] hover:text-[#B58A3A] transition-colors">
+            <Link href="/forgot-password" className="text-[#C7A96A] hover:text-[#B58A3A] transition-colors">
               忘记密码
-            </a>
+            </Link>
           </div>
 
           {error ? (
@@ -122,12 +123,12 @@ export function LoginForm() {
 
         <p className="mt-6 text-center text-sm text-muted">
           还没有账号？{' '}
-          <a
+          <Link
             href="/register"
             className="font-medium text-[#C7A96A] underline decoration-[#E8C872]/50 underline-offset-2 hover:text-[#B58A3A]"
           >
             立即注册
-          </a>
+          </Link>
         </p>
       </div>
     </div>

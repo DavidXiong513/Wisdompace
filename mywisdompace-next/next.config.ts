@@ -8,7 +8,7 @@ import {
 /**
  * 安全响应头配置
  * 参考: https://nextjs.org/docs/app/api-reference/config/next-config-js/headers
- * 
+ *
  * 配置说明：
  * - 开发环境：自动放宽限制，不启用CSP，便于调试和热重载
  * - 生产环境：启用完整安全策略
@@ -58,7 +58,9 @@ function getSecurityHeaders() {
 }
 
 const nextConfig: NextConfig = {
-  reactCompiler: true,
+  // React Compiler 在 Windows 上导致子进程崩溃(0xc0000142)，暂时禁用
+  // TODO: 升级内存至32GB+WSL2后重新启用
+  // reactCompiler: true,
 
   // 安全响应头（根据环境自动调整）
   async headers() {
@@ -82,8 +84,8 @@ const nextConfig: NextConfig = {
   // 生产环境优化
   poweredByHeader: false, // 移除X-Powered-By头，避免暴露技术栈
 
-  // 严格模式
-  reactStrictMode: true,
+  // 严格模式（开发时双重渲染影响性能，生产保持开启）
+  reactStrictMode: process.env.NODE_ENV === 'production',
 
   // 开发环境优化：详细日志
   ...(securityPolicy.logSecurityEvents && {

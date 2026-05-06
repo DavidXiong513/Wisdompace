@@ -10,7 +10,7 @@ import SectionNav from "@/components/about-simon/SectionNav";
    ───────────────────────────────────── */
 const SECTIONS = [
   { id: "ideology", label: "三配理念" },
-  { id: "methodology", label: "方法论" },
+  { id: "methodology", label: "方法论示例" },
   { id: "stages", label: "四阶模型" },
   { id: "quotes", label: "金句墙" },
 ];
@@ -83,14 +83,15 @@ const STAGES = [
 const METHODOLOGIES = [
   {
     title: "因地思维",
-    tag: "核心方法论",
+    tag: "思维模式",
     desc: "决策四问：这是谁的问题？他在什么处境下？他的核心诉求是什么？什么方案能在这个处境里生长？",
+    desc2: "菩萨畏因，凡夫畏果——真正的高手不在结果上纠结，而在因上着力。与其焦虑裁员之后怎么办，不如追问：哪些因是我今天还能种的？",
     example: "面对裁员：不是先想补偿方案，而是先问——这个人处在什么人生阶段？他最怕什么？什么转型路径对他最可行？",
   },
   {
     title: "借假修真",
     tag: "人生哲学",
-    desc: "在每一个角色里修炼自己。工作不是目的，而是道场；关系不是负担，而是镜子；财富不是终点，而是功课。",
+    desc: "在每一个暂时扮演的斜杠角色中修炼自己真实的内心。工作即道场，烦恼是菩提——如何借由每次升起的烦恼内观自己的心念起伏，这才是真正的修行功课。",
     example: "5000+裁员经历：每一次艰难对话，都是修炼慈悲心的机会。裁员是'假'，修出的同理心是'真'。",
   },
   {
@@ -100,10 +101,10 @@ const METHODOLOGIES = [
     example: "某中高端酒店集群：人效达标但文化断层→先修复文化纽带，再推组织精简，避免硬着陆。",
   },
   {
-    title: "生涯四问",
-    tag: "咨询框架",
-    desc: "你真正想要什么？你现在拥有什么？你愿意放弃什么？你准备好了吗？四个问题，一个比一个深，直到触达核心。",
-    example: "一位40岁的高管：想要自由→拥有能力→愿意放弃安全感→还没准备好→那就先在现有框架里创造自由。",
+    title: "灵魂拷问",
+    tag: "自我探索",
+    desc: "你真正内心想要的目标愿景是什么？你想此生想成为一个什么样的人？你对当下自己的满意度打几分？如果还剩余1年生命，你当下会如何去生活？步步深入，去触达自己内心真正的生命自洽...",
+    example: "一位40岁的高管：被问到'如果还剩余1年生命'时当场泪崩→原来他一直活在别人的期待里，从未问过自己真正想要什么。",
   },
 ];
 
@@ -170,7 +171,7 @@ export default function PhilosophyPage() {
         <div className="as-container">
           <div className="mb-6 text-center">
             <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
-              <span className="as-heading-line">四大方法论</span>
+              <span className="as-heading-line">方法论示例</span>
             </h2>
           </div>
 
@@ -186,6 +187,11 @@ export default function PhilosophyPage() {
                 <p className="mt-2 text-sm leading-relaxed text-[var(--as-gray-600)]">
                   {m.desc}
                 </p>
+                {m.desc2 && (
+                  <p className="mt-2 text-sm leading-relaxed italic text-[var(--as-primary-600)]">
+                    {m.desc2}
+                  </p>
+                )}
                 <div className="mt-3 rounded-lg bg-[var(--as-primary-50)] p-3">
                   <p className="text-xs text-[var(--as-gray-500)]">
                     💡 示例

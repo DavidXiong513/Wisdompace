@@ -1,4 +1,14 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
+
+@theme {
+  --color-foreground: hsl(20 14% 4%);
+  --color-background: hsl(28 8% 96%);
+  --color-muted: #9a8e7a;
+  --color-border: #d9d0c1;
+  --color-surface: #ffffff;
+  --color-card: #ffffff;
+}
 
 :root {
   --background: 28 8% 96%;

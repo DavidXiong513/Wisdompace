@@ -2,7 +2,7 @@ import { type NextRequest } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
 /**
- * Supabase Auth Middleware
+ * Supabase Auth Proxy (formerly Middleware)
  *
  * 每个请求都会执行：
  * 1. 读取请求 Cookie 中的 Auth token
@@ -12,7 +12,7 @@ import { updateSession } from '@/lib/supabase/middleware'
  * 这是 Supabase Auth 在 Next.js 中正常工作的前提。
  * 参考: https://supabase.com/docs/guides/auth/server-side/nextjs
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   return await updateSession(request)
 }
 

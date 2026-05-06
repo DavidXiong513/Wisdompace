@@ -244,7 +244,7 @@ function TimelineSection() {
             <span className="as-heading-line">20年职涯足迹</span>
           </h2>
           <p className="mt-2 text-sm text-[var(--as-gray-500)]">
-            从外企到民企，从千亿集团到创业公司，每一步都在积累
+            从培训师到公司高管，从合资、外企到民企，从千亿集团到创业公司，每一步都在积累
           </p>
         </div>
 

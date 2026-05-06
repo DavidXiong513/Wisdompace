@@ -1,0 +1,32 @@
+-- ==================== MyWisdompace 迁移 002 ====================
+-- 创建时间: 2026-05-06
+-- 说明: 添加生前预嘱（living-will）评估类型支持
+--
+-- 注意: assessments 表已存在且 type 字段为 TEXT，
+-- 此处无需 ALTER TABLE，仅需在应用层将 'living-will' 作为有效 type 使用。
+-- 本迁移文件作为类型注册与文档记录。
+
+-- 可选：添加 living-will 类型的注释文档
+COMMENT ON TABLE public.assessments IS '测评结果表。支持的类型包括: mbti, big-five, ability, career-values, living-will 等。result 字段为 JSONB，结构因 type 而异。';
+
+-- ==================== living-will result 结构说明 ====================
+-- {
+--   version: "1.0",
+--   completedAt: "ISO 8601 字符串",
+--   wish1: string[],           -- 医疗服务选项
+--   wish1Supplement: string,   -- 补充说明
+--   wish2Abandon: string[],    -- 放弃的生命支持治疗
+--   scenarioTerminal: "yes" | "no" | "conditional" | null,
+--   scenarioComa: "yes" | "no" | "conditional" | null,
+--   scenarioVegetative: "yes" | "no" | "conditional" | null,
+--   wish2Supplement: string,
+--   wish3: string[],           -- 个人情感意愿
+--   wish3Supplement: string,
+--   wish4: string[],           -- 家人朋友信息
+--   wish4Supplement: string,
+--   witness1: { name, relation, phone },
+--   witness2: { name, relation, phone },
+--   declarationAgreed: boolean,
+--   signName: string,
+--   signDate: string
+-- }
