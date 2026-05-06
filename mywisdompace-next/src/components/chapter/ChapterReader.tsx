@@ -9,41 +9,74 @@ import { useChapterReadingProgress } from '@/hooks/useChapterReadingProgress';
 
 // ── Section card ───────────────────────────────────────────────────────────
 
-function SectionCard({ chapterSlug, section }: { chapterSlug: string; section: ChapterSection }) {
+function SectionCard({ chapterSlug, section, index }: { chapterSlug: string; section: ChapterSection; index: number }) {
   const { answers, saveAnswer, statuses } = useReflectionAnswers(
     chapterSlug,
     section.id,
     section.questions?.length ?? 0
   );
 
+  const isEven = index % 2 === 0;
+
   return (
     <div
       id={section.id}
-      className="scroll-mt-[120px]"
-      style={{ paddingBottom: '2.5rem' }}
+      className="scroll-mt-[120px] rounded-xl border p-6 sm:p-8"
+      style={{
+        paddingBottom: '2.5rem',
+        background: isEven ? 'rgba(255,255,255,0.72)' : 'var(--wp-bg-alt)',
+        borderColor: 'var(--wp-border)',
+        boxShadow: 'var(--wp-shadow-sm)',
+        transition: 'box-shadow 0.25s ease, transform 0.25s ease',
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--wp-shadow-md)';
+        (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-1px)';
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLDivElement).style.boxShadow = 'var(--wp-shadow-sm)';
+        (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+      }}
     >
-      <h2
-        className="mb-4 text-2xl font-semibold"
-        style={{
-          fontFamily: 'var(--wp-font-serif)',
-          color:      'var(--wp-ink)',
-          borderLeft: '3px solid var(--wp-accent)',
-          paddingLeft: '0.75rem',
-        }}
+      {/* 标题区：底纹条 + 序号徽章 + 左侧装饰线 */}
+      <div
+        className="mb-5 flex items-center gap-3 rounded-lg px-4 py-3"
+        style={{ background: isEven ? 'var(--wp-bg-alt)' : 'rgba(255,255,255,0.6)' }}
       >
-        {section.title}
-      </h2>
+        {/* 序号徽章 */}
+        <span
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+          style={{ background: 'var(--wp-accent)', fontFamily: 'var(--wp-font-sans)' }}
+        >
+          {index + 1}
+        </span>
+        <h2
+          className="text-xl font-bold sm:text-2xl"
+          style={{
+            fontFamily: 'var(--wp-font-serif)',
+            color:      'var(--wp-ink)',
+            borderLeft: '3px solid var(--wp-gold)',
+            paddingLeft: '0.75rem',
+            lineHeight: 1.4,
+          }}
+        >
+          {section.title}
+        </h2>
+      </div>
 
-      <div className="space-y-4">
+      {/* 正文段落区 */}
+      <div className="space-y-5">
         {section.paragraphs.map((para, i) => (
           <p
             key={i}
+            className="first:mt-0"
             style={{
               color:      'var(--wp-ink-light)',
               lineHeight: 1.9,
               fontSize:   '1.05rem',
               textAlign:  'justify',
               fontFamily: 'var(--wp-font-sans)',
+              textIndent: '2em',
             }}
             dangerouslySetInnerHTML={{ __html: para }}
           />
@@ -191,9 +224,9 @@ export function ChapterReader({ chapter }: ChapterReaderProps) {
   }, [chapter.slug, chapter.sections, saveProgress]);
 
   return (
-    <div ref={containerRef} className="space-y-2">
-      {chapter.sections.map((section) => (
-        <SectionCard key={section.id} chapterSlug={chapter.slug} section={section} />
+    <div ref={containerRef} className="space-y-6">
+      {chapter.sections.map((section, idx) => (
+        <SectionCard key={section.id} chapterSlug={chapter.slug} section={section} index={idx} />
       ))}
     </div>
   );
