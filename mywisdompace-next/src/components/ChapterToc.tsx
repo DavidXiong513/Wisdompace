@@ -1,11 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { ChapterSection } from "@/data/chapters";
 import { useReadingProgressStore } from "@/stores/readingProgressStore";
 
 type TocVariant = "bar" | "sidebar";
+
+/**
+ * 顶部导航栏 + prev/next bar 的总高度约 110–120px。
+ * rootMargin 顶部留出 -120px 排除遮挡区，底部 -25% 避免选中刚露出一点的 section，
+ * 只检测内容区中部的 section，高亮更精确。
+ */
+const ROOT_MARGIN = "-120px 0px -25% 0px";
 
 export function ChapterToc({
   chapterSlug,
@@ -20,17 +27,48 @@ export function ChapterToc({
   const [activeId, setActiveId] = useState(ids[0] ?? "");
   const { getProgress, saveProgress } = useReadingProgressStore();
 
+  /* 记录是否正在执行点击触发的滚动，滚动期间暂停 IntersectionObserver 更新 activeId */
+  const isClickScrolling = useRef(false);
+  const clickScrollTimer = useRef<number | null>(null);
+
+  const handleClick = useCallback((id: string) => {
+    // 1. 立即高亮点击项，不再等 Observer
+    setActiveId(id);
+
+    // 2. 标记"正在点击滚动"，暂停 Observer 更新
+    isClickScrolling.current = true;
+    if (clickScrollTimer.current) {
+      window.clearTimeout(clickScrollTimer.current);
+    }
+
+    // 3. 执行滚动
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // 4. 滚动动画约 500–800ms，结束后恢复 Observer
+    clickScrollTimer.current = window.setTimeout(() => {
+      isClickScrolling.current = false;
+    }, 900);
+  }, []);
+
   useEffect(() => {
     const last = getProgress(chapterSlug);
     if (!last?.sectionId) return;
     const el = document.getElementById(last.sectionId);
     if (!el) return;
+    // 恢复阅读进度时也要设 activeId
+    setActiveId(last.sectionId);
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [chapterSlug, getProgress]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
+        // 点击滚动期间，忽略 Observer 更新，避免高亮跳动
+        if (isClickScrolling.current) return;
+
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0));
@@ -41,7 +79,7 @@ export function ChapterToc({
         setActiveId(id);
         saveProgress(chapterSlug, id);
       },
-      { threshold: [0.35, 0.5, 0.75] }
+      { threshold: [0.35, 0.5, 0.75], rootMargin: ROOT_MARGIN }
     );
 
     ids.forEach((id) => {
@@ -75,12 +113,7 @@ export function ChapterToc({
               <li key={s.id}>
                 <button
                   type="button"
-                  onClick={() =>
-                    document.getElementById(s.id)?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    })
-                  }
+                  onClick={() => handleClick(s.id)}
                   className="w-full rounded-lg px-2 py-3 text-base transition"
                   style={{
                     background: active ? 'var(--wp-bg-alt)' : 'transparent',
@@ -108,12 +141,7 @@ export function ChapterToc({
             <button
               key={s.id}
               type="button"
-              onClick={() =>
-                document.getElementById(s.id)?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "start",
-                })
-              }
+              onClick={() => handleClick(s.id)}
               className={
                 "whitespace-nowrap rounded-full border px-3 py-1.5 text-sm transition " +
                 (active
