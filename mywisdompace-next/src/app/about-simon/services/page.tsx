@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import AboutHero from "@/components/about-simon/AboutHero";
 import ScrollToTopButton from "@/components/about-simon/ScrollToTopButton";
@@ -160,6 +161,32 @@ export default function ServicesPage() {
                 </ul>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 职场发展模型（B端→C端的桥接） ── */}
+      <section className="as-section-alt">
+        <div className="as-container">
+          <div className="mb-6 text-center">
+            <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
+              <span className="as-heading-line">职场发展模型</span>
+            </h2>
+            <p className="mt-2 text-sm text-[var(--as-gray-500)]">
+              从组织诉求到个体成长，两个视角缺一不可
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <div className="w-full max-w-3xl overflow-hidden rounded-2xl border border-[var(--as-gray-100)] bg-white p-4 shadow-md sm:p-6">
+              <Image
+                src="/images/career-development-model.png"
+                alt="职场发展模型"
+                width={1200}
+                height={800}
+                className="h-auto w-full"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>
