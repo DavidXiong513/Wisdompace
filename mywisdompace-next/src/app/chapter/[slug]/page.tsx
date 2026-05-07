@@ -5,6 +5,7 @@ import ChapterTopNav from "@/components/ChapterTopNav";
 import { ChapterToc } from "@/components/ChapterToc";
 import { ChapterReader } from "@/components/chapter/ChapterReader";
 import { ScrollToTopButton } from "@/components/chapter/ScrollToTopButton";
+import DonateButton from "@/components/DonateButton";
 import { getChapterBySlug, chapters } from "@/data/chapters";
 
 export function generateStaticParams() {
@@ -85,10 +86,11 @@ export default async function ChapterPage({ params }: Props) {
 
                 {/* 底部版权信息 */}
                 <div className="mt-10 border-t border-[#E8E4DD] pt-10 text-center">
-                  <p className="text-xs text-[#8A7E6A] tracking-wider uppercase">
-                    内容来源：《一生的整理》 · 全网同名：借假修真的思考熊
+                  <p className="text-xs text-[#6A6256] tracking-wider">
+                    内容来源：《一生的整理》V1.0版 · 全网同名：借假修真的思考熊
                   </p>
-                  <div className="mt-4 flex justify-center">
+                  <div className="mt-3 flex items-center justify-center gap-3">
+                    <DonateButton />
                     <ScrollToTopButton />
                   </div>
                 </div>

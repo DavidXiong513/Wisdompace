@@ -91,6 +91,12 @@ export const tools: Record<string, ToolInfo> = {
     status: "developing",
     description: "发现生活中的趣味与意义",
   },
+  "hobby-radar": {
+    id: "hobby-radar",
+    name: "爱好健康雷达",
+    status: "ready",
+    description: "评估你的爱好组合对身心健康的影响，发现盲点，获得个性化优化建议。",
+  },
   "three-questions-tool": {
     id: "three-questions-tool",
     name: "三思清单",

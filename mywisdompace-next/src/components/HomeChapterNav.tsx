@@ -1,5 +1,8 @@
+'use client';
+
 import React from "react";
 import Link from "next/link";
+import DonateButton from "@/components/DonateButton";
 
 const navItems = [
   { chinese: "预备此生", english: "Prepare Wisely", href: "/chapter/read-instructions" },
@@ -33,21 +36,23 @@ const HomeChapterNav = () => {
             ))}
           </ul>
         </div>
-        <div className="mt-2 flex flex-col items-center gap-1 text-center text-[10px] leading-relaxed text-white/75 sm:mt-3 sm:text-[11px]">
-          <span>网站制作：思考熊 | 内容来源：《一生的整理》（全网同名：借假修真的思考熊）</span>
-          <Link
-            href="/about-simon"
-            className="inline-flex items-center gap-1 rounded-full border border-white/30 bg-white/10 px-3 py-0.5 text-[10px] text-white/80 backdrop-blur-sm transition hover:border-white/50 hover:bg-white/15 hover:text-yellow-200 sm:text-[11px]"
-          >
-            🐻 了解思考熊 →
-          </Link>
+        <div className="mt-2 flex flex-col items-center gap-2 text-center text-[10px] leading-relaxed sm:mt-3 sm:text-[11px]">
+          <span className="text-white/75">
+            网站制作：思考熊 | 内容来源：《一生的整理》V1.0版（全网同名：借假修真的思考熊）
+          </span>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Link
+              href="/about-simon"
+              className="inline-flex items-center gap-1 rounded-full border border-white/30 bg-white/10 px-3 py-0.5 text-[10px] text-white/80 backdrop-blur-sm transition hover:border-white/50 hover:bg-white/15 hover:text-yellow-200 sm:text-[11px]"
+            >
+              🐻 了解思考熊 →
+            </Link>
+            <DonateButton />
+          </div>
         </div>
       </div>
     </footer>
   );
-
-
-
 };
 
 export default HomeChapterNav;

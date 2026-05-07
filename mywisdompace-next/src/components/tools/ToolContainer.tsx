@@ -121,6 +121,7 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'emotional-assessment',
     'choice-rights',
     'dementia-prevention-entry',
+    'hobby-radar',
   ].includes(toolId);
 
   return (
