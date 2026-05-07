@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import AuthEntry from "@/components/AuthEntry";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { chapters } from "@/data/chapters";
 
 const navItems = [
@@ -30,6 +30,7 @@ export default function ChapterTopNav({
   navListClassName = "",
 }: ChapterTopNavProps) {
   const pathname = usePathname();
+  const { user, isLoggedIn, logout } = useCurrentUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Prev / next chapter navigation
@@ -114,7 +115,29 @@ export default function ChapterTopNav({
           >
             菜单
           </button>
-          <AuthEntry />
+          {isLoggedIn && user ? (
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#C7A96A]/20 text-xs font-medium text-[#F8EBD5]">
+                {user.name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || "U"}
+              </div>
+              <span className="hidden text-xs font-medium text-[#F8EBD5] sm:inline">
+                {user.name || user.email?.split("@")[0] || "访客"}
+              </span>
+              <button
+                onClick={logout}
+                className="rounded-md border border-[#E8D9C2]/70 px-2.5 py-1 text-[11px] font-medium text-[#F5EDE0] transition duration-300 hover:bg-[#F6E9D2] hover:text-[#3D2B1F]"
+              >
+                退出
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="rounded-md border border-[#E8D9C2] px-4 py-2 text-sm font-semibold text-[#F8EBD5] transition duration-300 hover:bg-[#F6E9D2] hover:text-[#3D2B1F]"
+            >
+              登录 / 注册
+            </Link>
+          )}
         </div>
 
         {isMenuOpen && (
