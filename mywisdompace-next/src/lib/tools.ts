@@ -112,8 +112,8 @@ export const tools: Record<string, ToolInfo> = {
   "responsibility-list": {
     id: "responsibility-list",
     name: "责任清单",
-    status: "developing",
-    description: "整理你的责任与承诺",
+    status: "ready",
+    description: "梳理你的人生责任，评估优先级，规划交接方案。",
   },
   "choice-rights": {
     id: "choice-rights",
@@ -124,14 +124,26 @@ export const tools: Record<string, ToolInfo> = {
   "ta-worth-trust": {
     id: "ta-worth-trust",
     name: "Ta值得托付吗？",
-    status: "developing",
+    status: "ready",
     description: "系统评估你的意定人是否值得托付——TA理解你的价值观吗？TA有压力下决策的能力吗？",
   },
   "goodbye-list": {
     id: "goodbye-list",
     name: "告别清单",
-    status: "developing",
-    description: "准备你的告别清单",
+    status: "ready",
+    description: "写下你在离开这个世界之前想做的事，一件件去完成它们。",
+  },
+  "farewell-style": {
+    id: "farewell-style",
+    name: "告别的方式",
+    status: "ready",
+    description: "设计属于你的告别——仪式形式、归处选择、告别语、背景音乐，用你喜欢的方式留给世界最后一份创意简报。",
+  },
+  "no-regrets": {
+    id: "no-regrets",
+    name: "不留遗憾 · 生命自洽评估",
+    status: "ready",
+    description: "融合东西方临终关怀研究，从7个维度评估你的生命质量，生成个性化的生命自洽指数和改善路线图。",
   },
   "dementia-prevention-entry": {
     id: "dementia-prevention-entry",

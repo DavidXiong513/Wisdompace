@@ -122,6 +122,11 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'choice-rights',
     'dementia-prevention-entry',
     'hobby-radar',
+    'responsibility-list',
+    'ta-worth-trust',
+    'no-regrets',
+    'goodbye-list',
+    'farewell-style',
   ].includes(toolId);
 
   return (

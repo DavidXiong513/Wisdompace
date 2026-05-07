@@ -227,6 +227,166 @@ function DementiaPreventionEntry() {
   );
 }
 
+// ── 告别方式入口卡片 ──
+function FarewellStyleEntry() {
+  return (
+    <Link
+      href="/tools/farewell-style"
+      className="group mt-8 block overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+    >
+      <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FDF5EE] text-4xl shadow-inner transition-transform group-hover:scale-110">
+          🎭
+        </div>
+
+        <div className="flex-1 text-center sm:text-left">
+          <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            告别的方式
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
+            你希望怎样被记住？设计属于你的告别仪式、归处选择、告别语和背景音乐。
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D] group-hover:px-8">
+          开始设计
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// ── 告别清单入口卡片 ──
+function GoodbyeListEntry() {
+  return (
+    <Link
+      href="/tools/goodbye-list"
+      className="group mt-8 block overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+    >
+      <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FDF5EE] text-4xl shadow-inner transition-transform group-hover:scale-110">
+          📝
+        </div>
+
+        <div className="flex-1 text-center sm:text-left">
+          <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            我的告别清单
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
+            在离开这个世界之前，你还有哪些想做的事？写下来，然后一件件去完成。
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D] group-hover:px-8">
+          开始清单
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// ── 不留遗憾入口卡片 ──
+function NoRegretsEntry() {
+  return (
+    <Link
+      href="/tools/no-regrets"
+      className="group mt-8 block overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+    >
+      <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FDF5EE] text-4xl shadow-inner transition-transform group-hover:scale-110">
+          🌟
+        </div>
+
+        <div className="flex-1 text-center sm:text-left">
+          <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            不留遗憾 · 生命自洽评估
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
+            融合东西方临终关怀研究，从7个维度评估你的生命质量，生成生命自洽指数和个性化改善路线图。
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D] group-hover:px-8">
+          开始评估
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// ── 意定人选择入口卡片 ──
+function TaWorthTrustEntry() {
+  return (
+    <Link
+      href="/tools/ta-worth-trust"
+      className="group mt-8 block overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+    >
+      <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FDF5EE] text-4xl shadow-inner transition-transform group-hover:scale-110">
+          🤝
+        </div>
+
+        <div className="flex-1 text-center sm:text-left">
+          <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            Ta值得托付吗？· 意定人评估
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
+            系统评估谁可以成为你的意定人——从价值观、决策力、意愿和现实条件四维度综合判断，独居者也有专属方案。
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D] group-hover:px-8">
+          开始评估
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// ── 责任清单入口卡片 ──
+function ResponsibilityListEntry() {
+  return (
+    <Link
+      href="/tools/responsibility-list"
+      className="group mt-8 block overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+    >
+      <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FDF5EE] text-4xl shadow-inner transition-transform group-hover:scale-110">
+          📋
+        </div>
+
+        <div className="flex-1 text-center sm:text-left">
+          <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            责任清单 · 梳理人生责任
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
+            梳理工作、家庭、社会与对己的各类责任，评估优先级，规划交接方案，让每一份责任都有着落。
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D] group-hover:px-8">
+          开始梳理
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 // ── 爱好健康雷达入口卡片 ──
 function HobbyRadarEntry() {
   return (
@@ -331,6 +491,31 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
   // 特殊处理：爱好健康雷达入口
   if (toolId === "hobby-radar") {
     return <HobbyRadarEntry />;
+  }
+
+  // 特殊处理：责任清单入口
+  if (toolId === "responsibility-list") {
+    return <ResponsibilityListEntry />;
+  }
+
+  // 特殊处理：意定人选择入口
+  if (toolId === "ta-worth-trust") {
+    return <TaWorthTrustEntry />;
+  }
+
+  // 特殊处理：不留遗憾入口
+  if (toolId === "no-regrets") {
+    return <NoRegretsEntry />;
+  }
+
+  // 特殊处理：告别清单入口
+  if (toolId === "goodbye-list") {
+    return <GoodbyeListEntry />;
+  }
+
+  // 特殊处理：告别方式入口
+  if (toolId === "farewell-style") {
+    return <FarewellStyleEntry />;
   }
 
   // 特殊处理：预备自测滑块
