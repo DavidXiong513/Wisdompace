@@ -1,4 +1,4 @@
-import { AssessmentAnswers, AssessmentResult, ModuleResult, LifeEventsResult } from '@/types/emotional-assessment';
+import { AssessmentAnswers, AssessmentResult, ModuleResult } from '@/types/emotional-assessment';
 
 // 反向计分题号 (1-based)
 const EMOTION_REVERSE = [2, 5, 6, 11, 12, 14, 16, 17, 18, 20];

@@ -479,8 +479,6 @@ function HandoverPhase({
 
 // ── 阶段四：报告 ──
 function ReportPhase({ report }: { report: ReportData }) {
-  const [showAll, setShowAll] = useState(false);
-
   return (
     <div className="space-y-8">
       <div className="text-center">

@@ -14,8 +14,7 @@ import {
 
 // ── 主页面 ──
 export default function GoodbyeListPage() {
-  const [items, setItems] = useState<GoodbyeItem[]>([]);
-  const [loaded, setLoaded] = useState(false);
+  const [items, setItems] = useState<GoodbyeItem[]>(() => loadList());
   const [newText, setNewText] = useState('');
   const [newCategory, setNewCategory] = useState<ListCategory>('experience');
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -24,16 +23,10 @@ export default function GoodbyeListPage() {
   const [filterCategory, setFilterCategory] = useState<ListCategory | 'all'>('all');
   const [justCompleted, setJustCompleted] = useState<string | null>(null);
 
-  // 加载
-  useEffect(() => {
-    setItems(loadList());
-    setLoaded(true);
-  }, []);
-
   // 保存
   useEffect(() => {
-    if (loaded) saveList(items);
-  }, [items, loaded]);
+    saveList(items);
+  }, [items]);
 
   const completedCount = items.filter((i) => i.completed).length;
   const totalCount = items.length;

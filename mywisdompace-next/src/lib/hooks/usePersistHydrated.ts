@@ -26,6 +26,7 @@ export function usePersistHydrated<TStore extends PersistStore>(store: TStore) {
 
   useEffect(() => {
     if (store.persist.hasHydrated()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- 初始化：等待 Zustand persist 水合完成
       setHydrated(true);
       return;
     }

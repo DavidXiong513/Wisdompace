@@ -1,4 +1,4 @@
-import { baselineQuestions, lifestyleQuestions, MAX_LIFESTYLE_SCORE } from "./questions";
+import { lifestyleQuestions, MAX_LIFESTYLE_SCORE } from "./questions";
 
 // ── 类型定义 ──
 

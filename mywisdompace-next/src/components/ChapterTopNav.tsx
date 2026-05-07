@@ -74,7 +74,7 @@ export default function ChapterTopNav({
                 <li key={item.href} className="min-w-0">
                   <Link
                     href={item.href}
-                    scroll={false}
+                    scroll={true}
                     aria-current={isActive ? "page" : undefined}
                     className={`flex w-full flex-col items-center rounded-md px-2 py-2.5 transition duration-300 lg:px-3 ${
                       isActive
@@ -152,7 +152,7 @@ export default function ChapterTopNav({
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      scroll={false}
+                      scroll={true}
                       onClick={() => setIsMenuOpen(false)}
                       aria-current={isActive ? "page" : undefined}
                       className={`flex items-center justify-between rounded-md px-3 py-2 transition duration-300 ${

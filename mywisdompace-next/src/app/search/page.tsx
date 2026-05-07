@@ -20,8 +20,6 @@ function SearchContent() {
       setIsSearching(true);
       try {
         const hits = searchAll(query);
-        console.log('Search query:', query);
-        console.log('Search results:', hits);
         setResults(hits);
       } catch (error) {
         console.error('Search error:', error);

@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useEmotionalAssessmentStore } from '@/stores/emotionalAssessmentStore';
 import { EMOTION_QUESTIONS, TENSION_QUESTIONS } from '@/data/emotional-assessment/bank';
 
@@ -25,7 +25,7 @@ export function QuestionFlow({ type }: Props) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   // 防止连击：正在过渡时锁定点击
-  const transitioning = useRef(false);
+  const [transitioning, setTransitioning] = useState(false);
 
   const currentQuestion = questions[currentIndex];
   // 进度：当前是第几题（1-based），让进度条从 ~5% 到 100%
@@ -48,7 +48,7 @@ export function QuestionFlow({ type }: Props) {
   const handleSelect = useCallback(
     (value: number) => {
       // 防连击：正在过渡中则忽略
-      if (transitioning.current) return;
+      if (transitioning) return;
 
       // 如果是最后一题，立即跳转，不延迟
       const isLastQuestion = currentIndex === total - 1;
@@ -67,20 +67,20 @@ export function QuestionFlow({ type }: Props) {
       }
 
       // 锁定 + 短暂延迟后跳转（150ms 更跟手）
-      transitioning.current = true;
+      setTransitioning(true);
       setTimeout(() => {
         goToNext();
         // 解锁（比动画稍晚一点，防止动画中再点）
         setTimeout(() => {
-          transitioning.current = false;
+          setTransitioning(false);
         }, 200);
       }, 150);
     },
-    [type, store, currentQuestion, goToNext, currentIndex, total],
+    [type, store, currentQuestion, goToNext, currentIndex, total, transitioning],
   );
 
   const handlePrev = () => {
-    if (currentIndex > 0 && !transitioning.current) {
+    if (currentIndex > 0 && !transitioning) {
       setCurrentIndex((prev) => prev - 1);
     }
   };
@@ -122,12 +122,12 @@ export function QuestionFlow({ type }: Props) {
               <button
                 key={opt.value}
                 onClick={() => handleSelect(opt.value)}
-                disabled={transitioning.current}
+                disabled={transitioning}
                 className={`w-full rounded-xl border p-4 text-center text-sm font-medium transition-all duration-150 ${
                   isSelected
                     ? 'border-[#C87941] bg-[#FDF5EE] text-[#C87941] shadow-sm scale-[1.01]'
                     : 'border-[#E8D9C2] bg-white text-[#6A6256] hover:bg-[#FAFAF8] hover:border-[#C87941]/50 active:scale-[0.98]'
-                } ${transitioning.current ? 'opacity-60 pointer-events-none' : ''}`}
+                } ${transitioning ? 'opacity-60 pointer-events-none' : ''}`}
               >
                 {opt.label}
               </button>
@@ -140,12 +140,12 @@ export function QuestionFlow({ type }: Props) {
       <div className="mt-8 flex items-center justify-between">
         <button
           onClick={handlePrev}
-          disabled={currentIndex === 0 || transitioning.current}
+          disabled={currentIndex === 0 || transitioning}
           className={`text-sm font-medium transition-colors ${
             currentIndex === 0
               ? 'text-transparent cursor-default'
               : 'text-[#8A7E6A] hover:text-[#C87941]'
-          } ${transitioning.current ? 'pointer-events-none opacity-50' : ''}`}
+          } ${transitioning ? 'pointer-events-none opacity-50' : ''}`}
         >
           ← 上一题
         </button>

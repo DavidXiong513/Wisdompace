@@ -1,3 +1,4 @@
+'use no memo';
 'use client';
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
@@ -896,6 +897,7 @@ function StrippingSection() {
       try {
         const parsed = JSON.parse(local);
         if (parsed?.answer) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect -- 初始化：从 localStorage 加载已有答案
           setText(parsed.answer);
           return;
         }

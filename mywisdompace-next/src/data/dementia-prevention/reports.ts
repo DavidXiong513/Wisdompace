@@ -1,4 +1,4 @@
-import type { RiskLevel, RiskResult } from "./calculation";
+import type { RiskLevel } from "./calculation";
 import { lifestyleQuestions } from "./questions";
 
 // ── 风险等级定义 ──

@@ -1,3 +1,4 @@
+'use no memo';
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -59,6 +60,7 @@ export function ChapterToc({
     const el = document.getElementById(last.sectionId);
     if (!el) return;
     // 恢复阅读进度时也要设 activeId
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 初始化：从阅读进度存储恢复状态
     setActiveId(last.sectionId);
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [chapterSlug, getProgress]);

@@ -10,7 +10,6 @@ import {
   getHobbiesByCategory,
   type HobbyCategory,
   type InterestLevel,
-  type HobbyItem,
 } from '@/data/hobby-radar/hobbyData';
 import { calculateRadar, getWeakestDimension, type RadarResult } from '@/data/hobby-radar/calculation';
 import {

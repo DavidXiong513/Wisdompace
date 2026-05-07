@@ -13,7 +13,7 @@ export function LoginForm() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe] = useState(true); // rememberMe 暂未使用，由 Supabase 管理
+  // rememberMe 由 Supabase 自动管理，无需本地状态
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // 从 URL 读取 returnUrl（登录后跳转回来源页面）
@@ -95,11 +95,11 @@ export function LoginForm() {
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
-                checked={rememberMe}
-                onChange={() => {}} // 暂未使用，由 Supabase 管理
+                defaultChecked
+                disabled
                 className="h-3.5 w-3.5 rounded border border-border text-[#C7A96A] focus:outline-none focus:ring-1 focus:ring-[#E8C872]/70"
               />
-              <span>记住我（在这台设备上保持登录）</span>
+              <span>记住我（由 Supabase 自动管理）</span>
             </label>
             <Link href="/forgot-password" className="text-[#C7A96A] hover:text-[#B58A3A] transition-colors">
               忘记密码

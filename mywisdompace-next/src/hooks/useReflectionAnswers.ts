@@ -116,6 +116,7 @@ export function useReflectionAnswers(
       }
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 初始化：从外部存储加载已有答案
     setAnswers(init);
   }, [chapterSlug, sectionId, questionCount, isLoggedIn, progressRows]);
 

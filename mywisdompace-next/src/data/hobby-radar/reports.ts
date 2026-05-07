@@ -1,6 +1,6 @@
 import type { HobbyCategory, InterestLevel } from "./hobbyData";
 import type { RadarResult, DimensionScore } from "./calculation";
-import { categoryMeta, interestLevelOptions } from "./hobbyData";
+import { categoryMeta } from "./hobbyData";
 
 // ── 维度解读 ──
 

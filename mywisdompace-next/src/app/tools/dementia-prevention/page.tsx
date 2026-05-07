@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { baselineQuestions, lifestyleQuestions, MAX_LIFESTYLE_SCORE } from '@/data/dementia-prevention/questions';
-import { calculateFullResult, getRiskLevel, type BaselineAnswers, type LifestyleAnswers, type RiskLevel, type RiskResult } from '@/data/dementia-prevention/calculation';
+import { calculateFullResult, type BaselineAnswers, type LifestyleAnswers, type RiskResult } from '@/data/dementia-prevention/calculation';
 import { riskLevelDefs, getGeneticDescription, getAgeDescription, getLifestyleDescription, getActionItems } from '@/data/dementia-prevention/reports';
 import { stages, windowColors, windowLabels } from '@/data/dementia-prevention/stages';
 

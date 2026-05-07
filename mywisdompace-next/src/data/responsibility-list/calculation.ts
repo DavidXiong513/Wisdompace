@@ -4,7 +4,7 @@ import type {
   ImportanceLevel,
   Quadrant,
 } from "./responsibilityData";
-import { getQuadrant, quadrantDefs, categoryMeta } from "./responsibilityData";
+import { getQuadrant } from "./responsibilityData";
 
 // ── 类型定义 ──
 

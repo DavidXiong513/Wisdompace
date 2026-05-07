@@ -11,7 +11,6 @@ import {
   musicOptions,
   loadFarewellData,
   saveFarewellData,
-  getDefaultData,
   type FarewellStyleData,
 } from '@/data/farewell-style/farewellStyleData';
 
@@ -76,17 +75,11 @@ function CardSelector<T extends { id: string; label: string; description: string
 // ── 主页面 ──
 export default function FarewellStylePage() {
   const [step, setStep] = useState(0);
-  const [data, setData] = useState<FarewellStyleData>(getDefaultData());
-  const [loaded, setLoaded] = useState(false);
+  const [data, setData] = useState<FarewellStyleData>(() => loadFarewellData());
 
   useEffect(() => {
-    setData(loadFarewellData());
-    setLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (loaded) saveFarewellData(data);
-  }, [data, loaded]);
+    saveFarewellData(data);
+  }, [data]);
 
   const update = <K extends keyof FarewellStyleData>(key: K, value: FarewellStyleData[K]) => {
     setData((prev) => ({ ...prev, [key]: value }));

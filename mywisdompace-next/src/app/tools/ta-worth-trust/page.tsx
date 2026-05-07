@@ -95,7 +95,7 @@ function ScoreSelector({
 // ── 阶段一：社交状况评估 ──
 function SocialPhase({
   marital,
-  children,
+  childrenStatus,
   parentsAlive,
   siblingRelation,
   closeFriends,
@@ -109,7 +109,7 @@ function SocialPhase({
   onNext,
 }: {
   marital: MaritalStatus | null;
-  children: ChildrenStatus | null;
+  childrenStatus: ChildrenStatus | null;
   parentsAlive: ParentsStatus | null;
   siblingRelation: RelationQuality | null;
   closeFriends: number | null;
@@ -122,7 +122,7 @@ function SocialPhase({
   onSolo: (v: boolean) => void;
   onNext: () => void;
 }) {
-  const allAnswered = marital && children !== null && parentsAlive !== null && siblingRelation && closeFriends !== null && isSolo !== null;
+  const allAnswered = marital && childrenStatus !== null && parentsAlive !== null && siblingRelation && closeFriends !== null && isSolo !== null;
 
   return (
     <div className="space-y-8">
@@ -143,7 +143,7 @@ function SocialPhase({
 
           <div>
             <p className="mb-2 text-sm font-medium text-[#4A3728]">子女情况</p>
-            <RadioGroup options={childrenOptions} value={children} onChange={onChildren} />
+            <RadioGroup options={childrenOptions} value={childrenStatus} onChange={onChildren} />
           </div>
 
           <div>
@@ -211,8 +211,6 @@ function NominatePhase({
   onNext: () => void;
   onBack: () => void;
 }) {
-  const [customName, setCustomName] = useState('');
-
   return (
     <div className="space-y-8">
       <div className="rounded-xl border border-[#E8D9C2] bg-white p-6 shadow-sm">
@@ -586,7 +584,7 @@ export default function TaWorthTrustPage() {
 
   // 社交状况
   const [marital, setMarital] = useState<MaritalStatus | null>(null);
-  const [children, setChildren] = useState<ChildrenStatus | null>(null);
+  const [childrenStatus, setChildrenStatus] = useState<ChildrenStatus | null>(null);
   const [parentsAlive, setParentsAlive] = useState<ParentsStatus | null>(null);
   const [siblingRelation, setSiblingRelation] = useState<RelationQuality | null>(null);
   const [closeFriends, setCloseFriends] = useState<number | null>(null);
@@ -654,13 +652,13 @@ export default function TaWorthTrustPage() {
         {phase === 'social' && (
           <SocialPhase
             marital={marital}
-            children={children}
+            childrenStatus={childrenStatus}
             parentsAlive={parentsAlive}
             siblingRelation={siblingRelation}
             closeFriends={closeFriends}
             isSolo={isSolo}
             onMarital={setMarital}
-            onChildren={setChildren}
+            onChildren={setChildrenStatus}
             onParents={setParentsAlive}
             onSibling={setSiblingRelation}
             onFriends={setCloseFriends}

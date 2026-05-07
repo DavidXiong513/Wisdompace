@@ -21,13 +21,6 @@ export type AssessmentResult = {
   lifeType: LifeType;
 };
 
-// ── 分类标签 ──
-const categoryLabels: Record<DimensionCategory, string> = {
-  self: "自我实现",
-  relation: "关系质量",
-  foundation: "健康根基",
-};
-
 // ── 计算 ──
 
 export function calculateResult(

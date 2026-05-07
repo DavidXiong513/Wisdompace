@@ -47,7 +47,7 @@ export function LifeMonthGrid({ result }: Props) {
       rows.push({ rowIndex: r, months });
     }
     return rows;
-  }, [result.totalMonths, result.pastMonths]);
+  }, [result.totalMonths, result.pastMonths, MONTHS_PER_ROW]);
 
   return (
     <div className="rounded-2xl border-2 border-[#C9A15A]/20 bg-white p-4 shadow-[0_8px_30px_rgb(201,161,90,0.08)] sm:p-8">

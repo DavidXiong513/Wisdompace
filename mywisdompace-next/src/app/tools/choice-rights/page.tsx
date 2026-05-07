@@ -203,7 +203,7 @@ export default function LivingWillPage() {
         const err = await res.json();
         alert('保存失败：' + (err.error || '未知错误'));
       }
-    } catch (e) {
+    } catch {
       alert('网络错误，请稍后重试');
     } finally {
       setSaving(false);
