@@ -13,6 +13,12 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "public/**",
+    // Reference sub-projects (not part of main codebase):
+    "fojin-master/**",
+    "big-five-personality/**",
+    "mbti-assessment/**",
+    "depression-assessment-lowrisk/**",
+    "skill-能力兴趣测评/**",
   ]),
 ]);
 

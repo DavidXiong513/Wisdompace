@@ -30,5 +30,12 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "fojin-master",
+    "big-five-personality",
+    "mbti-assessment",
+    "depression-assessment-lowrisk",
+    "skill-能力兴趣测评"
+  ]
 }

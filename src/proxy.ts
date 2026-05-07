@@ -1,5 +1,5 @@
-import { type NextRequest } from 'next/server'
-import { updateSession } from '@/lib/supabase/middleware'
+import { type NextRequest } from 'next/server';
+import { updateSession } from '@/lib/supabase/middleware';
 
 /**
  * Supabase Auth Middleware
@@ -12,8 +12,8 @@ import { updateSession } from '@/lib/supabase/middleware'
  * 这是 Supabase Auth 在 Next.js 中正常工作的前提。
  * 参考: https://supabase.com/docs/guides/auth/server-side/nextjs
  */
-export async function middleware(request: NextRequest) {
-  return await updateSession(request)
+export async function proxy(request: NextRequest) {
+  return await updateSession(request);
 }
 
 /**
@@ -32,4 +32,4 @@ export const config = {
      */
     '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)',
   ],
-}
+};
