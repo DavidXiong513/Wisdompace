@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { spawn } from "child_process";
-import path from "path";
-import fs from "fs";
-import os from "os";
+import nodemailer from "nodemailer";
 
 /* ─────────────────────────────────────
    表单字段中文映射
@@ -47,53 +44,32 @@ function buildEmailText(data: Record<string, string>): string {
 }
 
 /* ─────────────────────────────────────
-   调用 Python 脚本发送邮件（通过临时文件传中文）
+   通过 nodemailer 发送邮件
    ───────────────────────────────────── */
-function sendMailViaPython(payload: {
+async function sendMail(payload: {
   to: string;
+  host: string;
+  port: number;
   user: string;
   pass: string;
   subject: string;
   body: string;
 }): Promise<void> {
-  return new Promise((resolve, reject) => {
-    // 写临时文件（UTF-8，零编码损失）
-    const tmpFile = path.join(os.tmpdir(), "contact-" + Date.now() + ".json");
-    fs.writeFileSync(tmpFile, JSON.stringify(payload), "utf-8");
+  const transporter = nodemailer.createTransport({
+    host: payload.host,
+    port: payload.port,
+    secure: payload.port === 465, // 465 = SSL, 587 = STARTTLS
+    auth: {
+      user: payload.user,
+      pass: payload.pass,
+    },
+  });
 
-    const scriptPath = path.join(process.cwd(), "scripts", "send_mail.py");
-    const py = spawn("python3", [scriptPath, tmpFile], {
-      env: { ...process.env, PYTHONIOENCODING: "utf-8" },
-    });
-
-    let stdout = "";
-    let stderr = "";
-
-    py.stdout.on("data", (d) => {
-      stdout += d.toString();
-    });
-    py.stderr.on("data", (d) => {
-      stderr += d.toString();
-    });
-
-    py.on("close", (code) => {
-      if (code === 0) {
-        try {
-          const result = JSON.parse(stdout.trim());
-          if (result.success) {
-            resolve();
-          } else {
-            reject(new Error(result.error || "Unknown error"));
-          }
-        } catch {
-          reject(new Error("Invalid JSON from Python: " + stdout));
-        }
-      } else {
-        reject(new Error(stderr || "Python script exited with code " + code));
-      }
-    });
-
-    py.on("error", (err) => reject(err));
+  await transporter.sendMail({
+    from: payload.user,
+    to: payload.to,
+    subject: payload.subject,
+    text: payload.body,
   });
 }
 
@@ -115,6 +91,8 @@ export async function POST(request: NextRequest) {
     }
 
     const mailTo = process.env.MAIL_TO || "1318952797@qq.com";
+    const smtpHost = process.env.SMTP_HOST || "smtp.qq.com";
+    const smtpPort = Number(process.env.SMTP_PORT) || 465;
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
 
@@ -125,8 +103,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await sendMailViaPython({
+    await sendMail({
       to: mailTo,
+      host: smtpHost,
+      port: smtpPort,
       user: smtpUser,
       pass: smtpPass,
       subject: "思考熊咨询 - " + (data.name?.trim() || "新消息"),
