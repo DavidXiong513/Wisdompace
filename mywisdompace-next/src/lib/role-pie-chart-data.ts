@@ -113,7 +113,7 @@ export const PRESET_ROLES: PresetRole[] = [
   },
   {
     id: 'mentor',
-    name: '导师/师傅',
+    name: '导师/带教师傅',
     description: '将经验和知识传授给他人，指导后辈成长和发展。',
     icon: '🏫',
     category: '工作',
@@ -155,10 +155,10 @@ export const PRESET_ROLES: PresetRole[] = [
     category: '社交',
   },
   {
-    id: 'citizen',
-    name: '公民',
-    description: '作为社会成员，享有权利并承担公民义务。',
-    icon: '🌐',
+    id: 'group-admin',
+    name: '微信群主/圈主',
+    description: '在微信社群或其他线上社群中组织活动、维护氛围，承担一定的社群管理责任。',
+    icon: '💬',
     category: '社交',
   },
 ];

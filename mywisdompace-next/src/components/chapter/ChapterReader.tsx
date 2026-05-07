@@ -74,9 +74,8 @@ function SectionCard({ chapterSlug, section, index }: { chapterSlug: string; sec
               color:      'var(--wp-ink-light)',
               lineHeight: 1.9,
               fontSize:   '1.05rem',
-              textAlign:  'justify',
+              textAlign:  'left',
               fontFamily: 'var(--wp-font-sans)',
-              textIndent: '2em',
             }}
             dangerouslySetInnerHTML={{ __html: para }}
           />

@@ -83,7 +83,7 @@ export const tools: Record<string, ToolInfo> = {
     id: "role-stripper",
     name: "角色剥离器",
     status: "developing",
-    description: "剥离社会角色，看见真实的自己",
+    description: "（已整合到角色饼图）剥离社会角色，看见真实的自己",
   },
   "life-finder": {
     id: "life-finder",
@@ -126,6 +126,12 @@ export const tools: Record<string, ToolInfo> = {
     name: "告别清单",
     status: "developing",
     description: "准备你的告别清单",
+  },
+  "dementia-prevention-entry": {
+    id: "dementia-prevention-entry",
+    name: "预防痴呆·风险自测",
+    status: "ready",
+    description: "基于《柳叶刀》14因素，3分钟自测你的老年痴呆风险，获取个性化预防指南。",
   },
 };
 

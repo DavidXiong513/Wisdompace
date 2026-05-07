@@ -72,9 +72,10 @@ export default async function ChapterPage({ params }: Props) {
                     {chapter.subtitle}
                   </p>
                   <div className="mx-auto mt-6 h-[2px] w-16 bg-[#C9A15A]" />
-                  <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-[#8A7E6A]">
-                    {chapter.description}
-                  </p>
+                  <p
+                    className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-[#8A7E6A]"
+                    dangerouslySetInnerHTML={{ __html: chapter.description }}
+                  />
                 </header>
 
                 {/* 章节核心内容渲染器 (带进度追踪) */}

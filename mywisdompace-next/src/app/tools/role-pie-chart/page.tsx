@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import Link from 'next/link';
 // Recharts 已移除 — 使用纯 CSS conic-gradient 避免 OOM
 // import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useRolePieChartStore } from '@/lib/role-pie-chart-store';
 import { usePersistHydrated } from '@/lib/hooks/usePersistHydrated';
+import { useAuthStore } from '@/stores/authStore';
+import { useProgressByCategory, useUpsertProgress } from '@/lib/hooks/useProgress';
 import {
   PRESET_ROLES,
   generateReport,
@@ -870,6 +872,144 @@ function TimePage() {
   );
 }
 
+// ── 角色剥离：开放式文本框 ──
+
+const STRIPPING_LOCAL_KEY = 'wp-role-stripper-answer';
+
+function StrippingSection() {
+  const user = useAuthStore((s) => s.user);
+  const isLoggedIn = !!user;
+  const [text, setText] = useState('');
+  const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const upsert = useUpsertProgress();
+
+  // 初始化：从 localStorage 或服务端加载
+  const { data: progressRows } = useProgressByCategory('reflection-answer', {
+    enabled: isLoggedIn,
+  });
+
+  useEffect(() => {
+    // 先尝试 localStorage
+    const local = localStorage.getItem(STRIPPING_LOCAL_KEY);
+    if (local) {
+      try {
+        const parsed = JSON.parse(local);
+        if (parsed?.answer) {
+          setText(parsed.answer);
+          return;
+        }
+      } catch { /* ignore */ }
+    }
+    // 已登录则尝试服务端
+    if (isLoggedIn && progressRows) {
+      const row = progressRows.find((r: { key: string }) => r.key === 'role-stripper');
+      if (row?.value && typeof row.value === 'object' && 'answer' in (row.value as object)) {
+        setText((row.value as { answer: string }).answer);
+      }
+    }
+  }, [isLoggedIn, progressRows]);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    setText(val);
+
+    // 写 localStorage
+    localStorage.setItem(STRIPPING_LOCAL_KEY, JSON.stringify({
+      answer: val,
+      updatedAt: new Date().toISOString(),
+    }));
+
+    // 防抖同步到服务端
+    setStatus('saving');
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      if (isLoggedIn) {
+        upsert.mutate(
+          {
+            category: 'reflection-answer',
+            key: 'role-stripper',
+            value: { answer: val, answeredAt: new Date().toISOString() },
+          },
+          {
+            onSuccess: () => setStatus('saved'),
+            onError: () => setStatus('error'),
+          }
+        );
+      } else {
+        setStatus('saved');
+      }
+      setTimeout(() => setStatus('idle'), 2000);
+    }, 800);
+  }, [isLoggedIn, upsert]);
+
+  const charCount = text.length;
+
+  let statusText = '';
+  let statusColor = THEME.textMuted;
+  if (status === 'saving') {
+    statusText = '保存中…';
+    statusColor = THEME.primary;
+  } else if (status === 'saved') {
+    statusText = isLoggedIn ? '已同步到云端 ✓' : '已保存到本地 ✓';
+    statusColor = '#7A9E7E';
+  } else if (status === 'error') {
+    statusText = '同步失败，已保留本地';
+    statusColor = '#C45B4A';
+  }
+
+  return (
+    <div className="mb-5 rounded-xl border border-[#E8D9C2] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+      <h3 className="mb-3 text-sm font-semibold" style={{ color: THEME.textPrimary }}>
+        🪞 剥去角色后的自己
+      </h3>
+      <p className="mb-4 text-sm leading-relaxed" style={{ color: THEME.textSecondary }}>
+        完成角色梳理后，试着回答这个问题：
+        <br />
+        <strong style={{ color: THEME.primary }}>「如果去掉所有这些角色和标签，你是谁？」</strong>
+        <br />
+        不用急着回答——让这个问题在心里停留一会儿。写下任何浮现的想法，没有对错。
+      </p>
+      <div className="relative">
+        <textarea
+          value={text}
+          onChange={handleChange}
+          placeholder="在这里写下你的思考…"
+          rows={5}
+          className="w-full resize-y rounded-xl border px-4 py-3 text-sm leading-relaxed outline-none transition-all"
+          style={{
+            borderColor: THEME.border,
+            color: THEME.textPrimary,
+            backgroundColor: '#FAF8F3',
+            minHeight: '120px',
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = THEME.primary;
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(200,121,65,0.12)';
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = THEME.border;
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        />
+        <span className="pointer-events-none absolute bottom-3 right-3 text-xs" style={{ color: charCount > 0 ? THEME.textMuted : THEME.border }}>
+          {charCount} 字
+        </span>
+      </div>
+      <div className="mt-2 flex items-center justify-between">
+        <span className="text-xs" style={{ color: statusColor }}>
+          {statusText}
+        </span>
+        {!isLoggedIn && charCount > 0 && (
+          <span className="rounded-full px-2 py-0.5 text-[10px]" style={{ background: '#F5EDE0', color: THEME.textMuted }}>
+            登录后可云端保存
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ==================== 阶段四：报告页 ==================== //
 function ReportPage() {
   const { assessments, reset } = useRolePieChartStore();
@@ -1098,6 +1238,8 @@ function ReportPage() {
         </div>
       )}
 
+      {/* 🪞 角色剥离：开放式思考 */}
+      <StrippingSection />
       {/* 操作按钮 */}
       <div className="flex flex-col gap-3">
         <button

@@ -120,6 +120,7 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'three-questions-tool',
     'emotional-assessment',
     'choice-rights',
+    'dementia-prevention-entry',
   ].includes(toolId);
 
   return (
