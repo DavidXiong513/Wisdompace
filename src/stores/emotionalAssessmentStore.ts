@@ -10,7 +10,7 @@ interface EmotionalAssessmentState {
   step: AssessmentStep;
   answers: AssessmentAnswers;
   result: AssessmentResult | null;
-  
+
   // Actions
   setStep: (step: AssessmentStep) => void;
   setEmotionAnswer: (questionId: number, score: number) => void;
@@ -33,10 +33,10 @@ export const useEmotionalAssessmentStore = create<EmotionalAssessmentState>()(
       answers: initialAnswers,
       result: null,
 
-      setStep: (step) => set({ step }),
+      setStep: step => set({ step }),
 
       setEmotionAnswer: (questionId, score) =>
-        set((state) => ({
+        set(state => ({
           answers: {
             ...state.answers,
             emotion: { ...state.answers.emotion, [questionId]: score },
@@ -44,18 +44,18 @@ export const useEmotionalAssessmentStore = create<EmotionalAssessmentState>()(
         })),
 
       setTensionAnswer: (questionId, score) =>
-        set((state) => ({
+        set(state => ({
           answers: {
             ...state.answers,
             tension: { ...state.answers.tension, [questionId]: score },
           },
         })),
 
-      toggleLifeEvent: (eventId) =>
-        set((state) => {
+      toggleLifeEvent: eventId =>
+        set(state => {
           const events = state.answers.lifeEvents;
           const newEvents = events.includes(eventId)
-            ? events.filter((id) => id !== eventId)
+            ? events.filter(id => id !== eventId)
             : [...events, eventId];
           return {
             answers: { ...state.answers, lifeEvents: newEvents },
@@ -64,13 +64,13 @@ export const useEmotionalAssessmentStore = create<EmotionalAssessmentState>()(
 
       calculateAndSetResult: () => {
         const { answers } = get();
-        
+
         // 计算生活压力事件总分
         let lesTotalLcu = 0;
         let lesHighCount = 0;
-        
-        answers.lifeEvents.forEach((id) => {
-          const event = LIFE_EVENTS.find((e) => e.id === id);
+
+        answers.lifeEvents.forEach(id => {
+          const event = LIFE_EVENTS.find(e => e.id === id);
           if (event) {
             lesTotalLcu += event.lcu;
             if (event.lcu >= 60) {
@@ -89,7 +89,7 @@ export const useEmotionalAssessmentStore = create<EmotionalAssessmentState>()(
       name: 'wp-emotional-assessment-storage',
       // 自定义 storage：OOM 防护（role-pie-chart 教训）
       storage: {
-        getItem: (name) => {
+        getItem: name => {
           try {
             const raw = localStorage.getItem(name);
             if (!raw) return null;
@@ -105,7 +105,7 @@ export const useEmotionalAssessmentStore = create<EmotionalAssessmentState>()(
         setItem: (_name, value) => {
           localStorage.setItem('wp-emotional-assessment-storage', JSON.stringify(value));
         },
-        removeItem: (_name: string): void => {
+        removeItem: (): void => {
           localStorage.removeItem('wp-emotional-assessment-storage');
         },
       },

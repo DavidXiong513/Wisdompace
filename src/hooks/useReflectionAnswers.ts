@@ -74,7 +74,7 @@ export function useReflectionAnswers(
   sectionId: string,
   questionCount: number
 ): UseReflectionAnswersReturn {
-  const user = useAuthStore((s) => s.user);
+  const user = useAuthStore(s => s.user);
   const isLoggedIn = !!user;
 
   // 本地答案状态
@@ -124,8 +124,8 @@ export function useReflectionAnswers(
   const saveAnswer = useCallback(
     (questionIndex: number, text: string) => {
       // 1. 立即更新本地状态
-      setAnswers((prev) => ({ ...prev, [questionIndex]: text }));
-      setStatuses((prev) => ({ ...prev, [questionIndex]: 'saving' }));
+      setAnswers(prev => ({ ...prev, [questionIndex]: text }));
+      setStatuses(prev => ({ ...prev, [questionIndex]: 'saving' }));
 
       // 2. 写入 localStorage（所有用户都写，作为本地缓存）
       const local = readLocal(chapterSlug, sectionId);
@@ -148,10 +148,10 @@ export function useReflectionAnswers(
             },
             {
               onSuccess: () => {
-                setStatuses((prev) => ({ ...prev, [questionIndex]: 'saved' }));
+                setStatuses(prev => ({ ...prev, [questionIndex]: 'saved' }));
                 // 2秒后恢复 idle
                 setTimeout(() => {
-                  setStatuses((prev) => {
+                  setStatuses(prev => {
                     if (prev[questionIndex] === 'saved') {
                       const next = { ...prev };
                       delete next[questionIndex];
@@ -162,15 +162,15 @@ export function useReflectionAnswers(
                 }, 2000);
               },
               onError: () => {
-                setStatuses((prev) => ({ ...prev, [questionIndex]: 'error' }));
+                setStatuses(prev => ({ ...prev, [questionIndex]: 'error' }));
               },
             }
           );
         } else {
           // 未登录用户：localStorage 保存完成后直接显示 saved
-          setStatuses((prev) => ({ ...prev, [questionIndex]: 'saved' }));
+          setStatuses(prev => ({ ...prev, [questionIndex]: 'saved' }));
           setTimeout(() => {
-            setStatuses((prev) => {
+            setStatuses(prev => {
               if (prev[questionIndex] === 'saved') {
                 const next = { ...prev };
                 delete next[questionIndex];
@@ -187,8 +187,9 @@ export function useReflectionAnswers(
 
   // 清理定时器
   useEffect(() => {
+    const current = debounceRef.current;
     return () => {
-      Object.values(debounceRef.current).forEach(clearTimeout);
+      Object.values(current).forEach(clearTimeout);
     };
   }, []);
 
