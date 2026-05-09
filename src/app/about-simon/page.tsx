@@ -214,10 +214,9 @@ function HeroSection() {
 
             {/* ── 定位标语 ── */}
             <div className="mt-5 flex items-center gap-3">
-              <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--as-primary-300)/50]" />
               <p className="text-sm font-semibold tracking-[0.12em] whitespace-nowrap text-[var(--as-primary-200)]">
-                组织提效 × 个体解惑<span className="mx-2 text-[var(--as-primary-300)]">——</span>
-                20年实战，助你迈出智慧下一步
+                组织提效 × 个体解惑<span className="mx-1.5 text-[var(--as-primary-300)]">──</span>
+                助你迈出智慧下一步
               </p>
               <span className="h-px flex-1 bg-gradient-to-r from-[var(--as-primary-300)/50] to-transparent" />
             </div>
