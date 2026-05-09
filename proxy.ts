@@ -3,7 +3,11 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { logBodyOversized, logDebugBlocked, getClientIp } from '@/lib/security-logger';
 
 /**
- * Root Middleware — 每个请求都经过此函数
+ * Root Proxy (formerly Middleware) — 每个请求都经过此函数
+ *
+ * Next.js 16 将 middleware.ts 重命名为 proxy.ts，
+ * 导出函数名也从 middleware 改为 proxy。
+ * 参考: https://nextjs.org/docs/messages/middleware-to-proxy
  *
  * 职责：
  * 1. 刷新 Supabase Auth Session Cookie（核心）
@@ -22,7 +26,7 @@ const MAX_BODY_SIZE: Record<string, number> = {
 };
 const DEFAULT_MAX_BODY = 1024 * 1024; // 默认 1MB
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // 1. 请求体大小预检（仅 POST/PATCH/PUT）
   if (['POST', 'PATCH', 'PUT'].includes(request.method)) {
     const contentLength = request.headers.get('content-length');
