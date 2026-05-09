@@ -195,7 +195,7 @@ function HeroSection() {
           </div>
 
           {/* 右侧：文案 */}
-          <div className="text-center sm:text-left">
+          <div className="text-left">
             <p className="text-sm font-medium tracking-widest text-[var(--as-primary-200)]">
               借假修真的思考熊
             </p>
