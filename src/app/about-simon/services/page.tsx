@@ -124,7 +124,7 @@ const CLIENT_CATEGORIES = [
   },
   {
     label: '🤝 合资单位',
-    count: '5',
+    count: '5+',
     clients: '上海通用汽车、和黄药业、华夏邓白氏、延锋伟世通、厦门国际银行',
   },
   {
@@ -135,7 +135,7 @@ const CLIENT_CATEGORIES = [
   },
   {
     label: '🚀 民营单位',
-    count: '14+',
+    count: '15+',
     clients:
       '沪东重机、华虹电子、浙商银行、中青旅、友讯科技、中达电通、宏力半导体、尚德太阳能、海康威视、前程无忧、上海奕尚、华住集团、携程集团',
   },
