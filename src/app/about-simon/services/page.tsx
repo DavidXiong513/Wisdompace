@@ -185,6 +185,26 @@ export default function ServicesPage() {
               </div>
             ))}
           </div>
+
+          {/* ── B端引导横幅 ── */}
+          <div className="mx-auto mt-8 max-w-4xl overflow-x-auto rounded-xl border border-[var(--as-primary-200)] bg-[var(--as-primary-50)] px-6 py-4 text-center shadow-sm">
+            <p className="text-sm font-medium tracking-wide whitespace-nowrap text-[var(--as-primary-700)]">
+              如果贵司正在经历：
+              <span className="font-semibold text-[var(--as-accent)]">组织效率下降</span>、
+              <span className="font-semibold text-[var(--as-accent)]">人才跟不上</span>、
+              <span className="font-semibold text-[var(--as-accent)]">文化酸蚀化</span>、
+              <span className="font-semibold text-[var(--as-accent)]">改革推不动</span>、
+              想降本增效组织精简又不知从何下手
+              <span className="mx-1.5">…</span>
+              <Link
+                scroll={false}
+                href="/about-simon/connect"
+                className="inline-flex items-center rounded-full bg-[var(--as-primary-600)] px-4 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-[var(--as-primary-700)]"
+              >
+                欢迎咨询 →
+              </Link>
+            </p>
+          </div>
         </div>
       </section>
 
