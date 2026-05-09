@@ -31,7 +31,11 @@ interface AuthState {
 
   // 认证方法
   login: (email: string, password: string) => Promise<{ ok: boolean; message?: string }>;
-  register: (name: string, email: string, password: string) => Promise<{ ok: boolean; message?: string }>;
+  register: (
+    name: string,
+    email: string,
+    password: string
+  ) => Promise<{ ok: boolean; message?: string }>;
   logout: () => Promise<void>;
   initSession: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ ok: boolean; message?: string }>;
@@ -48,9 +52,9 @@ export const useAuthStore = create<AuthState>()(
       initialized: false,
 
       // ==================== 状态更新 ==================== //
-      setUser: (user) => set({ user, status: user ? 'authenticated' : 'unauthenticated' }),
-      setStatus: (status) => set({ status }),
-      setError: (error) => set({ error }),
+      setUser: user => set({ user, status: user ? 'authenticated' : 'unauthenticated' }),
+      setStatus: status => set({ status }),
+      setError: error => set({ error }),
       clearError: () => set({ error: null }),
       setInitialized: () => set({ initialized: true }),
 
@@ -63,7 +67,10 @@ export const useAuthStore = create<AuthState>()(
       initSession: async () => {
         try {
           const supabase = createClient();
-          const { data: { user: supaUser }, error } = await supabase.auth.getUser();
+          const {
+            data: { user: supaUser },
+            error,
+          } = await supabase.auth.getUser();
 
           if (error || !supaUser) {
             set({ user: null, status: 'unauthenticated', initialized: true });
@@ -71,8 +78,9 @@ export const useAuthStore = create<AuthState>()(
           }
 
           // 从 profile 扩展字段获取 name（fallback 到 email 前缀）
-          const name = supaUser.user_metadata?.name
-            ?? (supaUser.email ? supaUser.email.split('@')[0] : '用户');
+          const name =
+            supaUser.user_metadata?.name ??
+            (supaUser.email ? supaUser.email.split('@')[0] : '用户');
 
           const authUser: AuthUser = {
             id: supaUser.id,
@@ -125,7 +133,10 @@ export const useAuthStore = create<AuthState>()(
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { name } },
+          options: {
+            data: { name },
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
+          },
         });
 
         if (error) {
@@ -163,7 +174,7 @@ export const useAuthStore = create<AuthState>()(
       /**
        * 发送密码重置邮件
        */
-      resetPassword: async (email) => {
+      resetPassword: async email => {
         const supabase = createClient();
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/reset-password`,
@@ -182,7 +193,7 @@ export const useAuthStore = create<AuthState>()(
       /**
        * 更新密码（在重置密码页面调用，需已有有效 session）
        */
-      updatePassword: async (password) => {
+      updatePassword: async password => {
         const supabase = createClient();
         const { error } = await supabase.auth.updateUser({ password });
 
@@ -199,7 +210,7 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'auth-storage',
       // 只持久化必要字段
-      partialize: (state) => ({
+      partialize: state => ({
         user: state.user,
       }),
       // 合并策略：服务端 session 为准，localStorage 仅做降级缓存

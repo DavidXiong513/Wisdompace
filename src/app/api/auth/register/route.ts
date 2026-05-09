@@ -6,23 +6,23 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
+/** 生产环境域名，用于邮箱验证链接 */
+const SITE_ORIGIN =
+  process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3000';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { name, email, password } = body;
 
     if (!name || !email || !password) {
-      return NextResponse.json(
-        { message: '请填写完整信息' },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: '请填写完整信息' }, { status: 400 });
     }
 
     if (password.length < 6) {
-      return NextResponse.json(
-        { message: '密码长度至少 6 位' },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: '密码长度至少 6 位' }, { status: 400 });
     }
 
     const supabase = await createClient();
@@ -30,7 +30,10 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { name } },
+      options: {
+        data: { name },
+        emailRedirectTo: `${SITE_ORIGIN}/auth/callback`,
+      },
     });
 
     if (error) {
@@ -60,6 +63,7 @@ function mapError(msg: string): string {
   if (msg.includes('invalid_email')) return '邮箱格式不正确';
   if (msg.includes('Password should be at least 6 characters')) return '密码长度至少 6 位';
   if (msg.includes('rate limit')) return '操作过于频繁，请稍后再试';
-  if (msg.includes('fetch failed') || msg.includes('NetworkError')) return '网络连接异常，请检查网络后重试';
+  if (msg.includes('fetch failed') || msg.includes('NetworkError'))
+    return '网络连接异常，请检查网络后重试';
   return msg || '注册失败，请稍后再试';
 }
