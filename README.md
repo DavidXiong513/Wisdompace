@@ -1,21 +1,25 @@
- MyWisdompace - 《一生的整理》官网
+MyWisdompace - 《一生的整理》官网
 
 Next.js 实现的现代化网站，包含完整的安全架构和用户体验优化。
 
 ## 🚀 快速开始
 
 ### 安装依赖
+
 ```bash
 npm install
 ```
 
 ### 开发模式
+
 ```bash
 npm run dev
 ```
+
 访问 [http://localhost:3000](http://localhost:3000)
 
 ### 生产构建
+
 ```bash
 npm run build
 npm run start
@@ -25,11 +29,11 @@ npm run start
 
 ## 📚 重要文档
 
-| 文档 | 说明 | 适用场景 |
-|------|------|----------|
-| [SECURITY_GUIDE.md](./SECURITY_GUIDE.md) | 安全配置快速使用指南 | 日常开发、集成第三方服务 |
-| [SECURITY_ARCHITECTURE.md](./SECURITY_ARCHITECTURE.md) | 安全架构详细设计 | 架构理解、团队规范、安全审查 |
-| [AGENTS.md](../AGENTS.md) | 项目开发规范 | 代码风格、模块规范 |
+| 文档                                                   | 说明                 | 适用场景                     |
+| ------------------------------------------------------ | -------------------- | ---------------------------- |
+| [SECURITY_GUIDE.md](./SECURITY_GUIDE.md)               | 安全配置快速使用指南 | 日常开发、集成第三方服务     |
+| [SECURITY_ARCHITECTURE.md](./SECURITY_ARCHITECTURE.md) | 安全架构详细设计     | 架构理解、团队规范、安全审查 |
+| [AGENTS.md](../AGENTS.md)                              | 项目开发规范         | 代码风格、模块规范           |
 
 ---
 
@@ -67,6 +71,7 @@ mywisdompace-next/
 ## 🔒 安全特性
 
 ### 生产级安全架构
+
 - ✅ **完整的CSP策略**：防止XSS、数据注入、点击劫持
 - ✅ **环境区分**：开发环境自动放宽限制，生产环境严格保护
 - ✅ **输入验证**：搜索、数据导入、URL 白名单验证
@@ -75,6 +80,7 @@ mywisdompace-next/
 - ✅ **降级方案**：边缘案例支持强制导入
 
 ### 安全配置文件
+
 - `src/config/security.config.ts` - 白名单和策略配置
 - `src/lib/security.ts` - 安全工具函数库
 - `next.config.ts` - 动态安全响应头
@@ -107,6 +113,7 @@ npm run lint     # 代码检查
 ## 🔧 集成第三方服务
 
 ### 快速集成
+
 编辑 `src/config/security.config.ts`，取消注释对应域名：
 
 ```typescript
@@ -117,7 +124,7 @@ export const ALLOWED_SCRIPT_DOMAINS = [
 
 // YouTube 视频
 export const ALLOWED_FRAME_DOMAINS = [
-  'https://www.youtube.com',          // ✅ 取消注释
+  'https://www.youtube.com', // ✅ 取消注释
 ];
 ```
 
@@ -128,12 +135,15 @@ export const ALLOWED_FRAME_DOMAINS = [
 ## 🐛 常见问题
 
 ### Q: 开发时第三方脚本无法加载？
+
 **A**: 开发环境已自动禁用CSP，检查网络和浏览器控制台。
 
 ### Q: 数据导入提示"部分内容跳过"？
+
 **A**: 这是正常的安全保护，查看控制台警告，或使用 `forceImportData()`。
 
 ### Q: 如何添加新的白名单域名？
+
 **A**: 编辑 `src/config/security.config.ts`，在对应数组中添加。
 
 **更多问题**: 见 [SECURITY_GUIDE.md#常见问题](./SECURITY_GUIDE.md#常见问题)
@@ -157,3 +167,5 @@ export const ALLOWED_FRAME_DOMAINS = [
 
 **最后更新**: 2026-02-21  
 **版本**: 1.0.0
+
+# Deploy trigger 1778335167
