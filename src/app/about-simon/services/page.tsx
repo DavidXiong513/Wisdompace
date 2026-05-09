@@ -187,8 +187,8 @@ export default function ServicesPage() {
           </div>
 
           {/* ── B端引导横幅 ── */}
-          <div className="mx-auto mt-8 max-w-4xl overflow-x-auto rounded-xl border border-[var(--as-primary-200)] bg-[var(--as-primary-50)] px-6 py-4 text-center shadow-sm">
-            <p className="text-sm font-medium tracking-wide whitespace-nowrap text-[var(--as-primary-700)]">
+          <div className="mt-8 rounded-xl border border-[var(--as-primary-200)] bg-[var(--as-primary-50)] px-6 py-4 text-center shadow-sm">
+            <p className="text-base font-medium tracking-wide whitespace-nowrap text-[var(--as-primary-700)]">
               如果贵司正在经历：
               <span className="font-semibold text-[var(--as-accent)]">组织效率下降</span>、
               <span className="font-semibold text-[var(--as-accent)]">人才跟不上</span>、
@@ -199,7 +199,7 @@ export default function ServicesPage() {
               <Link
                 scroll={false}
                 href="/about-simon/connect"
-                className="inline-flex items-center rounded-full bg-[var(--as-primary-600)] px-4 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-[var(--as-primary-700)]"
+                className="inline-flex items-center rounded-full bg-[var(--as-primary-600)] px-4 py-1 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--as-primary-700)]"
               >
                 欢迎咨询 →
               </Link>
@@ -297,8 +297,8 @@ export default function ServicesPage() {
           </div>
 
           {/* ── C端引导横幅 ── */}
-          <div className="mx-auto mt-8 max-w-4xl overflow-x-auto rounded-xl border border-[var(--as-accent-light)] bg-white px-6 py-4 text-center shadow-sm">
-            <p className="text-sm font-medium tracking-wide whitespace-nowrap text-[var(--as-gray-700)]">
+          <div className="mt-8 rounded-xl border border-[var(--as-accent-light)] bg-white px-6 py-4 text-center shadow-sm">
+            <p className="text-base leading-relaxed font-medium tracking-wide text-[var(--as-gray-700)]">
               如果你正在经历
               <span className="font-semibold text-[var(--as-accent)]">
                 &ldquo;求职无助迷茫&rdquo;
@@ -324,7 +324,7 @@ export default function ServicesPage() {
               <Link
                 scroll={false}
                 href="/about-simon/connect"
-                className="inline-flex items-center rounded-full bg-[var(--as-primary-600)] px-4 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-[var(--as-primary-700)]"
+                className="inline-flex items-center rounded-full bg-[var(--as-primary-600)] px-4 py-1 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--as-primary-700)]"
               >
                 欢迎咨询 →
               </Link>
