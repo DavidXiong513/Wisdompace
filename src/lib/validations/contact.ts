@@ -15,5 +15,7 @@ export const ContactSchema = z.object({
   budget: z.string().min(1, '请填写预算范围').max(100),
   message: z.string().min(1, '请填写留言内容').max(5000),
   // Honeypot — 机器人会填，人类不会（前端隐藏字段）
-  website: z.string().max(0).optional(),
+  // ⚠️ 不能用 .max(0)，否则机器人填值时 Zod 会 400 拒绝，
+  // 暴露蜜罐字段存在。必须允许任意值通过验证，再在业务逻辑中静默拦截。
+  website: z.string().optional(),
 });
