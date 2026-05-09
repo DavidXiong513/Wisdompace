@@ -295,6 +295,41 @@ export default function ServicesPage() {
               </div>
             ))}
           </div>
+
+          {/* ── C端引导横幅 ── */}
+          <div className="mx-auto mt-8 max-w-4xl overflow-x-auto rounded-xl border border-[var(--as-accent-light)] bg-white px-6 py-4 text-center shadow-sm">
+            <p className="text-sm font-medium tracking-wide whitespace-nowrap text-[var(--as-gray-700)]">
+              如果你正在经历
+              <span className="font-semibold text-[var(--as-accent)]">
+                &ldquo;求职无助迷茫&rdquo;
+              </span>
+              、
+              <span className="font-semibold text-[var(--as-accent)]">
+                &ldquo;跳槽犹豫不定&rdquo;
+              </span>
+              、
+              <span className="font-semibold text-[var(--as-accent)]">
+                &ldquo;发展&amp;转型瓶颈&rdquo;
+              </span>
+              、
+              <span className="font-semibold text-[var(--as-accent)]">
+                &ldquo;自我价值怀疑&rdquo;
+              </span>
+              、
+              <span className="font-semibold text-[var(--as-accent)]">
+                &ldquo;自我提升无力&rdquo;
+              </span>
+              等等的困扰
+              <span className="mx-1.5">…</span>
+              <Link
+                scroll={false}
+                href="/about-simon/connect"
+                className="inline-flex items-center rounded-full bg-[var(--as-primary-600)] px-4 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-[var(--as-primary-700)]"
+              >
+                欢迎咨询 →
+              </Link>
+            </p>
+          </div>
         </div>
       </section>
 
