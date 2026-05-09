@@ -1,13 +1,13 @@
 /**
  * 安全配置中心
  * 集中管理所有安全相关的白名单和策略
- * 
+ *
  * 使用说明：
  * 1. 集成第三方服务时，在相应的白名单数组中添加域名
  * 2. 开发环境会自动禁用CSP，无需修改配置
  * 3. 所有配置变更会自动应用到 next.config.ts
  * 4. 错误提示信息统一在 ERROR_MESSAGES 中管理
- * 
+ *
  * 快速集成示例：
  * - Google Analytics: 取消注释 ALLOWED_SCRIPT_DOMAINS 中的对应行
  * - YouTube视频: 取消注释 ALLOWED_FRAME_DOMAINS 中的对应行
@@ -47,10 +47,15 @@ export const ALLOWED_IMAGE_DOMAINS = [
 /**
  * 允许的连接域名 (fetch/XHR)
  * 使用场景: API调用、第三方服务
+ *
+ * ⚠️ 安全原则：不要使用 https: 通配符，必须列出具体域名
  */
 export const ALLOWED_CONNECT_DOMAINS = [
   'https://enubvdkirskacmtuzgys.supabase.co', // Supabase 项目
-  // 'https://api.example.com',           // 后端API
+  'https://api.resend.com', // Resend 邮件 API
+  'https://api.openai.com', // OpenAI API
+  'https://api.moonshot.cn', // Kimi API
+  'https://api.deepseek.com', // DeepSeek API
   // 'https://analytics.google.com',      // 分析服务
 ];
 
@@ -102,20 +107,12 @@ export const DATA_VALIDATION_LIMITS = {
 /**
  * 允许的本地脚本路径前缀
  */
-export const ALLOWED_LOCAL_SCRIPT_PATHS = [
-  '/assets/js/',
-  './assets/js/',
-  'assets/js/',
-];
+export const ALLOWED_LOCAL_SCRIPT_PATHS = ['/assets/js/', './assets/js/', 'assets/js/'];
 
 /**
  * 允许的本地样式路径前缀
  */
-export const ALLOWED_LOCAL_STYLE_PATHS = [
-  '/assets/css/',
-  './assets/css/',
-  'assets/css/',
-];
+export const ALLOWED_LOCAL_STYLE_PATHS = ['/assets/css/', './assets/css/', 'assets/css/'];
 
 // ==================== 错误提示配置 ====================
 
@@ -145,7 +142,7 @@ export const SECURITY_POLICY = {
     showDebugInfo: true, // 显示调试信息
     logSecurityEvents: true, // 记录安全事件
   },
-  
+
   // 生产环境：严格策略，最大化安全
   production: {
     enableCSP: true, // 启用完整CSP
@@ -153,7 +150,7 @@ export const SECURITY_POLICY = {
     showDebugInfo: false, // 隐藏调试信息
     logSecurityEvents: true, // 记录安全事件
   },
-  
+
   // 测试环境：平衡策略
   test: {
     enableCSP: true,
@@ -192,22 +189,20 @@ export function buildCSPString(): string {
 
   const imgSrc = [
     "'self'",
-    "data:",
-    "blob:",
-    "https:", // 允许所有HTTPS图片，或使用具体域名
+    'data:',
+    'blob:',
+    // ⚠️ 不使用 https: 通配符，只允许 Supabase 存储（头像等）
+    'https://enubvdkirskacmtuzgys.supabase.co',
     ...ALLOWED_IMAGE_DOMAINS,
   ];
 
   const connectSrc = [
     "'self'",
-    "https:",
+    // ⚠️ 不使用 https: 通配符，必须列出具体域名（见 ALLOWED_CONNECT_DOMAINS）
     ...ALLOWED_CONNECT_DOMAINS,
   ];
 
-  const frameSrc = [
-    "'self'",
-    ...ALLOWED_FRAME_DOMAINS,
-  ];
+  const frameSrc = ["'self'", ...ALLOWED_FRAME_DOMAINS];
 
   return [
     `default-src 'self'`,

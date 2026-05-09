@@ -1,0 +1,33 @@
+# .vercelignore — 排除不需要部署到 Vercel 的文件
+# https://vercel.com/docs/projects/project-configuration#vercelignore
+
+# ===== 安全文档（含架构设计，不应暴露到生产环境） =====
+SECURITY_ARCHITECTURE.md
+SECURITY_GUIDE.md
+CLAUDE.md
+
+# ===== 参考子项目（已 gitignore，但显式排除确保安全） =====
+fojin-master/
+big-five-personality/
+mbti-assessment/
+depression-assessment-lowrisk/
+skill-能力兴趣测评/
+
+# ===== 开发/调试工具 =====
+e2e/
+scripts/
+vitest.config.ts
+playwright.config.ts
+
+# ===== IDE 和 AI 工作目录 =====
+.vscode/
+.idea/
+.kiro/
+.workbuddy/
+
+# ===== 文档（本地参考用） =====
+docs/
+
+# ===== 杂项 =====
+*.log
+*.pem

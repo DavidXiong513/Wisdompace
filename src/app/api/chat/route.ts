@@ -16,7 +16,16 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { Database } from '@/types/database';
 import { createProvider, getActiveProvider } from '@/lib/ai';
+import { checkRateLimit, rateLimitHeaders, RATE_LIMITS } from '@/lib/rate-limit';
 import type { AIProviderName, AIMessage } from '@/lib/ai/types';
+
+// ===== 安全限制常量 =====
+const MAX_MESSAGES = 50; // 消息数组最大长度
+const MAX_CONTENT_LENGTH = 8000; // 单条消息内容最大字符数
+const MAX_CONCURRENT_SSE = 3; // 单 IP 最大并发 SSE 连接
+
+// SSE 并发连接追踪（内存 Map）
+const activeConnections = new Map<string, number>();
 
 // System prompt：让 AI 以"人生整理顾问"角色对话
 const SYSTEM_PROMPT: AIMessage = {
@@ -37,7 +46,33 @@ const SYSTEM_PROMPT: AIMessage = {
 请用真诚、简洁、有温度的语言与用户交流。`,
 };
 
+/** 获取客户端 IP */
+function getClientIp(request: NextRequest): string {
+  const xff = request.headers.get('x-forwarded-for');
+  if (xff) return xff.split(',')[0].trim();
+  return request.headers.get('x-real-ip') ?? 'unknown';
+}
+
 export async function POST(request: NextRequest) {
+  // 0. 速率限制
+  const rlResult = checkRateLimit(request, RATE_LIMITS.chat);
+  if (!rlResult.success) {
+    return NextResponse.json(
+      { success: false, error: '请求过于频繁，请稍后再试' },
+      { status: 429, headers: rateLimitHeaders(rlResult) }
+    );
+  }
+
+  // 0.5 并发连接限制
+  const clientIp = getClientIp(request);
+  const currentConns = activeConnections.get(clientIp) ?? 0;
+  if (currentConns >= MAX_CONCURRENT_SSE) {
+    return NextResponse.json(
+      { success: false, error: '并发连接数过多，请等待当前对话完成' },
+      { status: 429 }
+    );
+  }
+
   // 1. 验证登录
   const cookieStore = await cookies();
   const supabase = createServerClient<Database>(
@@ -45,42 +80,73 @@ export async function POST(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return cookieStore.getAll(); },
+        getAll() {
+          return cookieStore.getAll();
+        },
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             );
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
         },
       },
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   // 2. 解析请求体
   const body = await request.json().catch(() => ({}));
-  const messages: AIMessage[] = Array.isArray(body.messages) ? body.messages : [];
+  const rawMessages: unknown[] = Array.isArray(body.messages) ? body.messages : [];
   const providerName: AIProviderName = body.provider ?? getActiveProvider();
   const conversationId: string | null = body.conversationId ?? null;
 
-  if (!messages.length) {
+  // 2.5 输入安全限制
+  if (!rawMessages.length) {
     return NextResponse.json({ error: 'messages is required' }, { status: 400 });
+  }
+
+  if (rawMessages.length > MAX_MESSAGES) {
+    return NextResponse.json(
+      { error: `消息数量超过限制（最多 ${MAX_MESSAGES} 条）` },
+      { status: 400 }
+    );
+  }
+
+  // 过滤并验证消息格式
+  const messages: AIMessage[] = rawMessages.filter(
+    (m): m is AIMessage =>
+      typeof m === 'object' &&
+      m !== null &&
+      typeof (m as AIMessage).role === 'string' &&
+      typeof (m as AIMessage).content === 'string' &&
+      (m as AIMessage).content.length <= MAX_CONTENT_LENGTH
+  );
+
+  if (!messages.length) {
+    return NextResponse.json({ error: '消息格式无效' }, { status: 400 });
   }
 
   // 3. 获取 Provider 并发起流式请求
   const provider = createProvider(providerName);
 
   // 如果没有 system 消息，插入默认 system prompt
-  const hasSystem = messages.some((m) => m.role === 'system');
+  const hasSystem = messages.some(m => m.role === 'system');
   const fullMessages: AIMessage[] = hasSystem ? messages : [SYSTEM_PROMPT, ...messages];
 
   // 4. SSE 流式响应
   const streamResponse = provider.stream({ messages: fullMessages });
+
+  // 注册并发连接
+  activeConnections.set(clientIp, currentConns + 1);
 
   // 5. 流式返回（同时异步保存消息到数据库）
   const encoder = new TextEncoder();
@@ -112,15 +178,24 @@ export async function POST(request: NextRequest) {
               const parsed = JSON.parse(data);
               const delta = parsed.choices?.[0]?.delta?.content;
               if (delta) fullContent += delta;
-            } catch { /* ignore parse errors */ }
+            } catch {
+              /* ignore parse errors */
+            }
           }
         }
 
         // 流结束后，异步保存用户消息和 AI 回复到数据库
-        saveMessagesToDB(supabase, user.id, conversationId, fullMessages, fullContent).catch(
-          (err) => console.error('[chat] Failed to save messages', err)
+        saveMessagesToDB(supabase, user.id, conversationId, fullMessages, fullContent).catch(err =>
+          console.error('[chat] Failed to save messages', err)
         );
       } finally {
+        // 释放并发连接
+        const conns = activeConnections.get(clientIp) ?? 1;
+        if (conns <= 1) {
+          activeConnections.delete(clientIp);
+        } else {
+          activeConnections.set(clientIp, conns - 1);
+        }
         controller.close();
       }
     },

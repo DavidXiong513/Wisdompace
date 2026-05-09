@@ -1,9 +1,9 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 import {
   buildCSPString,
   getCurrentSecurityPolicy,
   ALLOWED_IMAGE_PATTERNS,
-} from "./src/config/security.config";
+} from './src/config/security.config';
 
 /**
  * 安全响应头配置
@@ -21,35 +21,41 @@ function getSecurityHeaders() {
   const headers = [
     {
       // 防止点击劫持攻击
-      key: "X-Frame-Options",
-      value: "SAMEORIGIN",
+      key: 'X-Frame-Options',
+      value: 'SAMEORIGIN',
     },
     {
       // 防止MIME类型嗅探攻击
-      key: "X-Content-Type-Options",
-      value: "nosniff",
+      key: 'X-Content-Type-Options',
+      value: 'nosniff',
     },
     {
       // 启用XSS过滤器（现代浏览器内置）
-      key: "X-XSS-Protection",
-      value: "1; mode=block",
+      key: 'X-XSS-Protection',
+      value: '1; mode=block',
     },
     {
       // 控制引用来源信息
-      key: "Referrer-Policy",
-      value: "strict-origin-when-cross-origin",
+      key: 'Referrer-Policy',
+      value: 'strict-origin-when-cross-origin',
     },
     {
       // 限制浏览器功能访问
-      key: "Permissions-Policy",
-      value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+      key: 'Permissions-Policy',
+      value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+    },
+    {
+      // 强制 HTTPS（HSTS）
+      // max-age=1年，包含子域名，允许加入浏览器预加载列表
+      key: 'Strict-Transport-Security',
+      value: 'max-age=31536000; includeSubDomains; preload',
     },
   ];
 
   // 仅在启用CSP时添加（生产环境）
   if (securityPolicy.enableCSP) {
     headers.push({
-      key: "Content-Security-Policy",
+      key: 'Content-Security-Policy',
       value: buildCSPString(),
     });
   }
@@ -67,7 +73,7 @@ const nextConfig: NextConfig = {
     return [
       {
         // 应用到所有路由
-        source: "/(.*)",
+        source: '/(.*)',
         headers: getSecurityHeaders(),
       },
     ];

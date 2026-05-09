@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { Database } from '@/types/database';
+import { CreateConversationSchema } from '@/lib/validations/conversation';
 
 /** GET /api/conversations — 获取当前用户所有对话 */
 export async function GET() {
@@ -11,19 +12,25 @@ export async function GET() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return cookieStore.getAll(); },
+        getAll() {
+          return cookieStore.getAll();
+        },
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             );
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
         },
       },
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -50,25 +57,36 @@ export async function POST(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return cookieStore.getAll(); },
+        getAll() {
+          return cookieStore.getAll();
+        },
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             );
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
         },
       },
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = await request.json().catch(() => ({}));
-  const title = (body.title as string | undefined)?.trim() || null;
+  const raw = await request.json().catch(() => ({}));
+  const parsed = CreateConversationSchema.safeParse(raw);
+  if (!parsed.success) {
+    return NextResponse.json({ success: false, error: '输入内容格式有误' }, { status: 400 });
+  }
+
+  const title = parsed.data.title?.trim() || null;
 
   const { data, error } = await supabase
     .from('conversations')

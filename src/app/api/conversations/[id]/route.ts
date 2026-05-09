@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { Database } from '@/types/database';
+import { UpdateConversationSchema } from '@/lib/validations/conversation';
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -14,19 +15,25 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return cookieStore.getAll(); },
+        getAll() {
+          return cookieStore.getAll();
+        },
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             );
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
         },
       },
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
@@ -54,25 +61,36 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return cookieStore.getAll(); },
+        getAll() {
+          return cookieStore.getAll();
+        },
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             );
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
         },
       },
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = await request.json().catch(() => ({}));
-  const title = (body.title as string | undefined)?.trim() || null;
+  const raw = await request.json().catch(() => ({}));
+  const parsed = UpdateConversationSchema.safeParse(raw);
+  if (!parsed.success) {
+    return NextResponse.json({ success: false, error: '标题格式有误' }, { status: 400 });
+  }
+
+  const title = parsed.data.title.trim();
 
   const { data, error } = await supabase
     .from('conversations')
@@ -98,19 +116,25 @@ export async function DELETE(request: NextRequest, { params }: RouteContext) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return cookieStore.getAll(); },
+        getAll() {
+          return cookieStore.getAll();
+        },
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             );
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
         },
       },
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
