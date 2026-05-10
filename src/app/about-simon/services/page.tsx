@@ -188,7 +188,7 @@ export default function ServicesPage() {
 
           {/* ── B端引导横幅 ── */}
           <div className="mt-8 rounded-xl border border-[var(--as-primary-200)] bg-[var(--as-primary-50)] px-6 py-4 text-center shadow-sm">
-            <p className="text-base font-medium tracking-wide whitespace-nowrap text-[var(--as-primary-700)]">
+            <p className="text-base font-medium tracking-wide text-[var(--as-primary-700)]">
               如果贵司正在经历：
               <span className="font-semibold text-[var(--as-accent)]">组织效率下降</span>、
               <span className="font-semibold text-[var(--as-accent)]">人才跟不上</span>、
