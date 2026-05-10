@@ -118,7 +118,7 @@ const FACES = [
 const CREDENTIALS = [
   { label: '上海交通大学（985）', sub: '统招硕士 · 工商管理' },
   { label: '北京理工大学（985）', sub: '统招本科 · 信息管理与信息系统（电子商务）' },
-  { label: '全球生涯规划师 BCC', sub: 'CCE（USA）授证' },
+  { label: '国际生涯规划师 GCDF & BCC', sub: 'CCE（USA）授证' },
   { label: '学习敏锐度授证', sub: 'Korn Ferry（USA，NYSE:KFY）' },
   { label: 'MBTI 授证培训', sub: 'Skill&Will（USA&HK）' },
   { label: 'PMP 项目管理师', sub: 'PMI（USA）认证' },
