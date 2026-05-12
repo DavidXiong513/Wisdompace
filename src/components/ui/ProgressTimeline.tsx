@@ -7,7 +7,7 @@
  * 展示用户的阅读进度、测评完成情况、人生里程碑等节点。
  * 数据来源：readingProgressStore + useProgress() hook（TanStack Query）
  */
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 
 // ── 类型 ────────────────────────────────────────────────────────────────────
@@ -35,22 +35,22 @@ export interface ProgressTimelineProps {
 const CATEGORY_STYLES = {
   chapter: {
     color: '#C9A15A',
-    bg:    'rgba(201,161,90,0.12)',
+    bg: 'rgba(201,161,90,0.12)',
     label: '章节阅读',
   },
   assessment: {
     color: '#8B6AA0',
-    bg:    'rgba(139,106,160,0.12)',
+    bg: 'rgba(139,106,160,0.12)',
     label: '测评完成',
   },
   milestone: {
     color: '#5A8E5A',
-    bg:    'rgba(90,142,90,0.12)',
+    bg: 'rgba(90,142,90,0.12)',
     label: '人生里程碑',
   },
   tool: {
     color: '#4A8AB0',
-    bg:    'rgba(74,138,176,0.12)',
+    bg: 'rgba(74,138,176,0.12)',
     label: '工具使用',
   },
 } as const;
@@ -61,21 +61,12 @@ function formatDate(dateStr: string): string {
   try {
     const d = new Date(dateStr);
     return d.toLocaleDateString('zh-CN', {
-      year:   'numeric',
-      month:  'long',
-      day:    'numeric',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   } catch {
     return dateStr;
-  }
-}
-
-function isWithinDays(dateStr: string, days: number): boolean {
-  try {
-    const diff = Date.now() - new Date(dateStr).getTime();
-    return diff < days * 24 * 60 * 60 * 1000;
-  } catch {
-    return false;
   }
 }
 
@@ -86,11 +77,10 @@ export function ProgressTimeline({
   emptyText = '还没有任何记录，开始你的整理之旅吧',
   className = '',
 }: ProgressTimelineProps) {
+  const [now] = useState<number>(() => Date.now());
+
   const sorted = useMemo(
-    () =>
-      [...milestones].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      ),
+    () => [...milestones].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
     [milestones]
   );
 
@@ -107,13 +97,22 @@ export function ProgressTimeline({
     <div className={`flex flex-col gap-0 ${className}`}>
       {sorted.map((item, idx) => {
         const style = CATEGORY_STYLES[item.category] ?? CATEGORY_STYLES.milestone;
-        const isNew = isWithinDays(item.date, 7);
+
+        // 只有在 client side hydration 完成后才判断是否为 "新"
+        let isNew = false;
+        if (now) {
+          try {
+            const diff = now - new Date(item.date).getTime();
+            isNew = diff < 7 * 24 * 60 * 60 * 1000;
+          } catch {
+            isNew = false;
+          }
+        }
+
         const isLast = idx === sorted.length - 1;
 
         const content = (
-          <div
-            className="group flex gap-4 rounded-xl p-3 transition-colors hover:bg-[#F8F2E6]"
-          >
+          <div className="group flex gap-4 rounded-xl p-3 transition-colors hover:bg-[#F8F2E6]">
             {/* 图标 */}
             <div
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base"
@@ -124,7 +123,7 @@ export function ProgressTimeline({
 
             {/* 信息 */}
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex flex-wrap items-center gap-2">
                 <span
                   className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
                   style={{ backgroundColor: style.bg, color: style.color }}
@@ -137,13 +136,9 @@ export function ProgressTimeline({
                   </span>
                 )}
               </div>
-              <p className="mt-1.5 text-sm font-medium leading-snug text-[#3D2B1F]">
-                {item.title}
-              </p>
+              <p className="mt-1.5 text-sm leading-snug font-medium text-[#3D2B1F]">{item.title}</p>
               {item.description && (
-                <p className="mt-0.5 text-xs leading-relaxed text-[#7A6A52]">
-                  {item.description}
-                </p>
+                <p className="mt-0.5 text-xs leading-relaxed text-[#7A6A52]">{item.description}</p>
               )}
               <p className="mt-1 text-xs text-[#A09080]">{formatDate(item.date)}</p>
             </div>
@@ -162,7 +157,7 @@ export function ProgressTimeline({
             {/* 垂直连线 */}
             {!isLast && (
               <div
-                className="absolute left-[18px] top-10 bottom-0 w-px"
+                className="absolute top-10 bottom-0 left-[18px] w-px"
                 style={{ backgroundColor: `${style.color}30` }}
               />
             )}

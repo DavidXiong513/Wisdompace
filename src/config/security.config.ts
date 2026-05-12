@@ -176,7 +176,8 @@ export function getCurrentSecurityPolicy() {
 export function buildCSPString(): string {
   const scriptSrc = [
     "'self'",
-    "'unsafe-eval'", // Next.js开发模式需要
+    // 仅在非生产环境启用 unsafe-eval，便于调试和热重载
+    ...(isProduction() ? [] : ["'unsafe-eval'"]),
     "'unsafe-inline'", // React内联脚本
     ...ALLOWED_SCRIPT_DOMAINS,
   ];
@@ -187,12 +188,13 @@ export function buildCSPString(): string {
     ...ALLOWED_STYLE_DOMAINS,
   ];
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const imgSrc = [
     "'self'",
     'data:',
     'blob:',
     // ⚠️ 不使用 https: 通配符，只允许 Supabase 存储（头像等）
-    'https://enubvdkirskacmtuzgys.supabase.co',
+    ...(supabaseUrl ? [supabaseUrl] : []),
     ...ALLOWED_IMAGE_DOMAINS,
   ];
 
