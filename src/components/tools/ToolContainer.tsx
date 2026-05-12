@@ -1,11 +1,7 @@
 'use client';
 
 import React, { type ReactNode } from 'react';
-import {
-  getToolDefinition,
-  getToolStatusText,
-  getToolInfo,
-} from '@/lib/tools';
+import { getToolDefinition, getToolStatusText, getToolInfo } from '@/lib/tools';
 import PersonalityTestCards from '@/components/PersonalityTestCards';
 import { RolePieChartCard } from '@/components/RolePieChartCard';
 import CareerValuesCard from '@/components/CareerValuesCard';
@@ -73,15 +69,11 @@ function PendingCard({ toolId }: { toolId: string }) {
           🚧
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-[#2F2A24]">
-            {info?.name ?? toolId}
-          </h3>
+          <h3 className="text-lg font-semibold text-[#2F2A24]">{info?.name ?? toolId}</h3>
           <p className="text-sm text-[#8A7E6A]">{statusText}</p>
         </div>
       </div>
-      <p className="mt-3 text-sm leading-relaxed text-[#6A6256]">
-        {info?.description}
-      </p>
+      <p className="mt-3 text-sm leading-relaxed text-[#6A6256]">{info?.description}</p>
     </div>
   );
 }
@@ -127,6 +119,7 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'no-regrets',
     'goodbye-list',
     'farewell-style',
+    'ai-knowledge-base',
   ].includes(toolId);
 
   return (
