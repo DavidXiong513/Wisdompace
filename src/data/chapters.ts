@@ -223,6 +223,7 @@ export const chapters: Chapter[] = [
       {
         id: 'community-aging',
         title: '提前布局 · 新型社群养老',
+        toolId: 'community-aging-poll',
         paragraphs: [
           '在前面几节中，我们讨论了如何主动养护身体、经营爱好、管理情绪——这些都是为自己的未来储能。',
           '但有一个问题，我们常常回避：当身边没有子女时，谁来陪你变老？',

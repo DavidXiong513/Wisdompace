@@ -164,6 +164,13 @@ export const tools: Record<string, ToolInfo> = {
     description:
       '关于衰老、疾病、死亡、生命关怀等主题的 AI 专题知识问答库，兼具法律、医学、宗教与亲情视角。',
   },
+  'community-aging-poll': {
+    id: 'community-aging-poll',
+    name: '新型社群养老 · 互动投票',
+    status: 'ready',
+    description:
+      '匿名投票看看大家怎么看待养老这件事——你的处境、态度、期待，一票一票投出真实的群体画像。',
+  },
 };
 
 export function getToolInfo(toolId: string): ToolInfo | null {

@@ -120,6 +120,7 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'goodbye-list',
     'farewell-style',
     'ai-knowledge-base',
+    'community-aging-poll',
   ].includes(toolId);
 
   return (
