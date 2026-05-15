@@ -1,9 +1,24 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { usePersistHydrated } from '@/lib/hooks/usePersistHydrated';
 import { useCommunityAgingPollStore } from '@/stores/communityAgingPollStore';
+
+/* ── 匿名 session ID ── */
+function useSessionId(): string {
+  const [sid] = useState(() => {
+    if (typeof window === 'undefined') return '00000000-0000-0000-0000-000000000000';
+    const key = 'cap_session_id';
+    let id = localStorage.getItem(key);
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem(key, id);
+    }
+    return id;
+  });
+  return sid;
+}
 
 /* ══════════════════════════════════════
    题目数据定义
@@ -22,103 +37,153 @@ interface Question {
 const QUESTIONS: Question[] = [
   {
     id: 'q0',
-    chapter: '篇章一：养老期望',
+    chapter: '\u7BC7\u7AE0\u4E00\uFF1A\u517B\u8001\u671F\u671B',
     chapterIcon: '\u{1F3E0}',
-    text: '你目前对"子女养老"寄予希望的程度？',
+    text: '\u4F60\u76EE\u524D\u5BF9\u201C\u5B50\u5973\u517B\u8001\u201D\u5BC4\u4E88\u5E0C\u671B\u7684\u7A0B\u5EA6\uFF1F',
     multi: false,
-    options: ['非常寄望', '比较寄望', '一般', '不太寄望', '完全不寄望'],
+    options: [
+      '\u975E\u5E38\u5BC4\u671B',
+      '\u6BD4\u8F83\u5BC4\u671B',
+      '\u4E00\u822C',
+      '\u4E0D\u592A\u5BC4\u671B',
+      '\u5B8C\u5168\u4E0D\u5BC4\u671B',
+    ],
   },
   {
     id: 'q1',
-    chapter: '篇章一：养老期望',
+    chapter: '\u7BC7\u7AE0\u4E00\uFF1A\u517B\u8001\u671F\u671B',
     chapterIcon: '\u{1F3E0}',
-    text: '你的养老处境更贴合以下哪些选项？',
+    text: '\u4F60\u7684\u517B\u8001\u5904\u5883\u66F4\u8D34\u5408\u4EE5\u4E0B\u54EA\u4E9B\u9009\u9879\uFF1F',
     multi: true,
     options: [
-      '独身',
-      '丁克',
-      '子女海外',
-      '子女去世',
-      '亲子关系破裂',
-      '子女能力不足',
-      '有子女在身边且关系良好',
+      '\u72EC\u8EAB',
+      '\u4E01\u514B',
+      '\u5B50\u5973\u6D77\u5916',
+      '\u5B50\u5973\u53BB\u4E16',
+      '\u4EB2\u5B50\u5173\u7CFB\u7834\u88C2',
+      '\u5B50\u5973\u80FD\u529B\u4E0D\u8DB3',
+      '\u6709\u5B50\u5973\u5728\u8EAB\u8FB9\u4E14\u5173\u7CFB\u826F\u597D',
     ],
   },
   {
     id: 'q2',
-    chapter: '篇章二：社群认知',
+    chapter: '\u7BC7\u7AE0\u4E8C\uFF1A\u793E\u7FA4\u8BA4\u77E5',
     chapterIcon: '\u{1F91D}',
-    text: '你之前了解过"社群养老"这个概念吗？',
+    text: '\u4F60\u4E4B\u524D\u4E86\u89E3\u8FC7\u201C\u793E\u7FA4\u517B\u8001\u201D\u8FD9\u4E2A\u6982\u5FF5\u5417\uFF1F',
     multi: false,
-    options: ['完全没听过', '听说过但不了解', '有一定了解', '非常了解甚至在实践中'],
+    options: [
+      '\u5B8C\u5168\u6CA1\u542C\u8FC7',
+      '\u542C\u8BF4\u8FC7\u4F46\u4E0D\u4E86\u89E3',
+      '\u6709\u4E00\u5B9A\u4E86\u89E3',
+      '\u975E\u5E38\u4E86\u89E3\u751A\u81F3\u5728\u5B9E\u8DF5\u4E2D',
+    ],
   },
   {
     id: 'q3',
-    chapter: '篇章二：社群认知',
+    chapter: '\u7BC7\u7AE0\u4E8C\uFF1A\u793E\u7FA4\u8BA4\u77E5',
     chapterIcon: '\u{1F91D}',
-    text: '你对"非血缘互助养老"这件事的态度是？',
+    text: '\u4F60\u5BF9\u201C\u975E\u8840\u7F18\u4E92\u52A9\u517B\u8001\u201D\u8FD9\u4EF6\u4E8B\u7684\u6001\u5EA6\u662F\uFF1F',
     multi: false,
-    options: ['非常期待', '愿意尝试', '不确定', '有顾虑', '不认同'],
+    options: [
+      '\u975E\u5E38\u671F\u5F85',
+      '\u613F\u610F\u5C1D\u8BD5',
+      '\u4E0D\u786E\u5B9A',
+      '\u6709\u987E\u8651',
+      '\u4E0D\u8BA4\u540C',
+    ],
   },
   {
     id: 'q4',
-    chapter: '篇章三：挑战与期待',
+    chapter: '\u7BC7\u7AE0\u4E09\uFF1A\u6311\u6218\u4E0E\u671F\u5F85',
     chapterIcon: '\u26A1',
-    text: '你认为新型社群养老面临的最大挑战是什么？（限选3项）',
+    text: '\u4F60\u8BA4\u4E3A\u65B0\u578B\u793E\u7FA4\u517B\u8001\u9762\u4E34\u7684\u6700\u5927\u6311\u6218\u662F\u4EC0\u4E48\uFF1F\uFF08\u9650\u90093\u9879\uFF09',
     multi: true,
     maxSelect: 3,
     options: [
-      '信任建立困难',
-      '责任界定不明',
-      '经济成本分摊',
-      '生活习惯差异',
-      '缺乏法律保障',
-      '找不到志同道合的人',
+      '\u4FE1\u4EFB\u5EFA\u7ACB\u56F0\u96BE',
+      '\u8D23\u4EFB\u754C\u5B9A\u4E0D\u660E',
+      '\u7ECF\u6D4E\u6210\u672C\u5206\u644A',
+      '\u751F\u6D3B\u4E60\u60EF\u5DEE\u5F02',
+      '\u7F3A\u4E4F\u6CD5\u5F8B\u4FDD\u969C',
+      '\u627E\u4E0D\u5230\u5FD7\u540C\u9053\u5408\u7684\u4EBA',
     ],
   },
   {
     id: 'q5',
-    chapter: '篇章三：挑战与期待',
+    chapter: '\u7BC7\u7AE0\u4E09\uFF1A\u6311\u6218\u4E0E\u671F\u5F85',
     chapterIcon: '\u26A1',
-    text: '你愿意为未来的社群养老付出什么？',
+    text: '\u4F60\u613F\u610F\u4E3A\u672A\u6765\u7684\u793E\u7FA4\u517B\u8001\u4ED8\u51FA\u4EC0\u4E48\uFF1F',
     multi: true,
     options: [
-      '投入时间参与活动',
-      '贡献金钱建立基金',
-      '学习照护技能',
-      '开放自己的空间',
-      '目前还不想考虑',
+      '\u6295\u5165\u65F6\u95F4\u53C2\u4E0E\u6D3B\u52A8',
+      '\u8D21\u732E\u91D1\u94B1\u5EFA\u7ACB\u57FA\u91D1',
+      '\u5B66\u4E60\u7167\u62A4\u6280\u80FD',
+      '\u5F00\u653E\u81EA\u5DF1\u7684\u7A7A\u95F4',
+      '\u76EE\u524D\u8FD8\u4E0D\u60F3\u8003\u8651',
     ],
   },
   {
     id: 'q6',
-    chapter: '篇章四：技术接受度',
+    chapter: '\u7BC7\u7AE0\u56DB\uFF1A\u6280\u672F\u63A5\u53D7\u5EA6',
     chapterIcon: '\u{1F916}',
-    text: '你对具身AI机器人参与养老照护的态度？',
+    text: '\u4F60\u5BF9\u5177\u8EABAI\u673A\u5668\u4EBA\u53C2\u4E0E\u517B\u8001\u7167\u62A4\u7684\u6001\u5EA6\uFF1F',
     multi: false,
-    options: ['非常接受', '可以尝试', '不确定', '有顾虑', '不能接受'],
+    options: [
+      '\u975E\u5E38\u63A5\u53D7',
+      '\u53EF\u4EE5\u5C1D\u8BD5',
+      '\u4E0D\u786E\u5B9A',
+      '\u6709\u987E\u8651',
+      '\u4E0D\u80FD\u63A5\u53D7',
+    ],
   },
   {
     id: 'q7',
-    chapter: '篇章四：技术接受度',
+    chapter: '\u7BC7\u7AE0\u56DB\uFF1A\u6280\u672F\u63A5\u53D7\u5EA6',
     chapterIcon: '\u{1F916}',
-    text: '你最希望AI机器人在养老中扮演什么角色？',
+    text: '\u4F60\u6700\u5E0C\u671BAI\u673A\u5668\u4EBA\u5728\u517B\u8001\u4E2D\u626E\u6F14\u4EC0\u4E48\u89D2\u8272\uFF1F',
     multi: true,
     options: [
-      '日常陪伴聊天',
-      '健康监测提醒',
-      '紧急情况报警',
-      '家务辅助',
-      '行动辅助',
-      '不需要AI介入',
+      '\u65E5\u5E38\u966A\u4F34\u804A\u5929',
+      '\u5065\u5EB7\u76D1\u6D4B\u63D0\u9192',
+      '\u7D27\u6025\u60C5\u51B5\u62A5\u8B66',
+      '\u5BB6\u52A1\u8F85\u52A9',
+      '\u884C\u52A8\u8F85\u52A9',
+      '\u4E0D\u9700\u8981AI\u4ECB\u5165',
     ],
   },
 ];
 
+/* ── 工具函数 ── */
+function calcScore(answers: Record<number, string | string[]>): number {
+  let s = 50;
+  const q0 = answers[0] as string | undefined;
+  if (q0 === '完全不寄望') s += 15;
+  else if (q0 === '不太寄望') s += 10;
+  else if (q0 === '一般') s += 5;
+
+  const q3 = answers[3] as string | undefined;
+  if (q3 === '非常期待') s += 15;
+  else if (q3 === '愿意尝试') s += 10;
+
+  const q2 = answers[2] as string | undefined;
+  if (q2 === '非常了解甚至在实践中') s += 10;
+  else if (q2 === '有一定了解') s += 5;
+
+  const q5 = answers[5] as string[] | undefined;
+  if (q5) s += Math.min(q5.length * 5, 15);
+  if (q5?.includes('目前还不想考虑')) s -= 10;
+
+  const q6 = answers[6] as string | undefined;
+  if (q6 === '非常接受') s += 10;
+  else if (q6 === '可以尝试') s += 5;
+
+  return Math.max(0, Math.min(100, s));
+}
+
 /* ══════════════════════════════════════
-   Welcome 页
+   Welcome
    ══════════════════════════════════════ */
-function WelcomeView({ onStart }: { onStart: () => void }) {
+function WelcomeView({ onStart, loading }: { onStart: () => void; loading: boolean }) {
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4">
       <div className="w-full max-w-lg text-center">
@@ -132,12 +197,15 @@ function WelcomeView({ onStart }: { onStart: () => void }) {
           8个问题，4个篇章，匿名投出你的真实选择。
           <br />
           全部投完后，生成你的专属养老准备度报告。
+          <br />
+          你的投票将匿名计入真实数据。
         </p>
         <button
           onClick={onStart}
-          className="mt-8 rounded-full bg-[#C87941] px-10 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#A85E2D] hover:px-12"
+          disabled={loading}
+          className="mt-8 rounded-full bg-[#C87941] px-10 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#A85E2D] hover:px-12 disabled:opacity-50"
         >
-          开始投票
+          {loading ? '加载中...' : '开始投票'}
         </button>
         <p className="mt-4 text-xs text-[#B0A090]">匿名 无登录 约3分钟</p>
       </div>
@@ -153,11 +221,15 @@ function VoteQuestion({
   onVote,
   onNext,
   isLast,
+  submitting,
+  nextLabel,
 }: {
   question: Question;
   onVote: (answer: string | string[]) => void;
   onNext: () => void;
   isLast: boolean;
+  submitting: boolean;
+  nextLabel: string;
 }) {
   const store = useCommunityAgingPollStore();
   const existing = store.answers[store.currentQIndex] as string | string[] | undefined;
@@ -169,7 +241,7 @@ function VoteQuestion({
   const [submitted, setSubmitted] = useState(!!existing);
 
   const handleSelect = (opt: string) => {
-    if (submitted) return;
+    if (submitted || submitting) return;
     if (question.multi) {
       setSelected(prev => {
         if (prev.includes(opt)) return prev.filter(x => x !== opt);
@@ -191,13 +263,10 @@ function VoteQuestion({
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
-      {/* Chapter header */}
       <div className="flex items-center gap-2 text-sm text-[#8A7E6A]">
         <span>{question.chapterIcon}</span>
         <span>{question.chapter}</span>
       </div>
-
-      {/* Question */}
       <h2 className="mt-3 font-serif text-2xl leading-snug font-bold text-[#4A3728]">
         {question.text}
       </h2>
@@ -206,8 +275,6 @@ function VoteQuestion({
           限选 {question.maxSelect} 项（已选 {selected.length}）
         </p>
       )}
-
-      {/* Options */}
       <div className="mt-6 space-y-3">
         {question.options.map(opt => {
           const isSelected = selected.includes(opt);
@@ -215,7 +282,7 @@ function VoteQuestion({
             <button
               key={opt}
               onClick={() => handleSelect(opt)}
-              disabled={submitted}
+              disabled={submitted || submitting}
               className={`relative w-full overflow-hidden rounded-xl border p-4 text-left transition-all ${
                 isSelected
                   ? 'border-[#C87941] bg-[#FDF5EE] ring-1 ring-[#C87941]/30'
@@ -225,7 +292,6 @@ function VoteQuestion({
               }`}
             >
               <div className="flex items-center gap-3">
-                {/* Radio / Checkbox */}
                 <span
                   className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
                     isSelected
@@ -257,27 +323,25 @@ function VoteQuestion({
           );
         })}
       </div>
-
-      {/* Multi-select submit + next */}
       <div className="mt-6 flex items-center justify-between">
         {question.multi && !submitted ? (
           <button
             onClick={() => handleSubmit()}
-            disabled={selected.length === 0}
+            disabled={selected.length === 0 || submitting}
             className="rounded-full bg-[#C87941] px-8 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-[#A85E2D] disabled:cursor-not-allowed disabled:opacity-40"
           >
-            提交投票
+            {submitting ? '提交中...' : '提交投票'}
           </button>
         ) : (
           <div />
         )}
-
         {submitted && (
           <button
             onClick={onNext}
+            disabled={submitting}
             className="rounded-full bg-[#4A3728] px-8 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-[#2F2A24]"
           >
-            {isLast ? '查看报告 \u2192' : '下一题 \u2192'}
+            {submitting ? '同步中...' : nextLabel}
           </button>
         )}
       </div>
@@ -288,35 +352,16 @@ function VoteQuestion({
 /* ══════════════════════════════════════
    报告页
    ══════════════════════════════════════ */
-function ReportView() {
+function ReportView({
+  aggregates,
+  totalVotes,
+}: {
+  aggregates: Record<string, { label: string; count: number; pct: number }[]>;
+  totalVotes: number;
+}) {
   const store = useCommunityAgingPollStore();
   const answers = store.answers;
-
-  const readinessScore = useMemo(() => {
-    let score = 50;
-    const q0 = answers[0] as string | undefined;
-    if (q0 === '完全不寄望') score += 15;
-    else if (q0 === '不太寄望') score += 10;
-    else if (q0 === '一般') score += 5;
-
-    const q3 = answers[3] as string | undefined;
-    if (q3 === '非常期待') score += 15;
-    else if (q3 === '愿意尝试') score += 10;
-
-    const q2 = answers[2] as string | undefined;
-    if (q2 === '非常了解甚至在实践中') score += 10;
-    else if (q2 === '有一定了解') score += 5;
-
-    const q5 = answers[5] as string[] | undefined;
-    if (q5) score += Math.min(q5.length * 5, 15);
-    if (q5?.includes('目前还不想考虑')) score -= 10;
-
-    const q6 = answers[6] as string | undefined;
-    if (q6 === '非常接受') score += 10;
-    else if (q6 === '可以尝试') score += 5;
-
-    return Math.max(0, Math.min(100, score));
-  }, [answers]);
+  const readinessScore = useMemo(() => calcScore(answers), [answers]);
 
   const level =
     readinessScore >= 80
@@ -326,7 +371,6 @@ function ReportView() {
         : readinessScore >= 40
           ? '观望者'
           : '养老小白';
-
   const levelColor =
     readinessScore >= 80
       ? '#5A8E5A'
@@ -335,7 +379,6 @@ function ReportView() {
         : readinessScore >= 40
           ? '#D4A84B'
           : '#B06A6A';
-
   const levelEmoji =
     readinessScore >= 80
       ? '\u{1F31F}'
@@ -349,10 +392,10 @@ function ReportView() {
     <div className="mx-auto max-w-2xl px-4 py-8">
       <div className="text-center">
         <h1 className="font-serif text-3xl font-bold text-[#4A3728]">你的养老准备度报告</h1>
-        <p className="mt-2 text-sm text-[#8A7E6A]">基于你的8个回答生成 仅供参考与启发</p>
+        <p className="mt-2 text-sm text-[#8A7E6A]">基于你的8个回答生成 · 已匿名计入真实数据</p>
       </div>
 
-      {/* Score card */}
+      {/* Score */}
       <div className="mt-8 rounded-2xl border border-[#E8D9C2] bg-white p-8 text-center shadow-sm">
         <div className="text-5xl">{levelEmoji}</div>
         <div className="mt-4">
@@ -371,26 +414,63 @@ function ReportView() {
         </p>
         <p className="mt-1 text-sm text-[#8A7E6A]">
           {readinessScore >= 80
-            ? '你对社群养老有清晰的认知和积极的行动意愿，是推动新型养老模式的中坚力量。'
+            ? '你对社群养老有清晰的认知和积极的行动意愿。'
             : readinessScore >= 60
-              ? '你已经有了意识，正在从"知道"走向"行动"。不妨从一个小社群开始试试水。'
+              ? '你已经有了意识，正在从"知道"走向"行动"。'
               : readinessScore >= 40
-                ? '你对社群养老有些了解但还在观望，可以先从了解他人经验开始。'
-                : '你目前可能很少接触养老话题，没关系——从了解开始，你已经迈出了第一步。'}
+                ? '你有些了解但还在观望，可以从了解他人经验开始。'
+                : '没关系，从了解开始，你已经迈出了第一步。'}
         </p>
       </div>
 
-      {/* Summary by chapter */}
+      {/* Aggregates section */}
+      <div className="mt-8">
+        <h2 className="font-serif text-xl font-bold text-[#4A3728]">投票结果 · 真实数据</h2>
+        <p className="mt-1 text-xs text-[#B0A090]">{totalVotes.toLocaleString()} 人已参与</p>
+        {[0, 2, 3, 4, 5, 6, 7]
+          .filter(i => aggregates[i])
+          .map(qi => (
+            <div key={qi} className="mt-4 rounded-xl border border-[#E8D9C2] bg-white p-5">
+              <p className="text-sm font-medium text-[#4A3728]">{QUESTIONS[qi].text}</p>
+              <div className="mt-3 space-y-2">
+                {aggregates[qi].map(item => {
+                  const maxPct = Math.max(...aggregates[qi].map(x => x.pct));
+                  const isMax = item.pct === maxPct && maxPct > 0;
+                  return (
+                    <div key={item.label} className="flex items-center gap-2">
+                      <span className="w-28 shrink-0 truncate text-xs text-[#6A6256]">
+                        {item.label}
+                      </span>
+                      <div className="h-5 flex-1 overflow-hidden rounded-full bg-[#F5F0E8]">
+                        <div
+                          className="h-full rounded-full transition-all duration-700 ease-out"
+                          style={{
+                            width: `${item.pct}%`,
+                            backgroundColor: isMax ? '#C87941' : '#D0C8B8',
+                          }}
+                        />
+                      </div>
+                      <span className="w-14 text-right text-xs font-bold text-[#6A6256] tabular-nums">
+                        {item.pct}%
+                      </span>
+                      <span className="w-10 text-right text-[10px] text-[#B0A090]">
+                        {item.count}票
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+      </div>
+
+      {/* User's own answers */}
       <div className="mt-8 space-y-4">
         <h2 className="font-serif text-xl font-bold text-[#4A3728]">你的投票画像</h2>
         <div className="rounded-xl border border-[#E8D9C2] bg-white p-5">
           <p className="text-sm font-bold text-[#8B6AA0]">{'\u{1F3E0}'} 养老期望</p>
           <p className="mt-1 text-sm text-[#6A6256]">
-            {(() => {
-              const q0 = answers[0] as string;
-              const q1 = answers[1] as string[];
-              return `你对子女养老寄望程度为"${q0}"。你的处境是：${(q1 || []).join('、') || '未选择'}。`;
-            })()}
+            {`你对子女养老寄望程度为"${answers[0] as string}"。你的处境是：${((answers[1] as string[]) || []).join('、') || '未选择'}。`}
           </p>
         </div>
         <div className="rounded-xl border border-[#E8D9C2] bg-white p-5">
@@ -417,18 +497,7 @@ function ReportView() {
         </div>
       </div>
 
-      {/* Closing */}
-      <div className="mt-8 rounded-2xl border border-[#E8D9C2] bg-[#FAF8F3] p-6 text-center">
-        <p className="text-sm text-[#6A6256]">
-          {readinessScore >= 70
-            ? '养老不是一个人的长征，而是一群人的共建。你已经走在了前面，不妨开始寻找同路人。'
-            : readinessScore >= 40
-              ? '养老这件事，知道就是改变的开始。等你准备好了，社群的灯一直亮着。'
-              : '这趟旅程很长，从第一个问题开始，你已经在上路。'}
-        </p>
-      </div>
-
-      {/* Community QR placeholder */}
+      {/* Community QR + actions */}
       <div className="mt-8 rounded-2xl border-2 border-dashed border-[#D0C8B8] bg-white p-8 text-center">
         <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-xl bg-[#F5F0E8] text-4xl">
           {'\u{1F4AC}'}
@@ -438,7 +507,6 @@ function ReportView() {
         <p className="mt-3 text-xs font-medium text-[#C87941]">社群筹建中，敬请期待</p>
       </div>
 
-      {/* Actions */}
       <div className="mt-6 flex justify-center gap-4">
         <button
           onClick={() => store.reset()}
@@ -463,14 +531,112 @@ function ReportView() {
 export default function CommunityAgingPollPage() {
   const store = useCommunityAgingPollStore();
   const hydrated = usePersistHydrated(useCommunityAgingPollStore);
+  const sessionId = useSessionId();
 
-  if (!hydrated) {
+  const [submitting, setSubmitting] = useState(false);
+  const [aggregates, setAggregates] = useState<
+    Record<string, { label: string; count: number; pct: number }[]>
+  >({});
+  const [totalVotes, setTotalVotes] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [alreadyVoted, setAlreadyVoted] = useState(false);
+
+  // 1) Check if session already voted + fetch aggregates
+  const init = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [aggRes, voteRes] = await Promise.all([
+        fetch(`/api/poll/aggregates?tool_id=community-aging-poll`),
+        fetch(`/api/poll/vote-check?session_id=${sessionId}&tool_id=community-aging-poll`),
+      ]);
+      const aggData = await aggRes.json();
+      const voteData = await voteRes.json();
+
+      if (aggData.data) {
+        const grouped: Record<string, { label: string; count: number; pct: number }[]> = {};
+        for (const row of aggData.data.aggregates) {
+          const qi = String(row.question_index);
+          if (!grouped[qi]) grouped[qi] = [];
+          grouped[qi].push({ label: row.option_label, count: row.count, pct: 0 });
+        }
+        // Calculate percentages
+        for (const qi of Object.keys(grouped)) {
+          const total = grouped[qi].reduce((s, x) => s + x.count, 0);
+          grouped[qi] = grouped[qi].map(x => ({
+            ...x,
+            pct: total > 0 ? Math.round((x.count / total) * 100) : 0,
+          }));
+        }
+        setAggregates(grouped);
+        setTotalVotes(aggData.data.total_votes || 0);
+      }
+
+      if (voteData.exists && voteData.data) {
+        setAlreadyVoted(true);
+        store.setStep('report');
+        store.setAnswers(voteData.data.answers);
+      }
+    } catch (err) {
+      console.error('Init error:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [sessionId]);
+
+  useEffect(() => {
+    if (hydrated) init();
+  }, [hydrated, init]);
+
+  // 2) Submit vote to Supabase
+  const submitVote = useCallback(async () => {
+    setSubmitting(true);
+    const score = calcScore(store.answers);
+    try {
+      const res = await fetch('/api/poll/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tool_id: 'community-aging-poll',
+          session_id: sessionId,
+          answers: store.answers,
+          readiness_score: score,
+        }),
+      });
+      if (res.ok) {
+        store.setSynced(true);
+        store.setStep('report');
+      } else if (res.status === 409) {
+        // Already voted, just go to report
+        store.setSynced(true);
+        store.setStep('report');
+      } else {
+        console.error('Vote submit failed');
+        // Still allow going to report even if sync fails
+        store.setStep('report');
+      }
+    } catch (err) {
+      console.error('Vote error:', err);
+      store.setStep('report');
+    } finally {
+      setSubmitting(false);
+    }
+  }, [sessionId, store]);
+
+  // 3) Handle completing all questions
+  const handleAllComplete = useCallback(() => {
+    submitVote();
+  }, [submitVote]);
+
+  if (!hydrated || loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F5F0E8]">
         <div className="animate-pulse text-sm font-medium text-[#8A7E6A]">加载中...</div>
       </div>
     );
   }
+
+  const isReporting =
+    store.step === 'report' || (store.step === 'voting' && store.currentQIndex >= QUESTIONS.length);
 
   return (
     <div className="min-h-screen bg-[#F5F0E8]">
@@ -487,9 +653,11 @@ export default function CommunityAgingPollPage() {
         </div>
       </header>
 
-      {store.step === 'welcome' && <WelcomeView onStart={() => store.setStep('voting')} />}
+      {store.step === 'welcome' && !alreadyVoted && (
+        <WelcomeView onStart={() => store.setStep('voting')} loading={false} />
+      )}
 
-      {store.step === 'voting' && (
+      {store.step === 'voting' && !alreadyVoted && (
         <div>
           <div className="mx-auto mt-4 max-w-2xl px-4">
             <div className="flex items-center gap-2">
@@ -504,7 +672,6 @@ export default function CommunityAgingPollPage() {
               </span>
             </div>
           </div>
-
           <VoteQuestion
             key={store.currentQIndex}
             question={QUESTIONS[store.currentQIndex]}
@@ -513,15 +680,23 @@ export default function CommunityAgingPollPage() {
               if (store.currentQIndex < QUESTIONS.length - 1) {
                 store.setCurrentQIndex(store.currentQIndex + 1);
               } else {
-                store.setStep('report');
+                handleAllComplete();
               }
             }}
             isLast={store.currentQIndex === QUESTIONS.length - 1}
+            submitting={submitting}
+            nextLabel={
+              store.currentQIndex === QUESTIONS.length - 1
+                ? submitting
+                  ? '同步中...'
+                  : '查看报告 →'
+                : '下一题 →'
+            }
           />
         </div>
       )}
 
-      {store.step === 'report' && <ReportView />}
+      {isReporting && <ReportView aggregates={aggregates} totalVotes={totalVotes} />}
     </div>
   );
 }
