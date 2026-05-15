@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import NavBar from "@/components/NavBar";
-import HomeChapterNav from "@/components/HomeChapterNav";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import NavBar from '@/components/NavBar';
+import HomeChapterNav from '@/components/HomeChapterNav';
 
 export default function Home() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,18 +40,21 @@ export default function Home() {
       <div className="absolute inset-0 bg-black/20" />
 
       {/* Content */}
-      <div className="relative z-10 h-full px-4 pt-20 text-white sm:px-6 sm:pt-24">
-        <div className="absolute top-[46%] left-1/2 w-[min(94vw,58rem)] -translate-x-1/2 -translate-y-1/2 text-center sm:top-1/2 sm:left-[calc(64%+310px)] sm:w-[min(68rem,74vw)]">
-          <div className="flex w-full max-w-[680px] flex-col items-center">
-            <h1 className="font-cn-serif text-shadow-lg block w-full text-center text-[2.8rem] font-bold tracking-[0.16em] leading-none text-white sm:text-[5.2rem] md:text-[6.9rem]">
+      <div className="relative z-10 h-full w-full">
+        <div className="mx-auto flex h-full max-w-7xl items-center justify-center px-4 pt-20 sm:justify-end sm:px-12 sm:pt-24 lg:px-20">
+          <div className="flex w-full flex-col items-center text-center sm:w-auto sm:items-end sm:text-right lg:mr-12 xl:mr-20">
+            <h1 className="font-cn-serif block w-full text-[2.8rem] leading-tight font-bold tracking-[0.16em] text-white text-shadow-lg sm:text-[4.2rem] md:text-[5.2rem] lg:text-[5.8rem] xl:text-[6.4rem]">
               一生的整理
             </h1>
-            <p className="text-shadow mt-4 block w-full text-center text-base font-semibold tracking-[0.14em] text-white/95 sm:mt-6 sm:whitespace-nowrap sm:text-[1.53rem] md:text-[1.68rem]">
+            <p className="text-shadow mt-4 block w-full text-base font-semibold tracking-[0.14em] text-white/95 sm:mt-6 sm:text-[1.3rem] sm:whitespace-nowrap md:text-[1.5rem] lg:text-[1.6rem]">
               Wisdompace | A lifelong practice of living
             </p>
 
-            <div className="mt-10 w-full max-w-[620px] sm:max-w-[680px]">
-              <form onSubmit={handleSearch} className="flex items-center gap-3 rounded-full bg-white/68 px-4 py-2 shadow-[0_18px_45px_rgba(15,23,42,0.22)] ring-1 ring-white/60 backdrop-blur-sm">
+            <div className="mt-10 w-full max-w-[620px] sm:max-w-[580px] lg:max-w-[620px]">
+              <form
+                onSubmit={handleSearch}
+                className="flex items-center gap-3 rounded-full bg-white/68 px-4 py-2 shadow-[0_18px_45px_rgba(15,23,42,0.22)] ring-1 ring-white/60 backdrop-blur-sm"
+              >
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200/70 text-slate-500">
                   <svg
                     viewBox="0 0 24 24"
@@ -71,8 +74,8 @@ export default function Home() {
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="全站搜索 性格自测 价值观测评 能力自评 情绪 压力 寿命 生前预嘱..."
+                  onChange={e => setSearchQuery(e.target.value)}
+                  placeholder="全站搜索 性格自测 价值观测评..."
                   className="flex-1 bg-transparent text-sm text-slate-700 placeholder:text-slate-500 focus:outline-none sm:text-base"
                 />
                 <button
@@ -83,17 +86,11 @@ export default function Home() {
                 </button>
               </form>
 
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 text-[0.78rem] tracking-[0.06em] text-white/90">
-                <span className="mr-2 inline-flex h-8 items-center leading-none">🔥 热门搜索：</span>
-                {[
-                  "性格自测",
-                  "价值观测评",
-                  "能力自评",
-                  "情绪",
-                  "压力",
-                  "寿命",
-                  "生前预嘱",
-                ].map((tag) => (
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 text-[0.78rem] tracking-[0.06em] text-white/90 sm:justify-end">
+                <span className="mr-2 inline-flex h-8 items-center leading-none">
+                  🔥 热门搜索：
+                </span>
+                {['性格自测', '价值观测评', '能力自评', '情绪', '压力'].map(tag => (
                   <button
                     key={tag}
                     type="button"
