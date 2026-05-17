@@ -82,6 +82,37 @@ const TOPICS = [
   },
 ];
 
+const PODCASTS_CN = [
+  {
+    title: '【菩提科普】主题播客',
+    desc: '以佛学智慧为镜，照见生老病死八苦的真相。不是在讲经，是在陪你一起思考如何离苦得乐。',
+  },
+  {
+    title: '【一生的整理】主题播客',
+    desc: '整理的不是物品，是人生。从看见自己到好好告别——每期一个话题，陪你踏出智慧下一步。',
+  },
+];
+
+const MUSICS_CN = [
+  {
+    title: '赛博菩提原创专辑',
+    desc: '用AI工具将原创曲调化为菩提单曲。电子音色与禅意旋律在此相遇，是修行者写给数字时代的禅诗。',
+  },
+  {
+    title: '菩提改编翻唱专辑',
+    desc: '把经典老歌拆解重组，加入佛号、梵唱与禅意编曲。熟悉的旋律里藏着不一样的法喜，是另一种形式的共修。',
+  },
+];
+
+const LIVES_CN = [
+  { title: '《了凡四训》共读', desc: '国学经典与生命智慧的对话', episodes: '15期连载' },
+  {
+    title: '生、老、病、死的交流与思考',
+    desc: '关于疾病，衰老死亡的好书推荐',
+    episodes: '5期精华',
+  },
+];
+
 export default function ContentPage() {
   const { t, i18n } = useTranslation();
   const isEn = !(i18n.language || 'zh-CN').startsWith('zh');
@@ -171,13 +202,13 @@ export default function ContentPage() {
               <h2 className="as-serif text-2xl font-bold text-[var(--as-primary-700)]">
                 🎙️ {isEn ? 'Podcasts' : '播客系列'}
               </h2>
-              {[0, 1].map(i => (
+              {PODCASTS_CN.map((item, i) => (
                 <div key={`p${i}`} className="as-card flex flex-col p-4">
                   <h3 className="font-semibold text-[var(--as-primary-700)]">
-                    {jt(`aboutPageData.content.podcasts.${i}.name`, '')}
+                    {isEn ? jt(`aboutPageData.content.podcasts.${i}.name`, item.title) : item.title}
                   </h3>
                   <p className="mt-1 flex-1 text-sm text-[var(--as-gray-500)]">
-                    {jt(`aboutPageData.content.podcasts.${i}.desc`, '')}
+                    {isEn ? jt(`aboutPageData.content.podcasts.${i}.desc`, item.desc) : item.desc}
                   </p>
                   <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">
                     {isEn ? 'Available on WeChat Channels' : '已在视频号平台发布，欢迎收听'}
@@ -189,13 +220,13 @@ export default function ContentPage() {
               <h2 className="as-serif text-2xl font-bold text-[var(--as-primary-700)]">
                 🎵 {isEn ? 'Music' : '音乐系列'}
               </h2>
-              {[0, 1].map(i => (
+              {MUSICS_CN.map((item, i) => (
                 <div key={`m${i}`} className="as-card flex flex-col p-4">
                   <h3 className="font-semibold text-[var(--as-primary-700)]">
-                    {jt(`aboutPageData.content.music.${i}.name`, '')}
+                    {isEn ? jt(`aboutPageData.content.music.${i}.name`, item.title) : item.title}
                   </h3>
                   <p className="mt-1 flex-1 text-sm text-[var(--as-gray-500)]">
-                    {jt(`aboutPageData.content.music.${i}.desc`, '')}
+                    {isEn ? jt(`aboutPageData.content.music.${i}.desc`, item.desc) : item.desc}
                   </p>
                   <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">
                     {isEn ? 'Available on WeChat Channels' : '已在视频号平台发布，欢迎收听'}
@@ -207,17 +238,19 @@ export default function ContentPage() {
               <h2 className="as-serif text-2xl font-bold text-[var(--as-primary-700)]">
                 📺 {isEn ? 'Live Series' : '直播系列'}
               </h2>
-              {[0, 1].map(i => (
+              {LIVES_CN.map((item, i) => (
                 <div key={`l${i}`} className="as-card flex flex-col p-4">
                   <h3 className="font-semibold text-[var(--as-primary-700)]">
-                    {jt(`aboutPageData.content.lives.${i}.name`, '')}
+                    {isEn ? jt(`aboutPageData.content.lives.${i}.name`, item.title) : item.title}
                   </h3>
                   <p className="mt-1 flex-1 text-sm text-[var(--as-gray-500)]">
-                    {jt(`aboutPageData.content.lives.${i}.desc`, '')}
+                    {isEn ? jt(`aboutPageData.content.lives.${i}.desc`, item.desc) : item.desc}
                   </p>
                   <div className="mt-2 flex items-center gap-2">
                     <span className="rounded-full bg-[var(--as-primary-50)] px-2 py-0.5 text-xs text-[var(--as-primary-600)]">
-                      {jt(`aboutPageData.content.lives.${i}.episodes`, '')}
+                      {isEn
+                        ? jt(`aboutPageData.content.lives.${i}.episodes`, item.episodes)
+                        : item.episodes}
                     </span>
                     <span className="text-xs text-[var(--as-gray-400)]">
                       🔗 {isEn ? 'Replays on Channels' : '回放已在视频号放出'}
