@@ -107,13 +107,15 @@ export default function ChapterTopNav({
                       >
                         {currentLanguage.startsWith('zh') ? t(item.cnKey) : t(item.enKey)}
                       </span>
-                      <span
-                        className={`mt-0.5 text-[10px] font-normal tracking-[0.5px] uppercase ${
-                          isActive ? 'text-[#F5EDE0]/90' : 'text-[#F5EDE0]/80'
-                        }`}
-                      >
-                        {currentLanguage.startsWith('zh') ? t(item.enKey) : t(item.cnKey)}
-                      </span>
+                      {currentLanguage.startsWith('zh') && (
+                        <span
+                          className={`mt-0.5 text-[10px] font-normal tracking-[0.5px] uppercase ${
+                            isActive ? 'text-[#F5EDE0]/90' : 'text-[#F5EDE0]/80'
+                          }`}
+                        >
+                          {t(item.enKey, { lng: 'en' })}
+                        </span>
+                      )}
                     </Link>
                   </li>
                 );
@@ -224,13 +226,15 @@ export default function ChapterTopNav({
                       <span className="text-[14px] font-semibold">
                         {currentLanguage.startsWith('zh') ? t(item.cnKey) : t(item.enKey)}
                       </span>
-                      <span
-                        className={`text-[11px] tracking-[0.4px] uppercase ${
-                          isActive ? 'text-[#F5EDE0]/90' : 'text-[#F5EDE0]/80'
-                        }`}
-                      >
-                        {currentLanguage.startsWith('zh') ? t(item.enKey) : t(item.cnKey)}
-                      </span>
+                      {currentLanguage.startsWith('zh') && (
+                        <span
+                          className={`text-[11px] tracking-[0.4px] uppercase ${
+                            isActive ? 'text-[#F5EDE0]/90' : 'text-[#F5EDE0]/80'
+                          }`}
+                        >
+                          {t(item.enKey, { lng: 'en' })}
+                        </span>
+                      )}
                     </Link>
                   </li>
                 );

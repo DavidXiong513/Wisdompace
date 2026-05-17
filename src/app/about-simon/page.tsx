@@ -219,7 +219,14 @@ function HeroSection() {
               {t('about.heroRole', { role: t('about.lifelongOrganizer') })}
             </p>
             <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/70 sm:text-base">
-              {t('about.heroDesc')}
+              {t('about.heroDesc')
+                .split('\n')
+                .map((line, i) => (
+                  <span key={i}>
+                    {i > 0 && <br />}
+                    {line}
+                  </span>
+                ))}
             </p>
 
             {/* ── 定位标语 ── */}
