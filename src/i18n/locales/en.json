@@ -142,9 +142,9 @@
   },
   "about": {
     "backToMain": "← A Life Organized",
-    "siteName": "Simon Xiong",
+    "siteName": "Musing Bear",
     "heroTagline": "Practice truth through every role",
-    "heroName": "Simon Xiong",
+    "heroName": "Musing Bear",
     "heroRole": "{{role}} for organizations and individuals",
     "lifelongOrganizer": "Lifelong Organizer",
     "heroDesc": "20 years of HR expertise · Group HRD · Eastern wisdom\nUnderstanding both organizational pain and individual struggles",
@@ -165,7 +165,7 @@
     "credentialsFooter": "Want to learn about my underlying philosophy?",
     "credentialsCta": "Explore my philosophy →",
     "footerQuote": "「A lifelong organizer for organizations and individuals」",
-    "footerCredit": "© {{year}} Simon Xiong · Practice truth through every role",
+    "footerCredit": "© {{year}} Musing Bear · Practice truth through every role",
     "navWho": "About Simon",
     "navPhilosophy": "Philosophy",
     "navServices": "Services",
@@ -582,27 +582,27 @@
         },
         {
           "name": "Xiaohongshu",
-          "id": "@xiangkaxiong",
+          "id": "Musing Bear",
           "desc": "Life reflections, health科普, travel guides"
         },
         {
           "name": "WeChat Official",
-          "id": "借假修真的思考熊",
+          "id": "Musing Bear",
           "desc": "Eastern wisdom, classic texts, life science, fitness logs"
         },
         {
           "name": "Douyin/TikTok",
-          "id": "思考熊 Simon",
+          "id": "Musing Bear Simon",
           "desc": "Career insights, life philosophy short videos"
         },
         {
           "name": "Bilibili",
-          "id": "思考熊Simon",
+          "id": "Musing Bear Simon",
           "desc": "In-depth talks, book sharing, life organization series"
         },
         {
           "name": "Podcast",
-          "id": "借假修真的思考熊",
+          "id": "Musing Bear",
           "desc": "Audio blog — life reflection channel"
         }
       ],
@@ -658,7 +658,7 @@
       "contactMethods": [
         { "icon": "📧", "title": "Email", "value": "1318952797@qq.com" },
         { "icon": "📱", "title": "WeChat", "value": "DavidXiong513" },
-        { "icon": "💼", "title": "LinkedIn", "value": "Simon Xiong" },
+        { "icon": "💼", "title": "LinkedIn", "value": "Musing Bear" },
         { "icon": "🌐", "title": "Zaihai", "value": "Career Counselor, 9.7/10 Rating" }
       ],
       "faqItems": [
