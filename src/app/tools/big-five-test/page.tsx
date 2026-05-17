@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import {
   loadAllBigFiveData,
   getPageQuestions,
@@ -39,11 +40,13 @@ export default function BigFiveTestPage() {
   } = useBigFiveStore();
 
   const hydrated = usePersistHydrated(useBigFiveStore);
-  const user = useAuthStore((s) => s.user);
+  const user = useAuthStore(s => s.user);
   const saveAssessment = useSaveAssessment();
 
   const [questions, setQuestions] = useState<BigFiveQuestion[]>([]);
-  const [interpretations, setInterpretations] = useState<Record<string, DimensionInterpretation>>({});
+  const [interpretations, setInterpretations] = useState<Record<string, DimensionInterpretation>>(
+    {}
+  );
   const [loading, setLoading] = useState(true);
   const [activeDimTab, setActiveDimTab] = useState<BigFiveDimensionKey>('extraversion');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
@@ -56,25 +59,31 @@ export default function BigFiveTestPage() {
         setInterpretations(interpretations);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(err => {
         console.error('[BigFive] Failed to load test data:', err);
         setLoading(false);
       });
   }, []);
 
   const totalPages = useMemo(() => getTotalPages(questions.length), [questions]);
-  const pageQuestions = useMemo(() => getPageQuestions(questions, currentPage), [questions, currentPage]);
+  const pageQuestions = useMemo(
+    () => getPageQuestions(questions, currentPage),
+    [questions, currentPage]
+  );
   const answeredCount = useMemo(() => Object.keys(answers).length, [answers]);
 
   // 选择答案
-  const handleSelect = useCallback((questionId: number, value: number) => {
-    setAnswer(questionId, value);
-  }, [setAnswer]);
+  const handleSelect = useCallback(
+    (questionId: number, value: number) => {
+      setAnswer(questionId, value);
+    },
+    [setAnswer]
+  );
 
   // 当前页是否全部作答
   const isPageComplete = useMemo(
-    () => pageQuestions.length > 0 && pageQuestions.every((q) => answers[q.id] !== undefined),
-    [pageQuestions, answers],
+    () => pageQuestions.length > 0 && pageQuestions.every(q => answers[q.id] !== undefined),
+    [pageQuestions, answers]
   );
 
   // 下一页
@@ -96,7 +105,7 @@ export default function BigFiveTestPage() {
           {
             type: 'big-five',
             result: {
-              dimensionScores: r.dimensionScores.map((d) => ({
+              dimensionScores: r.dimensionScores.map(d => ({
                 key: d.key,
                 name: d.name,
                 percentage: d.percentage,
@@ -113,7 +122,18 @@ export default function BigFiveTestPage() {
         );
       }
     }
-  }, [currentPage, totalPages, answers, questions, interpretations, setCurrentPage, setResult, setPhase, user, saveAssessment]);
+  }, [
+    currentPage,
+    totalPages,
+    answers,
+    questions,
+    interpretations,
+    setCurrentPage,
+    setResult,
+    setPhase,
+    user,
+    saveAssessment,
+  ]);
 
   // 上一页
   const goPrevPage = useCallback(() => {
@@ -165,18 +185,27 @@ export default function BigFiveTestPage() {
             className="flex items-center gap-1 text-sm text-[#8A7E6A] transition-colors hover:text-[#4A3728]"
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             返回
           </button>
           <h1 className="text-sm font-semibold text-[#4A3728]">大五人格测试</h1>
-          <div className="w-12" />
+          <LanguageSwitcher className="text-[#8A7E6A]" />
         </div>
       </nav>
 
-      <main className="mx-auto max-w-3xl px-4 pb-20 pt-6">
+      <main className="mx-auto max-w-3xl px-4 pt-6 pb-20">
         {phase === 'welcome' && (
-          <WelcomePhase onStart={startTest} hasProgress={answeredCount > 0} savedPage={currentPage} />
+          <WelcomePhase
+            onStart={startTest}
+            hasProgress={answeredCount > 0}
+            savedPage={currentPage}
+          />
         )}
         {phase === 'testing' && (
           <TestingPhase
@@ -226,7 +255,7 @@ function WelcomePhase({
         <div className="mb-4 text-center text-5xl">⭐</div>
         <h2 className="mb-2 text-center text-2xl font-bold text-[#2F2A24]">大五人格测试</h2>
         <p className="mb-1 text-center text-sm text-[#8A7E6A]">Big Five Personality Test</p>
-        <p className="mt-4 text-center text-[#6A6256] leading-relaxed">
+        <p className="mt-4 text-center leading-relaxed text-[#6A6256]">
           基于经典大五人格理论，通过 60 道题目全面评估你的人格特征。
           没有对错之分，请根据自己的真实感受作答。
         </p>
@@ -236,11 +265,15 @@ function WelcomePhase({
       <div className="rounded-2xl border border-[#E8E4DD] bg-white p-6 shadow-sm">
         <h3 className="mb-4 text-lg font-semibold text-[#4A3728]">五大维度</h3>
         <div className="space-y-3">
-          {DIMENSION_ORDER.map((key) => {
+          {DIMENSION_ORDER.map(key => {
             const info = DIMENSION_INFO[key];
             const colors = DIMENSION_COLORS[key];
             return (
-              <div key={key} className="flex items-start gap-3 rounded-xl p-3 transition-colors" style={{ backgroundColor: colors.light }}>
+              <div
+                key={key}
+                className="flex items-start gap-3 rounded-xl p-3 transition-colors"
+                style={{ backgroundColor: colors.light }}
+              >
                 <span className="text-xl">{info.icon}</span>
                 <div>
                   <div className="font-semibold text-[#2F2A24]">{info.name}</div>
@@ -325,7 +358,9 @@ function TestingPhase({
       <div className="rounded-2xl border border-[#E8E4DD] bg-white p-4 shadow-sm">
         <div className="mb-2 flex items-center justify-between text-sm">
           <span className="text-[#8A7E6A]">完成进度</span>
-          <span className="font-semibold text-[#C9A15A]">{answeredCount}/{totalQuestions}</span>
+          <span className="font-semibold text-[#C9A15A]">
+            {answeredCount}/{totalQuestions}
+          </span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-[#F0EBE0]">
           <div
@@ -342,9 +377,7 @@ function TestingPhase({
               <button
                 key={p}
                 className={`h-2.5 rounded-full transition-all ${
-                  isActive
-                    ? 'w-6 bg-[#C9A15A]'
-                    : 'w-2.5 bg-[#E0D8C8]'
+                  isActive ? 'w-6 bg-[#C9A15A]' : 'w-2.5 bg-[#E0D8C8]'
                 }`}
               />
             );
@@ -354,7 +387,7 @@ function TestingPhase({
 
       {/* 题目列表 */}
       <div className="space-y-4">
-        {pageQuestions.map((q) => {
+        {pageQuestions.map(q => {
           const selected = answers[q.id];
           return (
             <div key={q.id} className="rounded-2xl border border-[#E8E4DD] bg-white p-5 shadow-sm">
@@ -362,7 +395,7 @@ function TestingPhase({
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F8F2E6] text-xs font-semibold text-[#C9A15A]">
                   {q.id}
                 </span>
-                <p className="text-[#2F2A24] leading-relaxed">{q.text}</p>
+                <p className="leading-relaxed text-[#2F2A24]">{q.text}</p>
               </div>
               <div className="ml-10 flex gap-1.5">
                 {SCALE_LABELS.map((label, idx) => {
@@ -393,7 +426,7 @@ function TestingPhase({
         <button
           onClick={onPrev}
           disabled={currentPage === 1}
-          className="rounded-xl border border-[#E8E4DD] bg-white px-6 py-3 text-sm font-medium text-[#6A6256] transition-all hover:bg-[#FAF8F3] disabled:opacity-40 disabled:cursor-not-allowed"
+          className="rounded-xl border border-[#E8E4DD] bg-white px-6 py-3 text-sm font-medium text-[#6A6256] transition-all hover:bg-[#FAF8F3] disabled:cursor-not-allowed disabled:opacity-40"
         >
           ← 上一页
         </button>
@@ -403,7 +436,7 @@ function TestingPhase({
         <button
           onClick={onNext}
           disabled={!isPageComplete}
-          className="rounded-xl bg-[#C9A15A] px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-[#B58A3A] disabled:opacity-40 disabled:cursor-not-allowed"
+          className="rounded-xl bg-[#C9A15A] px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-[#B58A3A] disabled:cursor-not-allowed disabled:opacity-40"
         >
           {currentPage === totalPages ? '查看结果 →' : '下一页 →'}
         </button>
@@ -429,13 +462,13 @@ function ResultPhase({
   saveStatus: 'idle' | 'saving' | 'saved' | 'error';
   isLoggedIn: boolean;
 }) {
-  const activeScore = result.dimensionScores.find((d) => d.key === activeTab)!;
+  const activeScore = result.dimensionScores.find(d => d.key === activeTab)!;
   const activeColor = DIMENSION_COLORS[activeTab];
 
   return (
     <div className="space-y-6">
       {/* 结果标题 */}
-      <div className="rounded-2xl border border-[#E8E4DD] bg-white p-8 shadow-sm text-center">
+      <div className="rounded-2xl border border-[#E8E4DD] bg-white p-8 text-center shadow-sm">
         <div className="mb-2 text-4xl">⭐</div>
         <h2 className="text-2xl font-bold text-[#2F2A24]">你的大五人格画像</h2>
         <p className="mt-1 text-sm text-[#8A7E6A]">
@@ -444,21 +477,13 @@ function ResultPhase({
 
         {/* 云端保存状态 */}
         {isLoggedIn ? (
-          <div className="text-xs mt-2">
-            {saveStatus === 'saving' && (
-              <span className="text-stone-400">正在保存结果到云端…</span>
-            )}
-            {saveStatus === 'saved' && (
-              <span className="text-green-600">✓ 结果已保存到云端</span>
-            )}
-            {saveStatus === 'error' && (
-              <span className="text-red-500">保存失败，请检查网络</span>
-            )}
+          <div className="mt-2 text-xs">
+            {saveStatus === 'saving' && <span className="text-stone-400">正在保存结果到云端…</span>}
+            {saveStatus === 'saved' && <span className="text-green-600">✓ 结果已保存到云端</span>}
+            {saveStatus === 'error' && <span className="text-red-500">保存失败，请检查网络</span>}
           </div>
         ) : (
-          <div className="text-xs text-stone-400 mt-2">
-            登录后可保存测评结果，随时查看历史记录
-          </div>
+          <div className="mt-2 text-xs text-stone-400">登录后可保存测评结果，随时查看历史记录</div>
         )}
       </div>
 
@@ -466,18 +491,24 @@ function ResultPhase({
       <div className="rounded-2xl border border-[#E8E4DD] bg-white p-6 shadow-sm">
         <h3 className="mb-5 text-lg font-semibold text-[#4A3728]">五维度得分</h3>
         <div className="space-y-4">
-          {result.dimensionScores.map((dim) => {
+          {result.dimensionScores.map(dim => {
             const colors = DIMENSION_COLORS[dim.key];
             return (
               <button
                 key={dim.key}
                 onClick={() => onTabChange(dim.key)}
                 className={`w-full rounded-xl p-4 text-left transition-all ${
-                  activeTab === dim.key
-                    ? 'shadow-md'
-                    : 'hover:bg-[#FAF8F3]'
+                  activeTab === dim.key ? 'shadow-md' : 'hover:bg-[#FAF8F3]'
                 }`}
-                style={activeTab === dim.key ? { backgroundColor: colors.light, outline: `2px solid ${colors.main}`, outlineOffset: '-2px' } : {}}
+                style={
+                  activeTab === dim.key
+                    ? {
+                        backgroundColor: colors.light,
+                        outline: `2px solid ${colors.main}`,
+                        outlineOffset: '-2px',
+                      }
+                    : {}
+                }
               >
                 <div className="mb-2 flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -486,7 +517,9 @@ function ResultPhase({
                     <span className="text-xs text-[#8A7E6A]">{dim.name_en}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-lg font-bold" style={{ color: colors.main }}>{dim.percentage}%</span>
+                    <span className="text-lg font-bold" style={{ color: colors.main }}>
+                      {dim.percentage}%
+                    </span>
                     <span className="ml-1 text-xs text-[#8A7E6A]">{dim.label}</span>
                   </div>
                 </div>
@@ -509,7 +542,9 @@ function ResultPhase({
           <span className="text-2xl">{DIMENSION_INFO[activeTab].icon}</span>
           <div>
             <h3 className="text-xl font-bold text-[#2F2A24]">{activeScore.name}</h3>
-            <p className="text-sm text-[#8A7E6A]">{activeScore.name_en} · {activeScore.label}</p>
+            <p className="text-sm text-[#8A7E6A]">
+              {activeScore.name_en} · {activeScore.label}
+            </p>
           </div>
         </div>
 
@@ -531,7 +566,7 @@ function ResultPhase({
 
         {/* 特征标签 */}
         <div className="mb-4 flex flex-wrap gap-2">
-          {activeScore.traits.map((trait) => (
+          {activeScore.traits.map(trait => (
             <span
               key={trait}
               className="rounded-full px-3 py-1 text-xs font-medium"

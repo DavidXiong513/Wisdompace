@@ -1,10 +1,11 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useAuthStore } from '@/stores/authStore';
 
 export function ForgotPasswordForm() {
-  const resetPassword = useAuthStore((s) => s.resetPassword);
+  const resetPassword = useAuthStore(s => s.resetPassword);
   const [email, setEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,10 +41,13 @@ export function ForgotPasswordForm() {
   if (sent) {
     return (
       <div className="mx-auto max-w-md px-4 py-10 sm:py-16">
-        <div className="rounded-3xl border border-border bg-surface/95 p-8 shadow-[var(--shadow-card)] sm:p-10 text-center">
-          <div className="text-5xl mb-4">📬</div>
-          <h1 className="text-2xl font-semibold text-foreground">邮件已发送</h1>
-          <p className="mt-3 text-sm text-muted leading-relaxed">
+        <div className="border-border bg-surface/95 rounded-3xl border p-8 text-center shadow-[var(--shadow-card)] sm:p-10">
+          <div className="-mt-4 -mr-4 mb-2 flex items-start justify-end">
+            <LanguageSwitcher className="text-muted" />
+          </div>
+          <div className="mb-4 text-5xl">📬</div>
+          <h1 className="text-foreground text-2xl font-semibold">邮件已发送</h1>
+          <p className="text-muted mt-3 text-sm leading-relaxed">
             我们已向 <strong className="text-foreground">{email}</strong> 发送了密码重置链接。
             <br />
             请检查你的邮箱（包括垃圾箱），点击链接重置密码。
@@ -61,22 +65,25 @@ export function ForgotPasswordForm() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-10 sm:py-16">
-      <div className="rounded-3xl border border-border bg-surface/95 p-8 shadow-[var(--shadow-card)] sm:p-10">
-        <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">忘记密码</h1>
-        <p className="mt-2 text-sm text-muted">
-          输入你的注册邮箱，我们将发送密码重置链接。
-        </p>
+      <div className="border-border bg-surface/95 rounded-3xl border p-8 shadow-[var(--shadow-card)] sm:p-10">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-foreground text-2xl font-semibold sm:text-3xl">忘记密码</h1>
+            <p className="text-muted mt-2 text-sm">输入你的注册邮箱，我们将发送密码重置链接。</p>
+          </div>
+          <LanguageSwitcher className="text-muted mt-1 shrink-0" />
+        </div>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">邮箱</label>
+            <label className="text-foreground block text-sm font-medium">邮箱</label>
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               placeholder="请输入你的注册邮箱"
               autoComplete="email"
-              className="w-full rounded-2xl border border-border bg-background/60 px-3 py-2.5 text-sm text-foreground outline-none ring-0 placeholder:text-muted focus:border-[#C7A96A] focus:ring-2 focus:ring-[#E8C872]/60"
+              className="border-border bg-background/60 text-foreground placeholder:text-muted w-full rounded-2xl border px-3 py-2.5 text-sm ring-0 outline-none focus:border-[#C7A96A] focus:ring-2 focus:ring-[#E8C872]/60"
             />
           </div>
 
@@ -95,7 +102,7 @@ export function ForgotPasswordForm() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-muted">
+        <p className="text-muted mt-6 text-center text-sm">
           <a
             href="/login"
             className="font-medium text-[#C7A96A] underline decoration-[#E8C872]/50 underline-offset-2 hover:text-[#B58A3A]"

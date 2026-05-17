@@ -2,18 +2,22 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import ScrollToTopButton from '@/components/about-simon/ScrollToTopButton';
 import SectionNav from '@/components/about-simon/SectionNav';
 
 /* ─────────────────────────────────────
    数据：章节导航
    ───────────────────────────────────── */
-const SECTIONS = [
-  { id: 'timeline', label: '职涯足迹' },
-  { id: 'capabilities', label: '能力图谱' },
-  { id: 'faces', label: '斜杠中年' },
-  { id: 'credentials', label: '教育资质' },
-];
+function useSections() {
+  const { t } = useTranslation();
+  return [
+    { id: 'timeline', label: t('about.sectionTimeline') },
+    { id: 'capabilities', label: t('about.sectionCapabilities') },
+    { id: 'faces', label: t('about.sectionFaces') },
+    { id: 'credentials', label: t('about.sectionCredentials') },
+  ];
+}
 
 /* ─────────────────────────────────────
    数据：时间线节点
@@ -138,9 +142,11 @@ const CREDENTIALS = [
    Page 1: 思考熊是谁
    ───────────────────────────────────── */
 export default function AboutPage() {
+  const sections = useSections();
+
   return (
     <div className="as-with-sidebar">
-      <SectionNav sections={SECTIONS} />
+      <SectionNav sections={sections} />
 
       {/* ── Block 1: Hero 区 ── */}
       <HeroSection />
@@ -166,6 +172,7 @@ export default function AboutPage() {
    Hero Section
    ══════════════════════════════════════ */
 function HeroSection() {
+  const { t } = useTranslation();
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-[var(--as-primary-800)] via-[var(--as-primary-700)] to-[var(--as-primary-600)]">
       {/* 背景纹理 */}
@@ -202,26 +209,23 @@ function HeroSection() {
           {/* 右侧：文案 */}
           <div className="text-left">
             <p className="text-sm font-medium tracking-widest text-[var(--as-primary-200)]">
-              借假修真的思考熊
+              {t('about.heroTagline')}
             </p>
             <h1 className="mt-2 font-serif text-4xl leading-tight font-bold text-white sm:text-5xl">
-              思考熊<span className="ml-1 text-3xl sm:text-4xl">Simon</span>
+              {t('about.heroName')}
+              <span className="ml-1 text-3xl sm:text-4xl">Simon</span>
             </h1>
             <p className="mt-3 text-lg leading-relaxed text-white/85 sm:text-xl">
-              做组织与个体的
-              <span className="font-semibold text-[var(--as-primary-200)]">终身整理者</span>
+              {t('about.heroRole', { role: t('about.lifelongOrganizer') })}
             </p>
             <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/70 sm:text-base">
-              近20年HR实战 · 千亿市值集团HRD · 国学修行智慧
-              <br />
-              既知企业组织的痛点，也懂打工人的心声
+              {t('about.heroDesc')}
             </p>
 
             {/* ── 定位标语 ── */}
             <div className="mt-5 flex items-center gap-3">
               <p className="text-sm font-semibold tracking-[0.12em] text-[var(--as-primary-200)]">
-                组织提效 × 个体解惑<span className="mx-1.5 text-[var(--as-primary-300)]">──</span>
-                助你迈出智慧下一步
+                {t('about.heroSlogan')}
               </p>
               <span className="h-px flex-1 bg-gradient-to-r from-[var(--as-primary-300)/50] to-transparent" />
             </div>
@@ -233,14 +237,14 @@ function HeroSection() {
                 href="/about-simon/philosophy"
                 className="rounded-full bg-white px-6 py-2.5 text-center text-sm font-semibold text-[var(--as-primary-700)] shadow-lg transition hover:bg-white/90"
               >
-                了解我的理念 →
+                {t('about.ctaPhilosophy')}
               </Link>
               <Link
                 scroll={false}
                 href="/about-simon/connect"
                 className="rounded-full border border-white/40 px-6 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-white/10"
               >
-                联系我
+                {t('about.ctaContact')}
               </Link>
             </div>
           </div>
@@ -254,16 +258,15 @@ function HeroSection() {
    时间线 Section
    ══════════════════════════════════════ */
 function TimelineSection() {
+  const { t } = useTranslation();
   return (
     <section id="timeline" className="as-section">
       <div className="as-container">
         <div className="mb-6 text-center">
           <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
-            <span className="as-heading-line">20年职涯足迹</span>
+            <span className="as-heading-line">{t('about.timelineTitle')}</span>
           </h2>
-          <p className="mt-2 text-sm text-[var(--as-gray-500)]">
-            从培训师到公司高管，从合资、外企到民企，从千亿集团到创业公司，每一步都在积累
-          </p>
+          <p className="mt-2 text-sm text-[var(--as-gray-500)]">{t('about.timelineDesc')}</p>
         </div>
 
         {/* 时间线 */}
@@ -322,16 +325,15 @@ const CAPABILITIES = [
 ];
 
 function HexagonSection() {
+  const { t } = useTranslation();
   return (
     <section id="capabilities" className="as-section-alt">
       <div className="as-container">
         <div className="mb-6 text-center">
           <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
-            <span className="as-heading-line">核心能力图谱</span>
+            <span className="as-heading-line">{t('about.capabilitiesTitle')}</span>
           </h2>
-          <p className="mt-2 text-sm text-[var(--as-gray-500)]">
-            20年实战淬炼，覆盖组织与个体双维度
-          </p>
+          <p className="mt-2 text-sm text-[var(--as-gray-500)]">{t('about.capabilitiesDesc')}</p>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -353,16 +355,15 @@ function HexagonSection() {
    斜杠中年 Section
    ══════════════════════════════════════ */
 function FacesSection() {
+  const { t } = useTranslation();
   return (
     <section id="faces" className="as-section">
       <div className="as-container">
         <div className="mb-6 text-center">
           <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
-            <span className="as-heading-line">同一个人的不同切面</span>
+            <span className="as-heading-line">{t('about.facesTitle')}</span>
           </h2>
-          <p className="mt-2 text-sm text-[var(--as-gray-500)]">
-            不是斜杠人生，而是同一颗心的不同面向
-          </p>
+          <p className="mt-2 text-sm text-[var(--as-gray-500)]">{t('about.facesDesc')}</p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -387,13 +388,14 @@ function FacesSection() {
    认证墙 + 数据条 Section
    ══════════════════════════════════════ */
 function CredentialsAndDataSection() {
+  const { t } = useTranslation();
   return (
     <section id="credentials" className="as-section-alt">
       <div className="as-container">
         {/* 认证墙 */}
         <div className="mb-6 text-center">
           <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
-            <span className="as-heading-line">教育背景与专业资质</span>
+            <span className="as-heading-line">{t('about.credentialsTitle')}</span>
           </h2>
         </div>
 
@@ -411,13 +413,13 @@ function CredentialsAndDataSection() {
 
         {/* 底部引导 */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-[var(--as-gray-500)]">想了解我背后的思想体系？</p>
+          <p className="text-sm text-[var(--as-gray-500)]">{t('about.credentialsFooter')}</p>
           <Link
             scroll={false}
             href="/about-simon/philosophy"
             className="mt-2 inline-block rounded-full bg-[var(--as-primary-600)] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--as-primary-700)]"
           >
-            探索理念体系 →
+            {t('about.credentialsCta')}
           </Link>
         </div>
       </div>

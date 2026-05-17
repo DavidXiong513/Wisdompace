@@ -2,13 +2,14 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FormEvent, useMemo, useState } from 'react';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 import { useAuthStore } from '@/stores/authStore';
 
 export function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const register = useAuthStore((s) => s.register);
+  const register = useAuthStore(s => s.register);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -77,67 +78,72 @@ export function RegisterForm() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-10 sm:py-16">
-      <div className="rounded-3xl border border-border bg-surface/95 p-8 shadow-[var(--shadow-card)] sm:p-10">
-        <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">注册</h1>
-        <p className="mt-2 text-sm text-muted">
-          创建一个 Wisdompace 账号，开始记录你的整理之路。
-        </p>
+      <div className="border-border bg-surface/95 rounded-3xl border p-8 shadow-[var(--shadow-card)] sm:p-10">
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-foreground text-2xl font-semibold sm:text-3xl">注册</h1>
+            <p className="text-muted mt-2 text-sm">
+              创建一个 Wisdompace 账号，开始记录你的整理之路。
+            </p>
+          </div>
+          <LanguageSwitcher className="text-muted mt-1 shrink-0" />
+        </div>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">昵称</label>
+            <label className="text-foreground block text-sm font-medium">昵称</label>
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={e => setName(e.target.value)}
               placeholder="你希望我们怎么称呼你"
               autoComplete="nickname"
-              className="w-full rounded-2xl border border-border bg-background/60 px-3 py-2.5 text-sm text-foreground outline-none ring-0 placeholder:text-muted focus:border-[#C7A96A] focus:ring-2 focus:ring-[#E8C872]/60"
+              className="border-border bg-background/60 text-foreground placeholder:text-muted w-full rounded-2xl border px-3 py-2.5 text-sm ring-0 outline-none focus:border-[#C7A96A] focus:ring-2 focus:ring-[#E8C872]/60"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">邮箱</label>
+            <label className="text-foreground block text-sm font-medium">邮箱</label>
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               placeholder="用于登录和找回账号"
               autoComplete="email"
-              className="w-full rounded-2xl border border-border bg-background/60 px-3 py-2.5 text-sm text-foreground outline-none ring-0 placeholder:text-muted focus:border-[#C7A96A] focus:ring-2 focus:ring-[#E8C872]/60"
+              className="border-border bg-background/60 text-foreground placeholder:text-muted w-full rounded-2xl border px-3 py-2.5 text-sm ring-0 outline-none focus:border-[#C7A96A] focus:ring-2 focus:ring-[#E8C872]/60"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">密码</label>
+            <label className="text-foreground block text-sm font-medium">密码</label>
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               placeholder="至少 6 位"
               autoComplete="new-password"
-              className="w-full rounded-2xl border border-border bg-background/60 px-3 py-2.5 text-sm text-foreground outline-none ring-0 placeholder:text-muted focus:border-[#C7A96A] focus:ring-2 focus:ring-[#E8C872]/60"
+              className="border-border bg-background/60 text-foreground placeholder:text-muted w-full rounded-2xl border px-3 py-2.5 text-sm ring-0 outline-none focus:border-[#C7A96A] focus:ring-2 focus:ring-[#E8C872]/60"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-foreground">确认密码</label>
+            <label className="text-foreground block text-sm font-medium">确认密码</label>
             <input
               type="password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={e => setConfirmPassword(e.target.value)}
               placeholder="再输一次密码"
               autoComplete="new-password"
-              className="w-full rounded-2xl border border-border bg-background/60 px-3 py-2.5 text-sm text-foreground outline-none ring-0 placeholder:text-muted focus:border-[#C7A96A] focus:ring-2 focus:ring-[#E8C872]/60"
+              className="border-border bg-background/60 text-foreground placeholder:text-muted w-full rounded-2xl border px-3 py-2.5 text-sm ring-0 outline-none focus:border-[#C7A96A] focus:ring-2 focus:ring-[#E8C872]/60"
             />
           </div>
 
-          <div className="flex items-start gap-2 text-xs text-muted">
+          <div className="text-muted flex items-start gap-2 text-xs">
             <input
               type="checkbox"
               checked={agreeTerms}
-              onChange={(e) => setAgreeTerms(e.target.checked)}
-              className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded border border-border text-[#C7A96A] focus:outline-none focus:ring-1 focus:ring-[#E8C872]/70"
+              onChange={e => setAgreeTerms(e.target.checked)}
+              className="border-border mt-0.5 h-3.5 w-3.5 shrink-0 rounded border text-[#C7A96A] focus:ring-1 focus:ring-[#E8C872]/70 focus:outline-none"
             />
             <span>
               我已阅读并同意{' '}
@@ -166,7 +172,7 @@ export function RegisterForm() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-muted">
+        <p className="text-muted mt-6 text-center text-sm">
           已有账号？{' '}
           <a
             href="/login"

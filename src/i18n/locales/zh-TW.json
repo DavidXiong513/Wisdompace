@@ -1,48 +1,119 @@
 {
   "nav": {
-    "chapters":  "章節導讀",
-    "search":    "全站搜尋",
-    "progress":  "我的進度",
-    "openMenu":  "開啟導覽選單",
+    "chapters": "章節導讀",
+    "search": "全站搜尋",
+    "progress": "我的進度",
+    "openMenu": "開啟導覽選單",
     "siteTitle": "一生的整理",
-    "skipLink":  "跳至主要內容"
+    "skipLink": "跳至主要內容",
+    "login": "登入 / 註冊",
+    "logout": "登出",
+    "visitor": "訪客"
+  },
+  "home": {
+    "heroTitle": "一生的整理",
+    "heroSubtitle": "Wisdompace | A lifelong practice of living",
+    "searchPlaceholder": "全站搜尋 性格自測 價值觀測評...",
+    "searchBtn": "搜尋",
+    "hotLabel": "🔥 熱門搜尋：",
+    "hotTags": ["性格自測", "價值觀測評", "能力自評", "情緒", "壓力"]
   },
   "footer": {
     "copyright": "© 2026 《一生的整理》｜Wisdompace · 網站製作：思考熊"
   },
   "search": {
     "placeholder": "全站搜尋 性格測評、優勢探索、失智預防...",
-    "button":      "搜尋",
-    "hotLabel":    "🔥 熱門搜尋：",
-    "noResults":   "未找到相關內容，請嘗試其他關鍵詞。",
-    "errorTooLong":"搜尋內容過長，請縮短後重試（最多100字元）。",
-    "errorEmpty":  "請輸入搜尋內容。"
+    "button": "搜尋",
+    "hotLabel": "🔥 熱門搜尋：",
+    "noResults": "未找到相關內容，請嘗試其他關鍵詞。",
+    "errorTooLong": "搜尋內容過長，請縮短後重試（最多100字元）。",
+    "errorEmpty": "請輸入搜尋內容。"
   },
   "tool": {
-    "developing":  "開發中",
-    "ready":       "可用",
+    "developing": "開發中",
+    "ready": "可用",
     "maintenance": "維護中",
-    "comingSoon":  "該工具正在開發中，敬請期待。",
+    "comingSoon": "該工具正在開發中，敬請期待。",
     "underMaintenance": "該工具正在維護中，請稍後再試。",
-    "loadError":   "工具載入失敗，請重新整理頁面。",
-    "unknown":     "未知工具"
+    "loadError": "工具載入失敗，請重新整理頁面。",
+    "unknown": "未知工具"
   },
   "chapter": {
-    "backToTop":   "回到頂部",
+    "backToTop": "回到頂部",
     "reflections": "思考題",
     "prevChapter": "上一篇",
-    "nextChapter": "下一篇"
+    "nextChapter": "下一篇",
+    "readInstructions": "閱讀說明",
+    "beforeStart": "在開始探索之前",
+    "readInstructionsDesc": "了解本書的緣起與初衷、整體框架結構，以及在使用過程中需要留意的幾點提醒。",
+    "chapter1": "第一篇｜看見自己",
+    "chapter1Sub": "從起點回顧此生，重新認識自己",
+    "chapter1Desc": "在被設定的人生軌道上，第一次停下來，認真地看看自己走到了哪裡。",
+    "chapter2": "第二篇｜積極生活",
+    "chapter2Sub": "用行動書寫每一天的精采",
+    "chapter2Desc": "在健康與活力中積極生活，在社區關懷中互相溫暖。",
+    "chapter3": "第三篇｜清楚交代",
+    "chapter3Sub": "為自己的生活做一份負責任的記錄",
+    "chapter3Desc": "確保重要事項有交代，讓關心你的人不至於無從下手。",
+    "chapter4": "第四篇｜好好告別",
+    "chapter4Sub": "以尊嚴與愛的方式完成告別",
+    "chapter4Desc": "從容安排最後的旅程，讓告別也成為一份莊重的禮物。"
+  },
+  "chapterNav": {
+    "prepare": "預備此生",
+    "see": "看見自己",
+    "live": "積極生活",
+    "state": "清楚交代",
+    "farewell": "好好告別",
+    "prepareEn": "Prepare Wisely",
+    "seeEn": "See Yourself",
+    "liveEn": "Live Positively",
+    "stateEn": "State Clearly",
+    "farewellEn": "Farewell Gracefully"
+  },
+  "about": {
+    "backToMain": "← 一生的整理",
+    "siteName": "借假修真的思考熊",
+    "heroTagline": "借假修真的思考熊",
+    "heroName": "思考熊",
+    "heroRole": "做組織與個體的{role}",
+    "lifelongOrganizer": "終身整理者",
+    "heroDesc": "近20年HR實戰 · 千億市值集團HRD · 國學修行智慧\n既知企業組織的痛點，也懂打工人的心聲",
+    "heroSlogan": "組織提效 × 個體解惑──助你邁出智慧下一步",
+    "ctaPhilosophy": "了解我的理念 →",
+    "ctaContact": "聯繫我",
+    "sectionTimeline": "職涯足跡",
+    "sectionCapabilities": "能力圖譜",
+    "sectionFaces": "斜槓中年",
+    "sectionCredentials": "教育資質",
+    "timelineTitle": "20年職涯足跡",
+    "timelineDesc": "從培訓師到公司高管，從合資、外企到民企，從千億集團到創業公司，每一步都在積累",
+    "capabilitiesTitle": "核心能力圖譜",
+    "capabilitiesDesc": "20年實戰淬煉，覆蓋組織與個體雙維度",
+    "facesTitle": "同一個人的不同切面",
+    "facesDesc": "不是斜槓人生，而是同一顆心的不同面向",
+    "credentialsTitle": "教育背景與專業資質",
+    "credentialsFooter": "想了解我背後的思想體系？",
+    "credentialsCta": "探索理念體系 →",
+    "footerQuote": "「做組織與個體的終身整理者」",
+    "footerCredit": "© {year} 思考熊Simon · 借假修真",
+    "navWho": "思考熊是誰",
+    "navPhilosophy": "理念體系",
+    "navServices": "服務產品",
+    "navContent": "內容作品",
+    "navConnect": "我想諮詢",
+    "mobileMenu": "選單"
   },
   "language": {
-    "zh-CN":   "简体中文",
-    "zh-TW":   "繁體中文",
-    "en":      "English"
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "en": "English"
   },
   "errors": {
-    "invalidUrl":       "抱歉，該連結不安全，無法存取。",
-    "invalidFile":      "檔案格式不支援或檔案已損毀，請檢查後重試。",
-    "fileTooLarge":     "檔案大小超出限制（最大1MB），請壓縮後重試。",
-    "importInvalid":    "資料格式不符合要求，部分內容已被略過。",
-    "importCorrupted":  "資料檔案已損毀，無法匯入。請使用最近的備份檔案。"
+    "invalidUrl": "抱歉，該連結不安全，無法存取。",
+    "invalidFile": "檔案格式不支援或檔案已損毀，請檢查後重試。",
+    "fileTooLarge": "檔案大小超出限制（最大1MB），請壓縮後重試。",
+    "importInvalid": "資料格式不符合要求，部分內容已被略過。",
+    "importCorrupted": "資料檔案已損毀，無法匯入。請使用最近的備份檔案。"
   }
 }

@@ -5,6 +5,7 @@ import ChapterTopNav from '@/components/ChapterTopNav';
 import { ChapterToc } from '@/components/ChapterToc';
 import { ChapterReader } from '@/components/chapter/ChapterReader';
 import { ScrollToTopButton } from '@/components/chapter/ScrollToTopButton';
+import ChapterHeader from '@/components/chapter/ChapterHeader';
 import DonateButton from '@/components/DonateButton';
 import { getChapterBySlug, chapters } from '@/data/chapters';
 
@@ -67,20 +68,13 @@ export default async function ChapterPage({ params }: Props) {
               <div className="mx-auto w-full max-w-4xl">
                 <div className="flex flex-col gap-8">
                   {/* 章节头部卡片 */}
-                  <header className="rounded-xl border border-[#E8E4DD] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)] sm:p-12">
-                    <p className="text-xs font-medium tracking-[0.22em] text-[#7A6A52] uppercase">
-                      {chapterIndex >= 0 ? `Chapter ${chapterIndex + 1}` : 'Chapter'}
-                    </p>
-                    <h1 className="mt-4 text-3xl font-bold tracking-tight text-[#4A3728] sm:text-4xl lg:text-5xl">
-                      {chapter.title}
-                    </h1>
-                    <p className="mt-3 text-lg font-medium text-[#6A6256]">{chapter.subtitle}</p>
-                    <div className="mx-auto mt-6 h-[2px] w-16 bg-[#C9A15A]" />
-                    <p
-                      className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-[#8A7E6A]"
-                      dangerouslySetInnerHTML={{ __html: chapter.description }}
-                    />
-                  </header>
+                  <ChapterHeader
+                    slug={slug}
+                    chapterIndex={chapterIndex}
+                    title={chapter.title}
+                    subtitle={chapter.subtitle}
+                    description={chapter.description}
+                  />
 
                   {/* 章节核心内容渲染器 (带进度追踪) */}
                   <div className="chapter-content-sections">

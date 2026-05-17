@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useAuthStore } from '@/stores/authStore';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import Link from 'next/link';
 
 interface Conversation {
@@ -14,9 +15,8 @@ interface Conversation {
 }
 
 function ConversationsContent() {
-
   const router = useRouter();
-  const user = useAuthStore((s) => s.user);
+  const user = useAuthStore(s => s.user);
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,21 +62,18 @@ function ConversationsContent() {
   }, [user, router]);
 
   // 删除对话
-  const handleDelete = useCallback(
-    async (e: React.MouseEvent, id: string) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!confirm('确定要删除这个对话吗？')) return;
+  const handleDelete = useCallback(async (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!confirm('确定要删除这个对话吗？')) return;
 
-      try {
-        await fetch(`/api/conversations/${id}`, { method: 'DELETE' });
-        setConversations((prev) => prev.filter((c) => c.id !== id));
-      } catch {
-        console.error('[conversations] Failed to delete');
-      }
-    },
-    []
-  );
+    try {
+      await fetch(`/api/conversations/${id}`, { method: 'DELETE' });
+      setConversations(prev => prev.filter(c => c.id !== id));
+    } catch {
+      console.error('[conversations] Failed to delete');
+    }
+  }, []);
 
   const formatDate = (iso: string) => {
     const d = new Date(iso);
@@ -92,68 +89,82 @@ function ConversationsContent() {
   return (
     <div className="min-h-screen bg-stone-50">
       {/* 顶部导航 */}
-      <header className="bg-white border-b border-stone-200 sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
+      <header className="sticky top-0 z-10 border-b border-stone-200 bg-white">
+        <div className="mx-auto flex h-14 max-w-2xl items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <span className="text-xl">💬</span>
             <h1 className="font-serif text-lg text-stone-800">我的对话</h1>
           </div>
-          <button
-            onClick={handleNewChat}
-            disabled={creating || !user}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600
-              disabled:bg-stone-200 text-white text-sm transition-colors"
-          >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M7 2v10M2 7h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-            新对话
-          </button>
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher className="text-stone-400" />
+            <button
+              onClick={handleNewChat}
+              disabled={creating || !user}
+              className="flex items-center gap-1.5 rounded-lg bg-amber-500 px-3 py-1.5 text-sm text-white transition-colors hover:bg-amber-600 disabled:bg-stone-200"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path
+                  d="M7 2v10M2 7h10"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+              新对话
+            </button>
+          </div>
         </div>
       </header>
 
       {/* 内容区 */}
-      <main className="max-w-2xl mx-auto px-4 py-6">
+      <main className="mx-auto max-w-2xl px-4 py-6">
         {!user ? (
-          <div className="text-center text-stone-500 text-sm py-12">
-            <p>请先 <Link href="/login" className="text-amber-600 underline">登录</Link> 查看对话历史</p>
+          <div className="py-12 text-center text-sm text-stone-500">
+            <p>
+              请先{' '}
+              <Link href="/login" className="text-amber-600 underline">
+                登录
+              </Link>{' '}
+              查看对话历史
+            </p>
           </div>
         ) : loading ? (
           <div className="space-y-3">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="bg-white rounded-xl border border-stone-200 h-16 animate-pulse" />
+              <div
+                key={i}
+                className="h-16 animate-pulse rounded-xl border border-stone-200 bg-white"
+              />
             ))}
           </div>
         ) : conversations.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-5xl mb-4">🌿</div>
-            <p className="text-stone-500 text-sm mb-6">还没有对话记录</p>
+          <div className="py-16 text-center">
+            <div className="mb-4 text-5xl">🌿</div>
+            <p className="mb-6 text-sm text-stone-500">还没有对话记录</p>
             <button
               onClick={handleNewChat}
-              className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm transition-colors"
+              className="rounded-xl bg-amber-500 px-5 py-2.5 text-sm text-white transition-colors hover:bg-amber-600"
             >
               开始第一次对话
             </button>
           </div>
         ) : (
           <div className="space-y-2">
-            {conversations.map((conv) => (
+            {conversations.map(conv => (
               <Link
                 key={conv.id}
                 href={`/conversations/${conv.id}`}
-                className="flex items-center justify-between p-4 bg-white rounded-xl border border-stone-200
-                  hover:border-amber-200 hover:shadow-sm transition-all group"
+                className="group flex items-center justify-between rounded-xl border border-stone-200 bg-white p-4 transition-all hover:border-amber-200 hover:shadow-sm"
               >
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-stone-800 truncate font-medium">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-stone-800">
                     {conv.title || '新的对话'}
                   </p>
-                  <p className="text-xs text-stone-400 mt-0.5">{formatDate(conv.updated_at)}</p>
+                  <p className="mt-0.5 text-xs text-stone-400">{formatDate(conv.updated_at)}</p>
                 </div>
                 <button
-                  onClick={(e) => handleDelete(e, conv.id)}
-                  className="opacity-0 group-hover:opacity-100 ml-3 p-1.5 text-stone-400 hover:text-red-500
-                    hover:bg-red-50 rounded-lg transition-all"
+                  onClick={e => handleDelete(e, conv.id)}
+                  className="ml-3 rounded-lg p-1.5 text-stone-400 opacity-0 transition-all group-hover:opacity-100 hover:bg-red-50 hover:text-red-500"
                   aria-label="删除对话"
                 >
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
