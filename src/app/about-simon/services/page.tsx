@@ -370,14 +370,14 @@ export default function ServicesPage() {
             ))}
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {CLIENT_CATEGORIES.map(cat => (
+            {CLIENT_CATEGORIES.map((cat, ci) => (
               <div
                 key={cat.label}
                 className="rounded-lg border border-[var(--as-gray-100)] bg-white p-5"
               >
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-[var(--as-primary-700)]">
-                    {cat.label}
+                    {isEn ? t(`aboutPageData.services.clientsCategories.${ci}`) : cat.label}
                   </h3>
                   <span className="text-lg font-bold text-[var(--as-primary-400)]">
                     {cat.count}

@@ -639,6 +639,12 @@
         { "value": "~1,000", "label": "Individual Clients" },
         { "value": "985×2", "label": "Education" }
       ],
+      "clientsCategories": [
+        "Foreign Companies",
+        "Joint Ventures",
+        "State-Owned Enterprises",
+        "Private Companies"
+      ],
       "clientsLabel": "Industries Served: E-commerce · OTA · Hospitality · Automotive · Medical Devices · Pharma · Semiconductor",
       "ctaText": "Want to see what I've written?",
       "ctaBtn": "My Content →"
