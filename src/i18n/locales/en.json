@@ -77,13 +77,59 @@
   },
   "chapterContent": {
     "read-instructions": {
-      "origin": "Origin & Motivation",
-      "intention": "Intention",
-      "preparedness": "Readiness Check",
-      "framework": "Framework",
-      "usage": "How to Use",
-      "reminders": "Five Reminders",
-      "ai-knowledge-base": "AI Knowledge Base"
+      "origin": {
+        "title": "Origin & Motivation",
+        "paragraphs": [
+          "The idea for this website existed years ago. But back then, I always felt there was no rush, it was too early, I could wait a little longer...",
+          "But over the past year, I've felt more and more clearly: in this era of uncertainty, impermanence often strikes without notice or reason.",
+          "Seemingly healthy middle-aged peers falling ill and passing away is becoming more frequent. Single, childless, DINK, divorced, and solitary family structures are becoming normalized. Anxiety and confusion about the meaning of life spread across social media platforms. And at home, my parents on both sides, approaching eighty, are aging day by day...",
+          "These realities make it harder and harder to tell myself: 'This can wait.'"
+        ]
+      },
+      "intention": {
+        "title": "Intention",
+        "paragraphs": [
+          "I created this website not because I've already deciphered life and death and want to serve you some chicken soup for the soul...",
+          "On the contrary, it's because I've realized time and again: most of us have almost zero preparation for impermanence.",
+          "We make detailed long-term plans for education, career, family, and assets, but rarely answer a more fundamental question: 'If my life cannot continue as planned, have I reserved space to deal with impermanence?'",
+          "In reality, what truly breaks people is not 'impermanence of life and death' itself, but when it happens — no forethought, no arrangements, no consensus, no choice.",
+          "This website is less 'about death' and more 'an instruction manual on how to seriously review this life.' It cares about: how to honestly face yourself, how to systematically organize a lifetime, how to reserve some choice for yourself while accepting impermanence. So you can live earnestly, clearly, with dignity, and with joy."
+        ]
+      },
+      "preparedness": {
+        "title": "Readiness Check",
+        "paragraphs": [
+          "This is not a test — it helps you identify your current level of preparedness. You can adjust the score at any time, just record where you are right now.",
+          "If you find it hard to judge, that's okay too — go with your intuition and give a rough range."
+        ]
+      },
+      "framework": {
+        "title": "Framework",
+        "paragraphs": [
+          "This website is divided into two major parts and four chapters. In this era of changing family structures — single, unmarried, childless — we can no longer assume someone will always clean up our mess.",
+          "That's why building a 'life and end-of-life' preparation system for yourself in advance is not pessimism, but maturity. I sincerely hope this website can become a quiet space for you — not rushing you, not scaring you, just accompanying you to slowly organize this life clearly."
+        ]
+      },
+      "usage": {
+        "title": "How to Use",
+        "paragraphs": [
+          "This website has four chapters. In each chapter, we guide you to use the tools and templates provided to engage in deep thinking and organization around your real life situation.",
+          "To make it easier to understand and use, the website provides demonstration examples and designs exercises as handbook tables or optional choices, reducing the burden of extensive writing and tool comprehension.",
+          "But a serious note: 'No matter how much assistance we provide, the real thinking and organizing can only be done by you.' These exercises are not about 'completing tasks' — they are about taking your life seriously, one step at a time."
+        ]
+      },
+      "reminders": {
+        "title": "Five Reminders",
+        "paragraphs": [
+          "If you experience prolonged discomfort or emotional distress while using this website, please prioritize taking care of yourself and consider seeking professional support."
+        ]
+      },
+      "ai-knowledge-base": {
+        "title": "AI Knowledge Base",
+        "paragraphs": [
+          "This knowledge base focuses on AI-powered Q&A about human aging, illness, death, physical and mental health, and end-of-life care. It integrates legal, medical, religious, and familial perspectives — combining serious policy interpretation with warm family experience. When facing aging, illness, or end-of-life care, you can quickly find practical information, emotional resonance, and actionable solutions."
+        ]
+      }
     },
     "chapter-1": {
       "stop-and-look": "Stop and See Yourself",
