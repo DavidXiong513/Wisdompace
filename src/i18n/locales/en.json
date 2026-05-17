@@ -173,6 +173,107 @@
     "navConnect": "Contact",
     "mobileMenu": "Menu"
   },
+  "aboutPageData": {
+    "faces": [
+      {
+        "title": "As a Consultant",
+        "text": "Nearly 20 years, 125+ corporate clients, thousands of individual clients. I've seen the harshest side of the workplace and the most beautiful transformations. If you're at a career crossroads, I might help you see the way."
+      },
+      {
+        "title": "As an HR Executive",
+        "text": "Since 2016, I've been the #1 HR at listed foreign companies, private enterprises, and startups. Interviewed tens of thousands, laid off thousands, and personally orchestrated organizational transformation, talent strategy, cultural重塑, and efficiency improvement. JV, MNC, private, startup — I've immersed in every organizational ecosystem. These experiences help me understand both organizational logic and individual struggles."
+      },
+      {
+        "title": "As a Practicing Lay Buddhist",
+        "text": "Practice truth through every role is not about escaping the mundane, but living authentically within each role. Precepts are not bondage but freedom — work is my dojo, relationships are my mirror, cultivating a clear mind amid worldly affairs."
+      },
+      {
+        "title": "As a Vegetarian Lifestyle Advocate",
+        "text": "13 years vegetarian — not restraint, but choice. The body is a vessel for practice; every meal is reverence for life. I believe how you treat food reflects how you treat yourself."
+      },
+      {
+        "title": "As a Content Creator",
+        "text": "Not just writing articles — themed videos, music works, audio podcasts. Each creative form is another practice of truth. Output is not the goal; shared cultivation is."
+      },
+      {
+        "title": "As a Tech Practitioner",
+        "text": "I vibe code, deploy AI applications, and do deep data analysis. Technology is not the end — serving human growth is. I believe the best consultant will be the one armed with AI."
+      },
+      {
+        "title": "As a Project Management Expert",
+        "text": "PMP certified, managing every consulting project with PM thinking. From diagnosis to delivery — not just an idea, but a traceable path."
+      },
+      {
+        "title": "As a Life Care Volunteer",
+        "text": "Life care is not charity — it's seeing. Through health education and hospice volunteering, I deeply understand the wisdom of 'prevention before illness.' The deepest compassion is teaching people to live well before illness arrives. Giving brings you closer to freedom than taking — this is the deepest lesson I've learned."
+      },
+      {
+        "title": "As a Bilingual National Tour Guide",
+        "text": "A bilingual tour guide license — not a career backup, but opening the world through another language. Every tour is a cross-cultural shared practice."
+      },
+      {
+        "title": "As a Licensed High School Chinese Teacher",
+        "text": "A high school Chinese teaching credential — not a career alternative, but a deep affection for my mother tongue and reverence for classical studies. Language is the foundation of culture; teaching is the best form of learning, and classics are forever the best teachers."
+      },
+      {
+        "title": "Still Exploring",
+        "text": "'I' is just an illusory construct, growing as sentient beings need me to master new skills. More slashes may be unlocked ahead — not because of lack, but because the world is vast and worth staying curious. Exploration itself is the answer."
+      }
+    ],
+    "timeline": [
+      {
+        "title": "Trainer Beginnings",
+        "desc": "51JOB trainer, an HR initiation from the vendor side, understanding real enterprise needs through delivery"
+      },
+      {
+        "title": "JV Deep Dive",
+        "desc": "SAIC-GM HRBP, 30,000+ workforce in manufacturing, sharpening systematic thinking in a scaled organization"
+      },
+      {
+        "title": "MNC Deep Cultivation",
+        "desc": "Dentsply Sirona (global dental #1) Greater China HRD, deep HR practice under a multinational system"
+      },
+      {
+        "title": "Entrepreneurial Forging",
+        "desc": "Esino E-commerce (acquired by Baozun) HR & Admin Head + M2 Information (acquired by Huazhu) HRD, building organizations from scratch, understanding startup survival rules"
+      },
+      {
+        "title": "Internet Giant",
+        "desc": "Trip.com Group Tourism BU HRD, 40,000+ workforce, embracing speed and change in the internet giant"
+      },
+      {
+        "title": "Hospitality Leader",
+        "desc": "Huazhu Group OD/OC/Performance COE Lead + Mid/High-end Business HRBP Head, 150,000+ workforce, deep organizational leverage"
+      },
+      {
+        "title": "Boutique Entrepreneurship",
+        "desc": "Founded Huixingzu Management Consulting, transitioning from client to consultant, serving 125+ corporate and nearly 1,000 individual clients"
+      }
+    ],
+    "capabilities": [
+      "Organizational Transformation & Upgrade",
+      "Talent Management & Assessment",
+      "Organizational Efficiency Improvement",
+      "Performance & Incentive System",
+      "Career Planning Consultation",
+      "MBTI & Personality Insight",
+      "AI + Humanities Tool Development",
+      "Content Creation & Expression"
+    ],
+    "credentials": [
+      "Shanghai Jiao Tong University (985)",
+      "Beijing Institute of Technology (985)",
+      "GCDF & BCC Career Counselor",
+      "Learning Agility Certified",
+      "MBTI Certified Trainer",
+      "PMP Project Management Professional",
+      "High-performance Teams & Leadership Development",
+      "MOT Organizational Change Management",
+      "PSC/PSS Sales Coaching",
+      "Bilingual National Tour Guide",
+      "High School Chinese Teacher License"
+    ]
+  },
   "language": {
     "zh-CN": "简体中文",
     "zh-TW": "繁體中文",

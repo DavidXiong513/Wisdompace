@@ -261,11 +261,22 @@ function HeroSection() {
   );
 }
 
+function useTranslatedTimeline(i18nLng: string, t: (key: string) => string) {
+  const isChinese = i18nLng.startsWith('zh');
+  if (isChinese) return TIMELINE;
+  return TIMELINE.map((item, i) => ({
+    ...item,
+    title: t(`aboutPageData.timeline.${i}.title`),
+    desc: t(`aboutPageData.timeline.${i}.desc`),
+  }));
+}
+
 /* ══════════════════════════════════════
    时间线 Section
    ══════════════════════════════════════ */
 function TimelineSection() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const timeline = useTranslatedTimeline(i18n.language || 'zh-CN', t);
   return (
     <section id="timeline" className="as-section">
       <div className="as-container">
@@ -282,7 +293,7 @@ function TimelineSection() {
           <div className="absolute top-0 left-4 h-full w-0.5 bg-[var(--as-primary-100)] sm:left-1/2 sm:-translate-x-px" />
 
           <div className="space-y-5">
-            {TIMELINE.map((item, i) => (
+            {timeline.map((item, i) => (
               <div
                 key={item.year}
                 className={`relative flex items-start gap-4 sm:gap-0 ${
@@ -361,8 +372,19 @@ function HexagonSection() {
 /* ══════════════════════════════════════
    斜杠中年 Section
    ══════════════════════════════════════ */
+function useTranslatedFaces(i18nLng: string, t: (key: string) => string) {
+  const isChinese = i18nLng.startsWith('zh');
+  if (isChinese) return FACES;
+  return FACES.map((face, i) => ({
+    ...face,
+    title: t(`aboutPageData.faces.${i}.title`),
+    text: t(`aboutPageData.faces.${i}.text`),
+  }));
+}
+
 function FacesSection() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const faces = useTranslatedFaces(i18n.language || 'zh-CN', t);
   return (
     <section id="faces" className="as-section">
       <div className="as-container">
@@ -374,7 +396,7 @@ function FacesSection() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {FACES.map(face => (
+          {faces.map(face => (
             <div key={face.title} className="as-card p-5">
               <div className="mb-2 text-3xl">{face.icon}</div>
               <h3 className="as-serif text-base font-bold text-[var(--as-primary-700)]">
