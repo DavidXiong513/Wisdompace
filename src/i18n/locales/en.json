@@ -323,6 +323,35 @@
       "Bilingual National Tour Guide",
       "High School Chinese Teacher License"
     ],
+    "capabilitiesData": [
+      { "name": "Organizational Transformation & Upgrade", "tag": "Organization" },
+      { "name": "Talent Management & Assessment", "tag": "Organization" },
+      { "name": "Organizational Efficiency Improvement", "tag": "Organization" },
+      { "name": "Performance & Incentive System Design", "tag": "Organization" },
+      { "name": "Career Planning & Consultation", "tag": "Individual" },
+      { "name": "MBTI & Personality Insight", "tag": "Individual" },
+      { "name": "AI + Humanities Tool Development", "tag": "Exploration" },
+      { "name": "Content Creation & Expression", "tag": "Exploration" }
+    ],
+    "credentialsData": [
+      {
+        "label": "Shanghai Jiao Tong University (985)",
+        "sub": "Full-time Master · Business Administration"
+      },
+      {
+        "label": "Beijing Institute of Technology (985)",
+        "sub": "Full-time Bachelor · Information Management & Information Systems (E-Commerce)"
+      },
+      { "label": "GCDF & BCC Career Counselor", "sub": "CCE (USA) Certified" },
+      { "label": "Learning Agility Certified", "sub": "Korn Ferry (USA, NYSE:KFY)" },
+      { "label": "MBTI Certified Trainer", "sub": "Skill & Will (USA & HK)" },
+      { "label": "PMP Project Management Professional", "sub": "PMI (USA) Certified" },
+      { "label": "High-performance Teams & Leadership Development", "sub": "CEIBS" },
+      { "label": "MOT Organizational Change Management", "sub": "Linkage Certified Training" },
+      { "label": "PSC/PSS Sales Coaching", "sub": "AG Certified Training" },
+      { "label": "Bilingual National Tour Guide", "sub": "Tourism Bureau Certified" },
+      { "label": "High School Chinese Teacher License", "sub": "Education Bureau Certified" }
+    ],
     "philosophy": {
       "heroTitle": "Practice Truth, Live Toward Death",
       "heroSub": "Minimal Material · Maximal Capability · Supreme Spirit",

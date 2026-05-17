@@ -342,8 +342,19 @@ const CAPABILITIES = [
   { name: '内容创作与表达', tag: '探索' },
 ];
 
+function useTranslatedCapabilities(i18nLng: string, t: (key: string) => string) {
+  const isChinese = i18nLng.startsWith('zh');
+  if (isChinese) return CAPABILITIES;
+  return CAPABILITIES.map((cap, i) => ({
+    ...cap,
+    name: t(`aboutPageData.capabilitiesData.${i}.name`),
+    tag: t(`aboutPageData.capabilitiesData.${i}.tag`),
+  }));
+}
+
 function HexagonSection() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const capabilities = useTranslatedCapabilities(i18n.language || 'zh-CN', t);
   return (
     <section id="capabilities" className="as-section-alt">
       <div className="as-container">
@@ -355,7 +366,7 @@ function HexagonSection() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {CAPABILITIES.map(cap => (
+          {capabilities.map(cap => (
             <div key={cap.name} className="as-card flex items-center gap-3 p-4">
               <span className="inline-flex-shrink-0 rounded-full bg-[var(--as-primary-50)] px-2.5 py-1 text-xs font-semibold text-[var(--as-primary-600)]">
                 {cap.tag}
@@ -413,11 +424,22 @@ function FacesSection() {
   );
 }
 
+function useTranslatedCredentials(i18nLng: string, t: (key: string) => string) {
+  const isChinese = i18nLng.startsWith('zh');
+  if (isChinese) return CREDENTIALS;
+  return CREDENTIALS.map((cred, i) => ({
+    ...cred,
+    label: t(`aboutPageData.credentialsData.${i}.label`),
+    sub: t(`aboutPageData.credentialsData.${i}.sub`),
+  }));
+}
+
 /* ══════════════════════════════════════
    认证墙 + 数据条 Section
    ══════════════════════════════════════ */
 function CredentialsAndDataSection() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const credentials = useTranslatedCredentials(i18n.language || 'zh-CN', t);
   return (
     <section id="credentials" className="as-section-alt">
       <div className="as-container">
@@ -429,7 +451,7 @@ function CredentialsAndDataSection() {
         </div>
 
         <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
-          {CREDENTIALS.map(cred => (
+          {credentials.map(cred => (
             <div
               key={cred.label}
               className="rounded-lg border border-[var(--as-gray-100)] bg-white p-3.5"
