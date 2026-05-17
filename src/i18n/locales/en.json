@@ -16,7 +16,11 @@
     "searchPlaceholder": "Search personality tests, values assessment...",
     "searchBtn": "Search",
     "hotLabel": "🔥 Trending:",
-    "hotTags": ["Personality", "Values", "Abilities", "Emotions", "Stress"]
+    "hotTags": ["Personality", "Values", "Abilities", "Emotions", "Stress"],
+    "footerText": "Website by Musing Bear | Content source: \"A Life Organized\" V1.0 (also known as: Musing Bear: Seek Truth Through Illusions)"
+  },
+  "homeNav": {
+    "aboutBear": "🐻 About Musing Bear →"
   },
   "footer": {
     "copyright": "© 2026 A Life Organized | Wisdompace"
@@ -142,9 +146,9 @@
   },
   "about": {
     "backToMain": "← A Life Organized",
-    "siteName": "Musing Bear",
-    "heroTagline": "Practice truth through every role",
-    "heroName": "Musing Bear",
+    "siteName": "Musing Bear: Seek Truth Through Illusions",
+    "heroTagline": "Musing Bear: Seek Truth Through Illusions",
+    "heroName": "Musing Bear: Seek Truth Through Illusions",
     "heroRole": "{{role}} for organizations and individuals",
     "lifelongOrganizer": "Lifelong Organizer",
     "heroDesc": "20 years of HR expertise · Group HRD · Eastern wisdom\nUnderstanding both organizational pain and individual struggles",
@@ -165,7 +169,7 @@
     "credentialsFooter": "Want to learn about my underlying philosophy?",
     "credentialsCta": "Explore my philosophy →",
     "footerQuote": "「A lifelong organizer for organizations and individuals」",
-    "footerCredit": "© {{year}} Musing Bear · Practice truth through every role",
+    "footerCredit": "© {{year}} Musing Bear · Seek Truth Through Illusions",
     "navWho": "About Simon",
     "navPhilosophy": "Philosophy",
     "navServices": "Services",
@@ -185,7 +189,7 @@
       },
       {
         "title": "As a Practicing Lay Buddhist",
-        "text": "Practice truth through every role is not about escaping the mundane, but living authentically within each role. Precepts are not bondage but freedom — work is my dojo, relationships are my mirror, cultivating a clear mind amid worldly affairs."
+        "text": "Seek truth through illusions is not about escaping the mundane, but living authentically within each role. Precepts are not bondage but freedom — work is my dojo, relationships are my mirror, cultivating a clear mind amid worldly affairs."
       },
       {
         "title": "As a Vegetarian Lifestyle Advocate",
@@ -295,7 +299,7 @@
         },
         {
           "title": "Supreme Spirit",
-          "desc": "Practice truth through every role, live toward death. Work is your dojo, relationships are your mirror, every role is practice. Supreme spirit is not transcending the mundane — it's living authentically within it."
+          "desc": "Seek truth through illusions, live toward death. Work is your dojo, relationships are your mirror, every role is practice. Supreme spirit is not transcending the mundane — it's living authentically within it."
         }
       ],
       "stages": [

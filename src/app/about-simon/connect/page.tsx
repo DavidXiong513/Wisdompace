@@ -270,7 +270,7 @@ export default function ConnectPage() {
             」
           </p>
           <p className="mt-3 text-sm text-[var(--as-gray-500)]">
-            {isEn ? 'Simon Xiong · Practice truth through every role' : '借假修真的思考熊'}
+            {isEn ? 'Musing Bear · Seek Truth Through Illusions' : '借假修真的思考熊'}
           </p>
           <div className="mt-6 flex justify-center gap-4">
             <Link
