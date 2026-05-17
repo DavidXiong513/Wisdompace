@@ -45,10 +45,10 @@ export default function Home() {
       <div className="relative z-10 h-full w-full">
         <div className="mx-auto flex h-full max-w-7xl items-center justify-center px-4 pt-20 sm:justify-end sm:px-12 sm:pt-24 lg:px-20">
           <div className="flex w-full flex-col items-center text-center sm:w-auto sm:items-end sm:text-right lg:mr-12 xl:mr-20">
-            <h1 className="font-cn-serif block w-full text-[2.8rem] leading-tight font-bold tracking-[0.16em] text-white text-shadow-lg sm:text-[4.2rem] md:text-[5.2rem] lg:text-[5.8rem] xl:text-[6.4rem]">
+            <h1 className="font-cn-serif block w-full text-[2.5rem] leading-tight font-bold tracking-[0.16em] whitespace-nowrap text-white text-shadow-lg sm:text-[3.4rem] md:text-[4.2rem] lg:text-[5rem] xl:text-[5.6rem]">
               {t('home.heroTitle')}
             </h1>
-            <p className="text-shadow mt-4 block w-full text-base font-semibold tracking-[0.14em] text-white/95 sm:mt-6 sm:text-[1.3rem] sm:whitespace-nowrap md:text-[1.5rem] lg:text-[1.6rem]">
+            <p className="text-shadow mt-4 block w-full text-base font-semibold tracking-[0.14em] whitespace-nowrap text-white/95 sm:mt-6 sm:text-[1.3rem] md:text-[1.5rem] lg:text-[1.6rem]">
               {t('home.heroSubtitle')}
             </p>
 
