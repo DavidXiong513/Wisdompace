@@ -634,16 +634,34 @@
       ],
       "podcasts": [
         {
-          "name": "Audio Blog",
-          "desc": "Life reflections, daily insights, casual chats about practice"
+          "name": "Bodhi Science Podcast",
+          "desc": "Using Buddhist wisdom as a mirror, reflecting the truths of life, aging, illness, and death. Not preaching, but thinking together about how to find joy beyond suffering."
         },
         {
-          "name": "Music Works",
-          "desc": "Original songs created with AI — expressing emotions through melody"
+          "name": "A Life Organized Podcast",
+          "desc": "Not organizing things, but organizing life. From seeing yourself to farewell gracefully — one topic per episode, accompanying you to take the next wise step."
+        }
+      ],
+      "music": [
+        {
+          "name": "Cyber Bodhi Original Album",
+          "desc": "Turning original melodies into Bodhi songs with AI tools. Electronic tones meet Zen melodies — a meditation poem written for the digital age."
         },
         {
-          "name": "Live Streams",
-          "desc": "Irregular live talks on career, life, and practice, answering questions in real-time"
+          "name": "Bodhi Cover Album",
+          "desc": "Deconstructing and reimagining classic songs with Buddhist chants and Zen arrangements. Familiar melodies carry a different kind of joy — another form of shared practice."
+        }
+      ],
+      "lives": [
+        {
+          "name": "Liao Fan's Four Lessons Book Club",
+          "desc": "Dialogue between Chinese classics and life wisdom",
+          "episodes": "15 episodes"
+        },
+        {
+          "name": "Life, Aging, Illness, Death Series",
+          "desc": "Book recommendations about disease, aging, and death",
+          "episodes": "5 episodes"
         }
       ],
       "ctaText": "Inspired to have a conversation?",

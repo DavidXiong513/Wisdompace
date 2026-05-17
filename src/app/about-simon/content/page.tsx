@@ -179,6 +179,9 @@ export default function ContentPage() {
                   <p className="mt-1 flex-1 text-sm text-[var(--as-gray-500)]">
                     {jt(`aboutPageData.content.podcasts.${i}.desc`, '')}
                   </p>
+                  <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">
+                    {isEn ? 'Available on WeChat Channels' : '已在视频号平台发布，欢迎收听'}
+                  </span>
                 </div>
               ))}
             </div>
@@ -189,11 +192,37 @@ export default function ContentPage() {
               {[0, 1].map(i => (
                 <div key={`m${i}`} className="as-card flex flex-col p-4">
                   <h3 className="font-semibold text-[var(--as-primary-700)]">
-                    {jt(`aboutPageData.content.podcasts.${i + 2}.name`, '')}
+                    {jt(`aboutPageData.content.music.${i}.name`, '')}
                   </h3>
                   <p className="mt-1 flex-1 text-sm text-[var(--as-gray-500)]">
-                    {jt(`aboutPageData.content.podcasts.${i + 2}.desc`, '')}
+                    {jt(`aboutPageData.content.music.${i}.desc`, '')}
                   </p>
+                  <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">
+                    {isEn ? 'Available on WeChat Channels' : '已在视频号平台发布，欢迎收听'}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="space-y-3">
+              <h2 className="as-serif text-2xl font-bold text-[var(--as-primary-700)]">
+                📺 {isEn ? 'Live Series' : '直播系列'}
+              </h2>
+              {[0, 1].map(i => (
+                <div key={`l${i}`} className="as-card flex flex-col p-4">
+                  <h3 className="font-semibold text-[var(--as-primary-700)]">
+                    {jt(`aboutPageData.content.lives.${i}.name`, '')}
+                  </h3>
+                  <p className="mt-1 flex-1 text-sm text-[var(--as-gray-500)]">
+                    {jt(`aboutPageData.content.lives.${i}.desc`, '')}
+                  </p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="rounded-full bg-[var(--as-primary-50)] px-2 py-0.5 text-xs text-[var(--as-primary-600)]">
+                      {jt(`aboutPageData.content.lives.${i}.episodes`, '')}
+                    </span>
+                    <span className="text-xs text-[var(--as-gray-400)]">
+                      🔗 {isEn ? 'Replays on Channels' : '回放已在视频号放出'}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
