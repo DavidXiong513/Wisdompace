@@ -1,57 +1,49 @@
 'use client';
 
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import AboutHero from '@/components/about-simon/AboutHero';
 import ScrollToTopButton from '@/components/about-simon/ScrollToTopButton';
 import SectionNav from '@/components/about-simon/SectionNav';
 
-/* ─────────────────────────────────────
-   数据：章节导航
-   ───────────────────────────────────── */
 const SECTIONS = [
-  { id: 'platforms', label: '平台入口' },
-  { id: 'topics', label: '内容板块' },
-  { id: 'podcast', label: '播客·音乐·直播' },
+  { id: 'platforms', cn: '平台入口', enKey: 'navPlatforms' },
+  { id: 'topics', cn: '内容板块', enKey: 'navTopics' },
+  { id: 'podcast', cn: '播客·音乐·直播', enKey: 'navPodcast' },
 ];
 
-/* ─────────────────────────────────────
-   数据：平台
-   ───────────────────────────────────── */
 const PLATFORMS = [
   {
+    icon: '🎓',
     name: '在行',
     id: '生涯规划咨询',
     desc: '1对1生涯规划咨询，9.7分在行评分',
-    icon: '🎓',
     href: 'https://www.zaih.com/falcon/mentors/2bxahqla7fk',
   },
   {
+    icon: '📕',
     name: '小红书',
     id: '借假修真的思考熊',
     desc: '生命思考、健康科普、旅行攻略',
-    icon: '📕',
     href: 'https://www.xiaohongshu.com/user/',
   },
   {
+    icon: '📝',
     name: '微信公众号',
     id: '借假修真的思考熊',
     desc: '国学智慧、经典解读、生活科普、运动日志',
-    icon: '📝',
     href: 'https://mp.weixin.qq.com/',
   },
   {
+    icon: '🎬',
     name: '微信视频号',
     id: '借假修真的思考熊',
     desc: '哲学思考、读书分享、音乐创作、主题播客',
-    icon: '🎬',
     href: 'https://channels.weixin.qq.com/',
   },
 ];
 
-/* ─────────────────────────────────────
-   数据：内容板块
-   ───────────────────────────────────── */
-const CONTENT_SECTIONS = [
+const TOPICS = [
   {
     icon: '💊',
     title: '红药丸',
@@ -90,63 +82,35 @@ const CONTENT_SECTIONS = [
   },
 ];
 
-/* ─────────────────────────────────────
-   数据：播客
-   ───────────────────────────────────── */
-const PODCASTS = [
-  {
-    title: '【菩提科普】主题播客',
-    desc: '以佛学智慧为镜，照见生老病死八苦的真相。不是在讲经，是在陪你一起思考如何离苦得乐。',
-  },
-  {
-    title: '【一生的整理】主题播客',
-    desc: '整理的不是物品，是人生。从看见自己到好好告别——每期一个话题，陪你踏出智慧下一步。',
-  },
-];
-
-/* ─────────────────────────────────────
-   数据：直播
-   ───────────────────────────────────── */
-const LIVES = [
-  { title: '《了凡四训》共读', desc: '国学经典与生命智慧的对话', episodes: '15期连载' },
-  {
-    title: '生、老、病、死的交流与思考',
-    desc: '关于疾病，衰老死亡的好书推荐',
-    episodes: '5期精华',
-  },
-];
-
-/* ─────────────────────────────────────
-   数据：音乐
-   ───────────────────────────────────── */
-const MUSICS = [
-  {
-    title: '赛博菩提原创专辑',
-    desc: '用AI工具将原创曲调化为菩提单曲。电子音色与禅意旋律在此相遇，是修行者写给数字时代的禅诗。',
-  },
-  {
-    title: '菩提改编翻唱专辑',
-    desc: '把经典老歌拆解重组，加入佛号、梵唱与禅意编曲。熟悉的旋律里藏着不一样的法喜，是另一种形式的共修。',
-  },
-];
-
-/* ─────────────────────────────────────
-   Page 4: 内容作品
-   ───────────────────────────────────── */
 export default function ContentPage() {
+  const { t, i18n } = useTranslation();
+  const isEn = !(i18n.language || 'zh-CN').startsWith('zh');
+  const jt = (k: string, fb: string) => (isEn ? (t(k) === k ? fb : t(k)) : fb);
+
   return (
     <div className="as-with-sidebar">
-      <SectionNav sections={SECTIONS} />
-
+      <SectionNav
+        sections={SECTIONS.map(s => ({
+          id: s.id,
+          label: isEn ? jt(`aboutContent.content.${s.enKey}`, s.cn) : s.cn,
+        }))}
+      />
       <AboutHero
         label="Content"
-        title="这些地方，能找到我"
-        description="每一篇作品都是一次自我对话，做着做着，就懂了自己"
+        title={jt('aboutPageData.content.heroTitle', '这些地方，能找到我')}
+        description={jt(
+          'aboutPageData.content.heroSub',
+          '每一篇作品都是一次自我对话，做着做着，就懂了自己'
+        )}
+        subtext={jt('aboutPageData.content.heroText', '')}
       />
-
-      {/* 平台地图 */}
       <section id="platforms" className="as-section">
         <div className="as-container">
+          <h2 className="as-serif mb-6 text-center text-3xl font-bold text-[var(--as-primary-700)]">
+            <span className="as-heading-line">
+              {jt('aboutPageData.content.sectionPlatforms', '平台入口')}
+            </span>
+          </h2>
           <div className="mx-auto grid max-w-3xl gap-5 sm:grid-cols-2">
             {PLATFORMS.map(p => (
               <a
@@ -162,26 +126,25 @@ export default function ContentPage() {
                 </h3>
                 <p className="mt-1 text-sm text-[var(--as-gray-500)]">{p.id}</p>
                 <p className="mt-2 text-sm text-[var(--as-gray-600)]">{p.desc}</p>
-                <p className="mt-3 text-xs text-[var(--as-primary-500)] transition hover:text-[var(--as-primary-700)]">
-                  → 前往主页
+                <p className="hover:text-[var(--as-primary-700)) mt-3 text-xs text-[var(--as-primary-500)] transition">
+                  → {jt('aboutPageData.content.heroSub', '前往主页').split(' · ')[0] || 'Visit'}
                 </p>
               </a>
             ))}
           </div>
         </div>
       </section>
-
-      {/* 六大板块 */}
       <section id="topics" className="as-section-alt">
         <div className="as-container">
           <div className="mb-6 text-center">
             <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
-              <span className="as-heading-line">六大内容板块</span>
+              <span className="as-heading-line">
+                {jt('aboutPageData.content.sectionTopics', '内容板块')}
+              </span>
             </h2>
           </div>
-
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {CONTENT_SECTIONS.map(s => (
+            {TOPICS.map(s => (
               <div key={s.title} className="as-card p-4 text-center">
                 <span className="text-3xl">{s.icon}</span>
                 <h3 className="as-serif mt-2 text-sm font-bold text-[var(--as-primary-700)]">
@@ -194,79 +157,63 @@ export default function ContentPage() {
           </div>
         </div>
       </section>
-
-      {/* 播客 & 音乐 & 直播 — 按分类分组排列 */}
       <section id="podcast" className="as-section">
         <div className="as-container">
+          <div className="mb-6 text-center">
+            <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
+              <span className="as-heading-line">
+                {jt('aboutPageData.content.sectionPodcast', '播客·音乐·直播')}
+              </span>
+            </h2>
+          </div>
           <div className="grid gap-x-6 gap-y-8 lg:grid-cols-3">
-            {/* ───── 播客系列 ───── */}
             <div className="space-y-3">
               <h2 className="as-serif text-2xl font-bold text-[var(--as-primary-700)]">
-                🎙️ 播客系列
+                🎙️ {isEn ? 'Podcasts' : '播客系列'}
               </h2>
-              {PODCASTS.map((item, i) => (
+              {[0, 1].map(i => (
                 <div key={`p${i}`} className="as-card flex flex-col p-4">
-                  <h3 className="font-semibold text-[var(--as-primary-700)]">{item.title}</h3>
-                  <p className="mt-1 flex-1 text-sm text-[var(--as-gray-500)]">{item.desc}</p>
-                  <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">
-                    已在视频号平台发布，欢迎收听
-                  </span>
+                  <h3 className="font-semibold text-[var(--as-primary-700)]">
+                    {jt(`aboutPageData.content.podcasts.${i}.name`, '')}
+                  </h3>
+                  <p className="mt-1 flex-1 text-sm text-[var(--as-gray-500)]">
+                    {jt(`aboutPageData.content.podcasts.${i}.desc`, '')}
+                  </p>
                 </div>
               ))}
             </div>
-
-            {/* ───── 音乐系列 ───── */}
             <div className="space-y-3">
               <h2 className="as-serif text-2xl font-bold text-[var(--as-primary-700)]">
-                🎵 音乐系列
+                🎵 {isEn ? 'Music' : '音乐系列'}
               </h2>
-              {MUSICS.map((item, i) => (
+              {[0, 1].map(i => (
                 <div key={`m${i}`} className="as-card flex flex-col p-4">
-                  <h3 className="font-semibold text-[var(--as-primary-700)]">{item.title}</h3>
-                  <p className="mt-1 flex-1 text-sm text-[var(--as-gray-500)]">{item.desc}</p>
-                  <span className="mt-2 inline-block text-xs text-[var(--as-gray-400)]">
-                    已在视频号平台发布，欢迎收听
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* ───── 直播系列 ───── */}
-            <div className="space-y-3">
-              <h2 className="as-serif text-2xl font-bold text-[var(--as-primary-700)]">
-                📺 直播系列
-              </h2>
-              {LIVES.map((item, i) => (
-                <div key={`l${i}`} className="as-card flex flex-col p-4">
-                  <h3 className="font-semibold text-[var(--as-primary-700)]">{item.title}</h3>
-                  <p className="mt-1 flex-1 text-sm text-[var(--as-gray-500)]">{item.desc}</p>
-                  <div className="mt-2 flex items-center gap-2">
-                    <span className="rounded-full bg-[var(--as-primary-50)] px-2 py-0.5 text-xs text-[var(--as-primary-600)]">
-                      {item.episodes}
-                    </span>
-                    <span className="text-xs text-[var(--as-gray-400)]">🔗 回放已在视频号放出</span>
-                  </div>
+                  <h3 className="font-semibold text-[var(--as-primary-700)]">
+                    {jt(`aboutPageData.content.podcasts.${i + 2}.name`, '')}
+                  </h3>
+                  <p className="mt-1 flex-1 text-sm text-[var(--as-gray-500)]">
+                    {jt(`aboutPageData.content.podcasts.${i + 2}.desc`, '')}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </section>
-
-      {/* 底部引导 */}
       <section className="as-section">
         <div className="text-center">
-          <p className="text-[var(--as-gray-500)]">喜欢我的内容？来聊聊吧</p>
+          <p className="text-[var(--as-gray-500)]">
+            {jt('aboutPageData.content.ctaText', '喜欢我的内容？来聊聊吧')}
+          </p>
           <Link
             scroll={false}
             href="/about-simon/connect"
             className="mt-3 inline-block rounded-full bg-[var(--as-primary-600)] px-8 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--as-primary-700)]"
           >
-            联系我 →
+            {jt('aboutPageData.content.ctaBtn', '联系我 →')}
           </Link>
         </div>
       </section>
-
       <ScrollToTopButton />
     </div>
   );

@@ -6,22 +6,13 @@ import AboutHero from '@/components/about-simon/AboutHero';
 import ScrollToTopButton from '@/components/about-simon/ScrollToTopButton';
 import SectionNav from '@/components/about-simon/SectionNav';
 
-/* ─────────────────────────────────────
-   数据：章节导航
-   ───────────────────────────────────── */
-function useSections() {
-  const { t } = useTranslation();
-  return [
-    { id: 'ideology', label: t('aboutContent.philosophy.navIdeology') },
-    { id: 'methodology', label: t('aboutContent.philosophy.navMethodology') },
-    { id: 'stages', label: t('aboutContent.philosophy.navStages') },
-    { id: 'quotes', label: t('aboutContent.philosophy.navQuotes') },
-  ];
-}
+const SECTIONS = [
+  { id: 'ideology', label: '三配理念' },
+  { id: 'methodology', label: '方法论示例' },
+  { id: 'stages', label: '四阶模型' },
+  { id: 'quotes', label: '金句墙' },
+];
 
-/* ─────────────────────────────────────
-   数据：核心理念三配
-   ───────────────────────────────────── */
 const CORE_IDEOLOGY = [
   {
     icon: '🪙',
@@ -43,9 +34,6 @@ const CORE_IDEOLOGY = [
   },
 ];
 
-/* ─────────────────────────────────────
-   数据：四阶模型
-   ───────────────────────────────────── */
 const STAGES = [
   {
     step: 1,
@@ -68,7 +56,7 @@ const STAGES = [
     title: '积极生活',
     subtitle: 'Active Living',
     color: 'var(--as-primary-600)',
-    desc: '不是要在所有领域做到满分，而是守住工作与家庭的底盘。将体能、智力、创作三大兴趣变成日常——用运动经营肉身，用阅读喂养大脑，用创作表达灵魂。阶段性成就感与持续性成长感并行，才是积极生活。',
+    desc: '不是要在所有领域做到满分，而是守住工作与家庭的底盘。将体能、智力、创作三大兴趣变成日常——用运动经营肉身，用阅读喂养大脑，用创作表达灵魂。',
     methods: ['工作生活平衡', '体能兴趣', '智力兴趣', '创作兴趣', '持续成长'],
   },
   {
@@ -76,49 +64,40 @@ const STAGES = [
     title: '生命觉醒',
     subtitle: 'Awakening',
     color: 'var(--as-primary-700)',
-    desc: '从NPC觉醒为玩家——不再被动执行剧本，而是看清游戏规则，夺回选择权。工作的意义不是攀爬，是借事炼心；生老病死不是恐惧，是必经的关卡。走到最后，要的是生命自洽——内不拧巴，外不逢迎，自己跟自己和解。',
+    desc: '从NPC觉醒为玩家——不再被动执行剧本，而是看清游戏规则，夺回选择权。走到最后，要的是生命自洽——内不拧巴，外不逢迎，自己跟自己和解。',
     methods: ['国学修行指引', '素食生活实践', '持戒自律体系'],
   },
 ];
 
-/* ─────────────────────────────────────
-   数据：方法论卡片
-   ───────────────────────────────────── */
 const METHODOLOGIES = [
   {
     title: '因地思维',
     tag: '思维模式',
     desc: '决策四问：这是谁的问题？他在什么处境下？他的核心诉求是什么？什么方案能在这个处境里生长？',
-    desc2:
-      '菩萨畏因，凡夫畏果——真正的高手不在结果上纠结，而在因上着力。与其焦虑裁员之后怎么办，不如追问：哪些因是我今天还能种的？',
+    desc2: '菩萨畏因，凡夫畏果——真正的高手不在结果上纠结，而在因上着力。',
     example:
       '面对裁员：不是先想补偿方案，而是先问——这个人处在什么人生阶段？他最怕什么？什么转型路径对他最可行？',
   },
   {
     title: '借假修真',
     tag: '人生哲学',
-    desc: '在每一个暂时扮演的斜杠角色中修炼自己真实的内心。工作即道场，烦恼是菩提——如何借由每次升起的烦恼内观自己的心念起伏，这才是真正的修行功课。',
-    example:
-      "5000+裁员经历：每一次艰难对话，都是修炼慈悲心的机会。裁员是'假'，修出的同理心是'真'。",
+    desc: '在每一个暂时扮演的斜杠角色中修炼自己真实的内心。工作即道场，烦恼是菩提。',
+    example: '5000+裁员经历：每一次艰难对话，都是修炼慈悲心的机会。',
   },
   {
     title: '组织四象限',
     tag: '诊断工具',
-    desc: '人效 × 文化两个维度，将组织分为四个象限：高人效高文化（繁荣态）、高人效低文化（机械态）、低人效高文化（养老态）、低人效低文化（僵尸态）。',
-    example: '某中高端酒店集群：人效达标但文化断层→先修复文化纽带，再推组织精简，避免硬着陆。',
+    desc: '人效 × 文化两个维度，将组织分为四个象限：高人效高文化（繁荣态）到低人效低文化（僵尸态）。',
+    example: '某中高端酒店集群：人效达标但文化断层→先修复文化纽带，再推组织精简。',
   },
   {
     title: '灵魂拷问',
     tag: '自我探索',
-    desc: '你真正内心想要的目标愿景是什么？你想此生想成为一个什么样的人？你对当下自己的满意度打几分？如果还剩余1年生命，你当下会如何去生活？步步深入，去触达自己内心真正的生命自洽...',
-    example:
-      "一位40岁的高管：被问到'如果还剩余1年生命'时当场泪崩→原来他一直活在别人的期待里，从未问过自己真正想要什么。",
+    desc: '你真正内心想要的目标愿景是什么？你想此生想成为一个什么样的人？如果还剩余1年生命，你当下会如何去生活？',
+    example: '一位40岁的高管：被问到"如果还剩余1年生命"时当场泪崩。',
   },
 ];
 
-/* ─────────────────────────────────────
-   数据：金句墙
-   ───────────────────────────────────── */
 const QUOTES = [
   { text: '工作不是苦修，但可以是道场。', category: '借假修真' },
   { text: '裁员是组织的新陈代谢，但每一个被代谢的人，都值得被看见。', category: '借假修真' },
@@ -140,28 +119,66 @@ const QUOTES = [
   { text: '向死而生不是悲观，是最彻底的清醒。', category: '生命觉醒' },
 ];
 
-/* ─────────────────────────────────────
-   Page 2: 理念体系
-   ───────────────────────────────────── */
 export default function PhilosophyPage() {
-  const sections = useSections();
+  const { t, i18n } = useTranslation();
+  const isEn = !(i18n.language || 'zh-CN').startsWith('zh');
+
+  const sections = isEn
+    ? [
+        { id: 'ideology', label: t('aboutContent.philosophy.navIdeology') },
+        { id: 'methodology', label: t('aboutContent.philosophy.navMethodology') },
+        { id: 'stages', label: t('aboutContent.philosophy.navStages') },
+        { id: 'quotes', label: t('aboutContent.philosophy.navQuotes') },
+      ]
+    : SECTIONS.map(s => ({ ...s, label: s.label }));
+
+  const coreIdeology = isEn
+    ? CORE_IDEOLOGY.map((item, i) => ({
+        ...item,
+        title: t(`aboutPageData.philosophy.coreIdeology.${i}.title`),
+        desc: t(`aboutPageData.philosophy.coreIdeology.${i}.desc`),
+      }))
+    : CORE_IDEOLOGY;
+  const stages = isEn
+    ? STAGES.map((s, i) => ({
+        ...s,
+        title: t(`aboutPageData.philosophy.stages.${i}.title`),
+        desc: t(`aboutPageData.philosophy.stages.${i}.desc`),
+        methods:
+          (t(`aboutPageData.philosophy.stagesMethods.${i}`, { returnObjects: true }) as string[]) ||
+          s.methods,
+      }))
+    : STAGES;
+  const methodologies = isEn
+    ? METHODOLOGIES.map((m, i) => ({
+        ...m,
+        title: t(`aboutPageData.philosophy.methodologies.${i}.title`),
+        tag: t(`aboutPageData.philosophy.methodologies.${i}.tag`),
+        desc: t(`aboutPageData.philosophy.methodologies.${i}.desc`),
+        desc2: t(`aboutPageData.philosophy.methodologies.${i}.desc2`),
+        example: t(`aboutPageData.philosophy.methodologies.${i}.example`),
+      }))
+    : METHODOLOGIES;
+  const quotes = isEn
+    ? QUOTES.map((q, i) => ({
+        text: t(`aboutPageData.philosophy.quotes.${i}.text`),
+        category: t(`aboutPageData.philosophy.quotes.${i}.cat`),
+      }))
+    : QUOTES;
 
   return (
     <div className="as-with-sidebar">
-      <SectionNav sections={sections} />
-
+      <SectionNav sections={isEn ? sections : SECTIONS} />
       <AboutHero
         label="Philosophy"
-        title="「借假修真 向死而生」"
-        subtitle="物质低配 · 能力高配 · 精神顶配"
-        subtext="不是鸡汤，是活出来的生命配方"
+        title={isEn ? t('aboutPageData.philosophy.heroTitle') : '「借假修真 向死而生」'}
+        subtitle={isEn ? t('aboutPageData.philosophy.heroSub') : '物质低配 · 能力高配 · 精神顶配'}
+        subtext={isEn ? t('aboutPageData.philosophy.heroText') : '不是鸡汤，是活出来的生命配方'}
       />
-
-      {/* 核心理念：三配卡片 */}
       <section id="ideology" className="as-section">
         <div className="as-container">
           <div className="mx-auto grid max-w-4xl gap-5 lg:grid-cols-3">
-            {CORE_IDEOLOGY.map(item => (
+            {coreIdeology.map(item => (
               <div key={item.title} className="as-card p-5 text-center">
                 <div className="text-4xl">{item.icon}</div>
                 <h3 className="as-serif mt-4 text-xl font-bold text-[var(--as-primary-700)]">
@@ -176,18 +193,17 @@ export default function PhilosophyPage() {
           </div>
         </div>
       </section>
-
-      {/* 方法论 */}
       <section id="methodology" className="as-section-alt">
         <div className="as-container">
           <div className="mb-6 text-center">
             <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
-              <span className="as-heading-line">方法论示例</span>
+              <span className="as-heading-line">
+                {isEn ? t('aboutPageData.philosophy.sectionMethodology') : '方法论示例'}
+              </span>
             </h2>
           </div>
-
           <div className="grid gap-5 lg:grid-cols-2">
-            {METHODOLOGIES.map(m => (
+            {methodologies.map(m => (
               <div key={m.title} className="as-card p-5">
                 <span className="mb-3 inline-block rounded-full bg-[var(--as-accent-light)] px-3 py-1 text-xs font-semibold text-[var(--as-accent)]">
                   {m.tag}
@@ -202,7 +218,9 @@ export default function PhilosophyPage() {
                   </p>
                 )}
                 <div className="mt-3 rounded-lg bg-[var(--as-primary-50)] p-3">
-                  <p className="text-xs text-[var(--as-gray-500)]">💡 示例</p>
+                  <p className="text-xs text-[var(--as-gray-500)]">
+                    💡 {isEn ? 'Example' : '示例'}
+                  </p>
                   <p className="mt-1 text-sm text-[var(--as-primary-700)]">{m.example}</p>
                 </div>
               </div>
@@ -210,19 +228,22 @@ export default function PhilosophyPage() {
           </div>
         </div>
       </section>
-
-      {/* 四阶成长模型 */}
       <section id="stages" className="as-section">
         <div className="as-container">
           <div className="mb-6 text-center">
             <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
-              <span className="as-heading-line">四阶成长模型</span>
+              <span className="as-heading-line">
+                {isEn ? t('aboutPageData.philosophy.sectionStagesTitle') : '四阶成长模型'}
+              </span>
             </h2>
-            <p className="mt-2 text-sm text-[var(--as-gray-500)]">从觉察到觉醒，一条可验证的路径</p>
+            <p className="mt-2 text-sm text-[var(--as-gray-500)]">
+              {isEn
+                ? t('aboutPageData.philosophy.sectionStagesSub')
+                : '从觉察到觉醒，一条可验证的路径'}
+            </p>
           </div>
-
           <div className="mx-auto max-w-3xl space-y-3">
-            {STAGES.map(stage => (
+            {stages.map(stage => (
               <div
                 key={stage.step}
                 className="as-card p-5"
@@ -262,19 +283,20 @@ export default function PhilosophyPage() {
           </div>
         </div>
       </section>
-
-      {/* 金句墙 */}
       <section id="quotes" className="as-section-alt">
         <div className="as-container">
           <div className="mb-6 text-center">
             <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
-              <span className="as-heading-line">金句墙</span>
+              <span className="as-heading-line">
+                {isEn ? t('aboutPageData.philosophy.sectionQuotesTitle') : '金句墙'}
+              </span>
             </h2>
-            <p className="mt-2 text-sm text-[var(--as-gray-500)]">不是心灵鸡汤，是实修笔记</p>
+            <p className="mt-2 text-sm text-[var(--as-gray-500)]">
+              {isEn ? t('aboutPageData.philosophy.sectionQuotesSub') : '不是心灵鸡汤，是实修笔记'}
+            </p>
           </div>
-
           <div className="columns-1 gap-3 sm:columns-2 lg:columns-3">
-            {QUOTES.map((q, i) => (
+            {quotes.map((q, i) => (
               <div
                 key={i}
                 className="mb-3 break-inside-avoid rounded-xl border border-[var(--as-primary-100)] bg-white p-4"
@@ -288,21 +310,20 @@ export default function PhilosophyPage() {
           </div>
         </div>
       </section>
-
-      {/* 底部引导 */}
       <section className="as-section-alt">
         <div className="text-center">
-          <p className="text-sm text-[var(--as-gray-500)]">想知道这些理念如何变成服务？</p>
+          <p className="text-sm text-[var(--as-gray-500)]">
+            {isEn ? t('aboutPageData.philosophy.ctaText') : '想知道这些理念如何变成服务？'}
+          </p>
           <Link
             scroll={false}
             href="/about-simon/services"
             className="mt-2 inline-block rounded-full bg-[var(--as-primary-600)] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--as-primary-700)]"
           >
-            查看服务产品 →
+            {isEn ? t('aboutPageData.philosophy.ctaBtn') : '查看服务产品 →'}
           </Link>
         </div>
       </section>
-
       <ScrollToTopButton />
     </div>
   );

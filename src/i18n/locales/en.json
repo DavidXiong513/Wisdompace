@@ -272,7 +272,414 @@
       "PSC/PSS Sales Coaching",
       "Bilingual National Tour Guide",
       "High School Chinese Teacher License"
-    ]
+    ],
+    "philosophy": {
+      "heroTitle": "Practice Truth, Live Toward Death",
+      "heroSub": "Minimal Material · Maximal Capability · Supreme Spirit",
+      "heroText": "Not chicken soup — a recipe lived out",
+      "sectionMethodology": "Methodology Examples",
+      "sectionStagesTitle": "Four-Stage Growth Model",
+      "sectionStagesSub": "From awareness to awakening, a verifiable path",
+      "sectionQuotesTitle": "Memorable Quotes",
+      "sectionQuotesSub": "Not motivational speeches, practice notes",
+      "ctaText": "Want to see how these ideas become services?",
+      "ctaBtn": "View Services →",
+      "coreIdeology": [
+        {
+          "title": "Minimal Material",
+          "desc": "Not ascetic restraint, but active choice. 13 years vegetarian, simple living — subtract excess desire to hear your true voice. Less in matter, more in life."
+        },
+        {
+          "title": "Maximal Capability",
+          "desc": "20 years across 6 industries, from trainer to Group HRD, from client-side to consultant, from HRD to Vibe Coding — always learning, always practicing. Capability is the only asset that will never betray you."
+        },
+        {
+          "title": "Supreme Spirit",
+          "desc": "Practice truth through every role, live toward death. Work is your dojo, relationships are your mirror, every role is practice. Supreme spirit is not transcending the mundane — it's living authentically within it."
+        }
+      ],
+      "stages": [
+        {
+          "title": "See Yourself",
+          "desc": "The starting point of all change is seeing. Seeing your patterns, beliefs, blind spots. Not judgment, but awareness."
+        },
+        {
+          "title": "Personalize",
+          "desc": "No one-size-fits-all method. Adapt to context, tailor to the person — let every solution grow in the client's own soil."
+        },
+        {
+          "title": "Live Actively",
+          "desc": "Not perfection in every area, but holding the foundation of work and family. Turn physical, intellectual, and creative interests into daily practice — exercise the body, feed the mind, express the soul."
+        },
+        {
+          "title": "Awaken",
+          "desc": "Wake up from NPC to player — no longer passively executing a script, but seeing the game rules and reclaiming choice. Work is not about climbing, but refining the heart through events. Life, aging, illness, death — not fear, but inevitable stages."
+        }
+      ],
+      "stagesMethods": [
+        ["MBTI Insight", "360° Feedback Decoding", "Career Narrative"],
+        ["Context-Based Decision 4Qs", "Strengths Anchoring", "Scenario Design"],
+        [
+          "Work-Life Balance",
+          "Physical Interest",
+          "Intellectual Interest",
+          "Creative Interest",
+          "Continuous Growth"
+        ],
+        ["Eastern Wisdom Guidance", "Vegetarian Practice", "Precept Discipline"]
+      ],
+      "methodologies": [
+        {
+          "title": "Context-Based Thinking",
+          "tag": "Mindset",
+          "desc": "Four decision questions: Whose problem is this? What situation are they in? What is their core need? What solution can grow in this context?",
+          "desc2": "Bodhisattvas fear causes, ordinary people fear results — true masters focus on causes, not outcomes. Instead of worrying about layoffs, ask: what causes can I plant today?",
+          "example": "Facing layoffs: don't start with compensation — ask — what life stage is this person in? What do they fear most? What transition path works best for them?"
+        },
+        {
+          "title": "Practice Truth Through Roles",
+          "tag": "Life Philosophy",
+          "desc": "Cultivate your true inner self through every temporarily played role. Work is the dojo,烦恼 is bodhi — how to observe your mind's fluctuations through each arising frustration, that is the real practice.",
+          "example": "5000+ layoff experiences: every difficult conversation is an opportunity to cultivate compassion. The layoff is 'illusion'; the empathy cultivated is 'truth'."
+        },
+        {
+          "title": "Organizational Quadrant",
+          "tag": "Diagnostic Tool",
+          "desc": "Efficiency × Culture: two dimensions, four quadrants — high efficiency/high culture (thriving), high efficiency/low culture (mechanical), low efficiency/high culture (coasting), low efficiency/low culture (zombie).",
+          "example": "A mid-to-high-end hotel cluster: efficiency met target but culture was fractured → repair cultural bonds first, then restructure, avoiding hard landing."
+        },
+        {
+          "title": "Soul Questions",
+          "tag": "Self-Exploration",
+          "desc": "What is your true inner vision? What kind of person do you want to become? How satisfied are you with yourself right now? If you had one year left, how would you live? Step deeper to reach your authentic self.",
+          "example": "A 40-year-old executive broke down when asked 'if you had one year left' — he had been living for others' expectations, never asking what he truly wanted."
+        }
+      ],
+      "quotes": [
+        { "text": "Work is not asceticism, but it can be a dojo.", "cat": "Practice Truth" },
+        {
+          "text": "Layoffs are an organization's metabolism, but every person metabolized deserves to be seen.",
+          "cat": "Practice Truth"
+        },
+        {
+          "text": "True freedom is not doing whatever you want — it's still being yourself in every role you must play.",
+          "cat": "Practice Truth"
+        },
+        {
+          "text": "Wealth is a lesson, not an answer. What you cultivate is your relationship with desire.",
+          "cat": "Practice Truth"
+        },
+        {
+          "text": "Practice through every role is not escaping the mundane — it's finding the path to truth within it.",
+          "cat": "Practice Truth"
+        },
+        {
+          "text": "There is no one-size-fits-all method, only context-based wisdom.",
+          "cat": "Context Thinking"
+        },
+        {
+          "text": "Management's greatest arrogance is judging others' problems from your own situation.",
+          "cat": "Context Thinking"
+        },
+        {
+          "text": "Consulting is not giving answers — it's helping others grow their own.",
+          "cat": "Context Thinking"
+        },
+        {
+          "text": "Adapting to context doesn't mean no principles — it's principles expressed flexibly in specific situations.",
+          "cat": "Context Thinking"
+        },
+        {
+          "text": "Every organization's illness is known only to its own body.",
+          "cat": "Context Thinking"
+        },
+        {
+          "text": "Awakening is not leaving the world — it's no longer getting lost within it.",
+          "cat": "Awakening"
+        },
+        {
+          "text": "Precepts are not bondage — they draw a safe boundary for freedom.",
+          "cat": "Awakening"
+        },
+        {
+          "text": "The body is the vessel of practice. Mistreat it and you lose the right to practice.",
+          "cat": "Awakening"
+        },
+        {
+          "text": "Life's organization is not about throwing away — it's seeing clearly what's worth keeping.",
+          "cat": "Awakening"
+        },
+        {
+          "text": "Living toward death is not pessimism — it's the ultimate clarity.",
+          "cat": "Awakening"
+        }
+      ]
+    },
+    "services": {
+      "heroTitle": "Dual-Wheel Drive, Unity of Knowledge & Action",
+      "heroDesc": "One wheel serves organizations, the other serves individuals. Understanding both corporate pain and individual struggles.",
+      "sectionBServices": "B-Side: Organizational Projects",
+      "sectionCProducts": "C-Side: Individual Consulting",
+      "sectionStory": "Stories Behind 5000+ Layoffs",
+      "sectionClients": "Enterprise Clients Served",
+      "statsTitle": "Career Development Model",
+      "statsSub": "From organizational needs to individual growth — both perspectives are essential",
+      "bSideCTA": "Is your organization experiencing",
+      "bSideCTAItems": [
+        "declining efficiency",
+        "talent gaps",
+        "cultural erosion",
+        "resistance to change"
+      ],
+      "bSideCTATail": "and need cost reduction and restructuring but don't know where to start?",
+      "bSideCTAButton": "Contact Me →",
+      "cSideCTA": "Are you struggling with",
+      "cSideCTAItems": [
+        "career confusion",
+        "hesitation about job change",
+        "growth bottlenecks",
+        "self-doubt",
+        "lack of motivation"
+      ],
+      "cSideCTATail": "and other challenges?",
+      "cSideCTAButton": "Let's Talk →",
+      "bServices": [
+        {
+          "title": "Organizational Transformation & Upgrade",
+          "items": [
+            "Org Diagnosis & Quadrant Positioning",
+            "Change Path Design & Execution",
+            "Org Structure Optimization & Talent Review",
+            "Cultural Reshaping & Values Implementation"
+          ]
+        },
+        {
+          "title": "Talent Management & Pipeline",
+          "items": [
+            "Key Role Competency Modeling",
+            "Talent Review & 9-Box Placement",
+            "Succession Planning & Pipeline Building",
+            "High-Potential Acceleration"
+          ]
+        },
+        {
+          "title": "Organizational Efficiency Improvement",
+          "items": [
+            "Efficiency KPI System Setup",
+            "Restructuring & Workforce Optimization",
+            "Performance & Compensation System Design",
+            "AI Tools & Org Empowerment"
+          ]
+        },
+        {
+          "title": "General Management Training & Workshops",
+          "items": [
+            "HR for Non-HR Managers",
+            "Influence Without Authority",
+            "Gen Z Insights & Management",
+            "Team Trust & Collaboration"
+          ]
+        }
+      ],
+      "cProducts": [
+        {
+          "title": "MBTI Professional Assessment v2.1",
+          "price": "Contact for price",
+          "desc": "93-question complete version + professional report + 1-on-1 consultation (30min). Not a simple label, but a deep entry into understanding your personality patterns.",
+          "badge": "",
+          "features": [
+            "4-Dimension Deep Analysis",
+            "Career Fit Recommendations",
+            "Communication Style Guide",
+            "1-on-1 Consultation"
+          ]
+        },
+        {
+          "title": "Career Planning Consultation",
+          "price": "Contact for price",
+          "desc": "Based on 20 years of HR experience + global career counselor certification, helping you clarify career direction and create an actionable transition plan.",
+          "badge": "Flagship",
+          "features": [
+            "Current State Diagnosis",
+            "Direction Anchoring",
+            "Path Planning",
+            "Action Plan"
+          ]
+        },
+        {
+          "title": "42-Item Ability & Interest Assessment",
+          "price": "Free",
+          "desc": "Four-quadrant classification: Strengths, Potential, Reserve, Release. Data tells you what to cultivate and what to let go.",
+          "badge": "",
+          "features": [
+            "42 Ability & Interest Dimensions",
+            "4-Quadrant Visualization",
+            "Development Suggestions"
+          ]
+        },
+        {
+          "title": "Psychological & Emotional Self-Assessment",
+          "price": "Free",
+          "desc": "SDS Depression + SAS Anxiety + LES Life Events scales — triple assessment of your psychological state.",
+          "badge": "",
+          "features": [
+            "3-Dimension Assessment",
+            "Risk Level Classification",
+            "Professional Suggestions"
+          ]
+        },
+        {
+          "title": "Three-Question Decision Method",
+          "price": "Free",
+          "desc": "A concise decision tool: What do you truly want? What are you willing to give up? Are you ready?",
+          "badge": "",
+          "features": ["Scenario-Based Guidance", "Decision Report"]
+        },
+        {
+          "title": "Customized Consulting",
+          "price": "Contact for price",
+          "desc": "Not constrained by standard processes. Your issues may cross domains and stages. I'll design a tailored solution for you.",
+          "badge": "",
+          "features": [
+            "Deep Needs Assessment",
+            "Tailored Solution Design",
+            "1-on-1 Full Support",
+            "Flexible Iteration"
+          ]
+        }
+      ],
+      "storyTitle": "5000+ Stories Behind Layoffs",
+      "storyP1": "5000 is not a cold number. It's 5000 late-night calls, 5000 difficult conversations, 5000 turning points in people's lives. Behind every number is a specific face, a family, a life going through its storm.",
+      "storyP2": "At its core, working for a company is a win-win balance between organization and individual — you contribute ability and time, the company provides platform and return. But when business pivots, strategy shifts, or your own value proposition changes, this balance breaks. Whether you jump or are pushed, it's the same: balance is lost, time to choose again.",
+      "storyP3": "I've seen a post-95 employee win the excellence award in the afternoon and get laid off that evening — not because she wasn't good enough, but because the business line was cut. I've seen an 18-year veteran HR draft her own departure agreement and sit in her car for two hours. I've also seen middle-aged people who felt relieved after being laid off: 'I've wanted to leave for a long time, I just never had the courage.'",
+      "storyP4": "What I can do is not choose between 'cold' and 'warm' — because this work is inherently contradictory. What I strive for is: let those leaving leave with dignity, let those staying not live in fear, so that every time the balance breaks, both sides can turn around gracefully.",
+      "storyQuote": "Layoffs are an organization's metabolism, but every person metabolized deserves to be seen.",
+      "stats": [
+        { "value": "9.7/10", "label": "Zaihai Rating" },
+        { "value": "125+", "label": "Enterprise Clients" },
+        { "value": "~1,000", "label": "Individual Clients" },
+        { "value": "985×2", "label": "Education" }
+      ],
+      "clientsLabel": "Industries Served: E-commerce · OTA · Hospitality · Automotive · Medical Devices · Pharma · Semiconductor",
+      "ctaText": "Want to see what I've written?",
+      "ctaBtn": "My Content →"
+    },
+    "content": {
+      "heroTitle": "Content Works",
+      "heroSub": "Writing · Video · Audio · Music",
+      "heroText": "Every form of creation is another practice of truth. Output is not the goal; shared cultivation is.",
+      "navPlatforms": "Platforms",
+      "navTopics": "Content Topics",
+      "navPodcast": "Podcast, Music & Live",
+      "sectionPlatforms": "Platforms & Channels",
+      "sectionTopics": "Content Topics",
+      "sectionPodcast": "Podcast, Music & Live Streams",
+      "platforms": [
+        {
+          "name": "Zaihai",
+          "id": "Career Counselor",
+          "desc": "1-on-1 career counseling, 9.7/10 rating"
+        },
+        {
+          "name": "Xiaohongshu",
+          "id": "@xiangkaxiong",
+          "desc": "Life reflections, health科普, travel guides"
+        },
+        {
+          "name": "WeChat Official",
+          "id": "借假修真的思考熊",
+          "desc": "Eastern wisdom, classic texts, life science, fitness logs"
+        },
+        {
+          "name": "Douyin/TikTok",
+          "id": "思考熊 Simon",
+          "desc": "Career insights, life philosophy short videos"
+        },
+        {
+          "name": "Bilibili",
+          "id": "思考熊Simon",
+          "desc": "In-depth talks, book sharing, life organization series"
+        },
+        {
+          "name": "Podcast",
+          "id": "借假修真的思考熊",
+          "desc": "Audio blog — life reflection channel"
+        }
+      ],
+      "topics": [
+        {
+          "title": "Career & Workplace",
+          "desc": "20 years of HR insight — organizational dynamics, career planning, workplace psychology, growth mindsets"
+        },
+        {
+          "title": "Life & Philosophy",
+          "desc": "Buddhist practice in daily life, life-death education, life organization methodology"
+        },
+        {
+          "title": "Health & Wellness",
+          "desc": "13 years vegetarian experience, TCM health preservation, exercise & fitness, dementia prevention"
+        },
+        {
+          "title": "Tools & Assessments",
+          "desc": "Self-assessment tools, personality tests, decision-making frameworks, productivity"
+        },
+        {
+          "title": "Reading & Learning",
+          "desc": "Book reviews, classic interpretations, learning methods, knowledge management"
+        }
+      ],
+      "podcasts": [
+        {
+          "name": "Audio Blog",
+          "desc": "Life reflections, daily insights, casual chats about practice"
+        },
+        {
+          "name": "Music Works",
+          "desc": "Original songs created with AI — expressing emotions through melody"
+        },
+        {
+          "name": "Live Streams",
+          "desc": "Irregular live talks on career, life, and practice, answering questions in real-time"
+        }
+      ],
+      "ctaText": "Inspired to have a conversation?",
+      "ctaBtn": "Contact Me →"
+    },
+    "connect": {
+      "heroTitle": "Let's Talk",
+      "heroSub": "Organizational transformation, career confusion, or just want to chat — all are welcome",
+      "heroText": "Every connection is a shared cultivation. Looking forward to meeting you.",
+      "navContact": "Contact Info",
+      "navForm": "Send a Message",
+      "navFaq": "FAQ",
+      "sectionContact": "Contact Information",
+      "sectionForm": "Send a Message",
+      "sectionFaq": "Frequently Asked Questions",
+      "contactMethods": [
+        { "icon": "📧", "title": "Email", "value": "1318952797@qq.com" },
+        { "icon": "📱", "title": "WeChat", "value": "DavidXiong513" },
+        { "icon": "💼", "title": "LinkedIn", "value": "Simon Xiong" },
+        { "icon": "🌐", "title": "Zaihai", "value": "Career Counselor, 9.7/10 Rating" }
+      ],
+      "faqItems": [
+        {
+          "q": "What types of clients do you serve?",
+          "a": "Corporate clients (organizational transformation, efficiency improvement, talent management) and individual clients (career planning, MBTI assessment, life organization)."
+        },
+        {
+          "q": "How long is a typical consultation?",
+          "a": "Individual career consultations are 60-90 minutes. Corporate projects vary by scope — from 2-day workshops to multi-month transformations."
+        },
+        {
+          "q": "Is it online or in-person?",
+          "a": "Most consultations are online (video/audio). On-site corporate visits can be arranged. I'm based in Shanghai."
+        },
+        {
+          "q": "What's your cancellation policy?",
+          "a": "Free cancellation up to 24 hours before the session. Within 24 hours, 50% fee applies."
+        }
+      ]
+    }
   },
   "language": {
     "zh-CN": "简体中文",
