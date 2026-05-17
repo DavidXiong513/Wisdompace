@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation';
 
 import ChapterTopNav from '@/components/ChapterTopNav';
 import { ChapterToc } from '@/components/ChapterToc';
-import { ChapterReader } from '@/components/chapter/ChapterReader';
 import { ScrollToTopButton } from '@/components/chapter/ScrollToTopButton';
 import ChapterHeader from '@/components/chapter/ChapterHeader';
+import ClientChapterContent from '@/components/chapter/ClientChapterContent';
 import DonateButton from '@/components/DonateButton';
 import { getChapterBySlug, chapters } from '@/data/chapters';
 
@@ -76,9 +76,9 @@ export default async function ChapterPage({ params }: Props) {
                     description={chapter.description}
                   />
 
-                  {/* 章节核心内容渲染器 (带进度追踪) */}
+                  {/* 章节核心内容渲染器 (带进度追踪 + 翻译) */}
                   <div className="chapter-content-sections">
-                    <ChapterReader chapter={chapter} />
+                    <ClientChapterContent chapter={chapter} />
                   </div>
 
                   {/* 底部版权信息 */}

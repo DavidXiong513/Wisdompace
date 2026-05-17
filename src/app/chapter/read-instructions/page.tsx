@@ -1,3 +1,4 @@
+'use no memo';
 'use client';
 
 import { notFound } from 'next/navigation';
@@ -8,28 +9,18 @@ import { ChapterReader } from '@/components/chapter/ChapterReader';
 import { ScrollToTopButton } from '@/components/chapter/ScrollToTopButton';
 import DonateButton from '@/components/DonateButton';
 import { getChapterBySlug } from '@/data/chapters';
+import { useTranslatedChapter } from '@/lib/hooks/useTranslatedChapter';
 
 const CHAPTER_SLUG = 'read-instructions';
 
-const chapterKeyMap: Record<string, string> = {
-  'read-instructions': 'chapter.readInstructions',
-};
-
-const chapterSubKeyMap: Record<string, string> = {
-  'read-instructions': 'chapter.beforeStart',
-};
-
-const chapterDescKeyMap: Record<string, string> = {
-  'read-instructions': 'chapter.readInstructionsDesc',
-};
-
 export default function ReadInstructionsPage() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const chapter = getChapterBySlug(CHAPTER_SLUG);
   if (!chapter) notFound();
 
-  const currentLang = i18n.language || 'zh-CN';
-  const isChinese = currentLang.startsWith('zh');
+  const translated = useTranslatedChapter(chapter);
+  const isChinese = (i18n.language || 'zh-CN').startsWith('zh');
+  const display = isChinese ? chapter : translated;
 
   return (
     <div className="relative min-h-screen bg-[#F5F0E8]">
@@ -46,7 +37,7 @@ export default function ReadInstructionsPage() {
         <main className="mx-auto max-w-[min(1800px,96vw)] px-6 pt-8 pb-20 sm:pt-10">
           {/* 左侧固定目录导航 */}
           <div className="lg:fixed lg:top-32 lg:left-6 lg:w-64">
-            <ChapterToc chapterSlug={chapter.slug} sections={chapter.sections} variant="sidebar" />
+            <ChapterToc chapterSlug={display.slug} sections={display.sections} variant="sidebar" />
           </div>
 
           <div className="lg:ml-[280px]">
@@ -58,26 +49,18 @@ export default function ReadInstructionsPage() {
                     {isChinese ? 'Prologue' : '序言'}
                   </p>
                   <h1 className="mt-4 text-3xl font-bold tracking-tight text-[#4A3728] sm:text-4xl lg:text-5xl">
-                    {isChinese
-                      ? chapter.title
-                      : t(chapterKeyMap[CHAPTER_SLUG] ?? 'chapter.readInstructions')}
+                    {display.title}
                   </h1>
-                  <p className="mt-3 text-lg font-medium text-[#6A6256]">
-                    {isChinese
-                      ? chapter.subtitle
-                      : t(chapterSubKeyMap[CHAPTER_SLUG] ?? 'chapter.beforeStart')}
-                  </p>
+                  <p className="mt-3 text-lg font-medium text-[#6A6256]">{display.subtitle}</p>
                   <div className="mx-auto mt-6 h-[2px] w-16 bg-[#C9A15A]" />
                   <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-[#8A7E6A]">
-                    {isChinese
-                      ? chapter.description
-                      : t(chapterDescKeyMap[CHAPTER_SLUG] ?? 'chapter.readInstructionsDesc')}
+                    {display.description}
                   </p>
                 </header>
 
                 {/* 章节核心内容渲染器 (带进度追踪) */}
                 <div className="chapter-content-sections">
-                  <ChapterReader chapter={chapter} />
+                  <ChapterReader chapter={display} />
                 </div>
 
                 {/* 底部版权信息 */}

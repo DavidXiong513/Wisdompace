@@ -71,6 +71,75 @@
     "stateEn": "State Clearly",
     "farewellEn": "Farewell Gracefully"
   },
+  "chapterContent": {
+    "read-instructions": {
+      "origin": "Origin & Motivation",
+      "intention": "Intention",
+      "preparedness": "Readiness Check",
+      "framework": "Framework",
+      "usage": "How to Use",
+      "reminders": "Five Reminders",
+      "ai-knowledge-base": "AI Knowledge Base"
+    },
+    "chapter-1": {
+      "stop-and-look": "Stop and See Yourself",
+      "personality-tests": "Personality Self-Assessment",
+      "career-values": "Career Values Assessment",
+      "ability-assessment": "Social Ability Self-Assessment",
+      "social-roles": "My Social Roles",
+      "summary": "Rediscover Yourself"
+    },
+    "chapter-2": {
+      "life-countdown": "See the Timeline of Life",
+      "emotional-check": "Emotional State Check",
+      "passive-vs-active": "Chosen Life vs Active Choice",
+      "life-fun": "Life's Joys & Health Foundation",
+      "health-body": "Caring for Your Body · Investing in the Future",
+      "community-aging": "Plan Ahead · New Community Aging",
+      "summary": "Live in the Now, Invest in the Future"
+    },
+    "chapter-3": {
+      "responsibility": "What is Responsibility",
+      "responsibility-list": "My Responsibility Checklist",
+      "three-questions": "Three Questions for Major Decisions",
+      "choice-rights": "Advance Directives",
+      "arrangement": "Choosing Your Designated Agent",
+      "summary": "Leaving No Regrets Behind"
+    },
+    "chapter-4": {
+      "face-goodbye": "Facing Farewell",
+      "no-regrets": "Leave No Regrets",
+      "goodbye-list": "My Farewell Checklist",
+      "goodbye-way": "Ways to Say Goodbye",
+      "ready": "Final Preparations",
+      "summary": "A Graceful Farewell"
+    }
+  },
+  "aboutContent": {
+    "philosophy": {
+      "navIdeology": "Three-Pillar Philosophy",
+      "navMethodology": "Methodology Examples",
+      "navStages": "Four-Stage Model",
+      "navQuotes": "Memorable Quotes"
+    },
+    "services": {
+      "navCoaching": "Coaching Services",
+      "navConsulting": "Consulting Services",
+      "navWorkshop": "Workshops & Training",
+      "navProcess": "Service Process"
+    },
+    "content": {
+      "navAll": "All Works",
+      "navWriting": "Writing",
+      "navVideo": "Video",
+      "navAudio": "Audio"
+    },
+    "connect": {
+      "navContact": "Contact Info",
+      "navForm": "Send a Message",
+      "navFaq": "FAQ"
+    }
+  },
   "about": {
     "backToMain": "← A Life Organized",
     "siteName": "Simon Xiong",
