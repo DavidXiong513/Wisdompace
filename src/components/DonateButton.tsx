@@ -2,9 +2,12 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 export default function DonateButton() {
   const [show, setShow] = useState(false);
+  const { t, i18n } = useTranslation();
+  const isEn = !(i18n.language || 'zh-CN').startsWith('zh');
 
   return (
     <>
@@ -12,7 +15,7 @@ export default function DonateButton() {
         onClick={() => setShow(true)}
         className="inline-flex items-center gap-1.5 rounded-full border border-[#C87941]/50 bg-[#C87941]/10 px-3.5 py-1 text-xs font-medium text-[#C87941] transition-all hover:border-[#C87941] hover:bg-[#C87941]/15"
       >
-        🥤 请思考熊喝杯豆浆
+        {isEn ? '☕' : '🥤'} {isEn ? 'Buy the author a coffee' : '请思考熊喝杯豆浆'}
       </button>
 
       {show && (
@@ -22,22 +25,24 @@ export default function DonateButton() {
         >
           <div
             className="relative mx-4 w-full max-w-xs transform rounded-2xl bg-white p-6 shadow-2xl transition-all"
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
           >
             <button
               onClick={() => setShow(false)}
-              className="absolute -right-2.5 -top-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-white text-xs text-[#8A7E6A] shadow-md transition-all hover:bg-[#F5F0E8] hover:text-[#4A3728]"
+              className="absolute -top-2.5 -right-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-white text-xs text-[#8A7E6A] shadow-md transition-all hover:bg-[#F5F0E8] hover:text-[#4A3728]"
             >
               ✕
             </button>
 
             <div className="mb-4 text-center">
-              <div className="text-2xl">🥤</div>
+              <div className="text-2xl">{isEn ? '☕' : '🥤'}</div>
               <h3 className="mt-2 text-base font-bold text-[#4A3728]">
-                请思考熊喝杯豆浆
+                {isEn ? 'Buy the author a coffee' : '请思考熊喝杯豆浆'}
               </h3>
               <p className="mt-1 text-xs leading-relaxed text-[#8A7E6A]">
-                您的支持是思考熊持续创作的动力～
+                {isEn
+                  ? 'Your support keeps Musing Bear creating!'
+                  : '您的支持是思考熊持续创作的动力～'}
               </p>
             </div>
 
@@ -47,7 +52,7 @@ export default function DonateButton() {
               <div className="overflow-hidden rounded-xl border border-[#E8D9C2] bg-[#FDF5EE] p-3 shadow-inner">
                 <Image
                   src="/images/donate-qr.png"
-                  alt="赞赏码"
+                  alt="QR Code"
                   width={200}
                   height={200}
                   className="h-auto w-full max-w-[200px]"
@@ -57,7 +62,7 @@ export default function DonateButton() {
             </div>
 
             <p className="mt-4 text-center text-[10px] text-[#B8A888]">
-              微信扫一扫 · 随缘支持
+              {isEn ? 'Scan with WeChat · Support as you wish' : '微信扫一扫 · 随缘支持'}
             </p>
           </div>
         </div>
