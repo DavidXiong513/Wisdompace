@@ -16,29 +16,41 @@ const PLATFORMS = [
   {
     icon: '🎓',
     name: '在行',
+    nameEn: 'Zaihai',
     id: '生涯规划咨询',
+    idEn: 'Career Counselor',
     desc: '1对1生涯规划咨询，9.7分在行评分',
+    descEn: '1-on-1 career counseling, 9.7/10 rating',
     href: 'https://www.zaih.com/falcon/mentors/2bxahqla7fk',
   },
   {
     icon: '📕',
     name: '小红书',
+    nameEn: 'Xiaohongshu',
     id: '借假修真的思考熊',
+    idEn: 'Musing Bear',
     desc: '生命思考、健康科普、旅行攻略',
+    descEn: 'Life reflections, health科普, travel guides',
     href: 'https://www.xiaohongshu.com/user/',
   },
   {
     icon: '📝',
     name: '微信公众号',
+    nameEn: 'WeChat Official',
     id: '借假修真的思考熊',
+    idEn: 'Musing Bear',
     desc: '国学智慧、经典解读、生活科普、运动日志',
+    descEn: 'Eastern wisdom, classic texts, life science, fitness logs',
     href: 'https://mp.weixin.qq.com/',
   },
   {
     icon: '🎬',
     name: '微信视频号',
+    nameEn: 'WeChat Channels',
     id: '借假修真的思考熊',
+    idEn: 'Musing Bear',
     desc: '哲学思考、读书分享、音乐创作、主题播客',
+    descEn: 'Philosophical reflections, book sharing, music creation, themed podcasts',
     href: 'https://channels.weixin.qq.com/',
   },
 ];
@@ -153,10 +165,14 @@ export default function ContentPage() {
               >
                 <span className="text-4xl sm:text-5xl">{p.icon}</span>
                 <h3 className="as-serif mt-4 text-xl font-bold text-[var(--as-primary-700)]">
-                  {p.name}
+                  {isEn && p.nameEn ? p.nameEn : p.name}
                 </h3>
-                <p className="mt-1 text-sm text-[var(--as-gray-500)]">{p.id}</p>
-                <p className="mt-2 text-sm text-[var(--as-gray-600)]">{p.desc}</p>
+                <p className="mt-1 text-sm text-[var(--as-gray-500)]">
+                  {isEn && p.idEn ? p.idEn : p.id}
+                </p>
+                <p className="mt-2 text-sm text-[var(--as-gray-600)]">
+                  {isEn && p.descEn ? p.descEn : p.desc}
+                </p>
                 <p className="hover:text-[var(--as-primary-700)) mt-3 text-xs text-[var(--as-primary-500)] transition">
                   → {jt('aboutPageData.content.heroSub', '前往主页').split(' · ')[0] || 'Visit'}
                 </p>
@@ -175,13 +191,15 @@ export default function ContentPage() {
             </h2>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {TOPICS.map(s => (
+            {TOPICS.map((s, ti) => (
               <div key={s.title} className="as-card p-4 text-center">
                 <span className="text-3xl">{s.icon}</span>
                 <h3 className="as-serif mt-2 text-sm font-bold text-[var(--as-primary-700)]">
-                  {s.title}
+                  {isEn ? jt(`aboutPageData.content.topics.${ti}.title`, s.title) : s.title}
                 </h3>
-                <p className="mt-2 text-xs leading-relaxed text-[var(--as-gray-600)]">{s.desc}</p>
+                <p className="mt-2 text-xs leading-relaxed text-[var(--as-gray-600)]">
+                  {isEn ? jt(`aboutPageData.content.topics.${ti}.desc`, s.desc) : s.desc}
+                </p>
                 <p className="mt-2 text-sm font-bold text-[var(--as-primary-400)]">{s.count} 篇</p>
               </div>
             ))}

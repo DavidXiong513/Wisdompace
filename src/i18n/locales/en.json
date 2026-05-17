@@ -693,24 +693,28 @@
       ],
       "topics": [
         {
-          "title": "Career & Workplace",
-          "desc": "20 years of HR insight — organizational dynamics, career planning, workplace psychology, growth mindsets"
+          "title": "Red Pill",
+          "desc": "Breaking cognitive filters through the awakening metaphor of The Matrix, refusing to be an NPC in samsara. Every independent thought is a gentle rebellion against the system."
         },
         {
-          "title": "Life & Philosophy",
-          "desc": "Buddhist practice in daily life, life-death education, life organization methodology"
+          "title": "Life Hacks",
+          "desc": "From daily chores to the vast universe — turning every 'why' in life into useful knowledge. Understanding life means learning to love yourself."
         },
         {
-          "title": "Health & Wellness",
-          "desc": "13 years vegetarian experience, TCM health preservation, exercise & fitness, dementia prevention"
+          "title": "Wisdom in the World",
+          "desc": "Body and soul, one is always on the road. Measuring the world's breadth with your steps, expanding your cognitive horizons through experience. Travel ten thousand miles, read ten thousand books."
         },
         {
-          "title": "Tools & Assessments",
-          "desc": "Self-assessment tools, personality tests, decision-making frameworks, productivity"
+          "title": "Mind & Body Wellness",
+          "desc": "Health is not the destination — it's the foundation. Exercise, nutrition, sleep, stress management — running this body with science so the soul has a place to dwell."
         },
         {
-          "title": "Reading & Learning",
-          "desc": "Book reviews, classic interpretations, learning methods, knowledge management"
+          "title": "Reading & Film",
+          "desc": "Every good book is a soul conversation; every great film is a life simulation. Turn what you read and watch into light that nourishes yourself."
+        },
+        {
+          "title": "AI Empowerment",
+          "desc": "Not being replaced by AI, but armed by it. Learning, practicing, sharing — letting technology return to its tool essence, serving humanistic ideals."
         }
       ],
       "podcasts": [
