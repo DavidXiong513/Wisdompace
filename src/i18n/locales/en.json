@@ -50,6 +50,8 @@
     "readInstructions": "Reader's Guide",
     "beforeStart": "Before You Begin",
     "readInstructionsDesc": "Learn about the origin and purpose of this book, its overall structure, and a few reminders for your journey.",
+    "tableOfContents": "In This Chapter",
+    "copyright": "Content source: \"A Life Organized\" V1.0 · Also known as: Musing Bear: Seek Truth Through Illusions",
     "chapter1": "Chapter 1 | See Yourself",
     "chapter1Sub": "Look back from the starting point, rediscover who you are",
     "chapter1Desc": "For the first time on your preset life track, stop and really look at where you've arrived.",
@@ -132,37 +134,250 @@
       }
     },
     "chapter-1": {
-      "stop-and-look": "Stop and See Yourself",
-      "personality-tests": "Personality Self-Assessment",
-      "career-values": "Career Values Assessment",
-      "ability-assessment": "Social Ability Self-Assessment",
-      "social-roles": "My Social Roles",
-      "summary": "Rediscover Yourself"
+      "stop-and-look": {
+        "title": "Stop and See Yourself",
+        "paragraphs": [
+          "At some point in life, we suddenly realize: we've come a long way, yet rarely stopped to truly see ourselves.",
+          "We've been pushed forward, defined by expectations, responsibilities, and roles. Who are we? What do we want? These questions seem increasingly blurry.",
+          "This chapter invites you to pause and rediscover yourself. Not to change anything, but to see — to see the overlooked parts, to see your authentic self."
+        ]
+      },
+      "personality-tests": {
+        "title": "Personality Self-Assessment",
+        "paragraphs": [
+          "Before diving deeper, we've prepared two classic personality assessment tools for you.",
+          "These tests can help you understand your personality traits, behavioral patterns, and thinking preferences from different angles. They're not about labeling you, but providing a reference framework for better self-understanding.",
+          "You can try one or both — there are no right or wrong answers, only deeper self-awareness."
+        ]
+      },
+      "career-values": {
+        "title": "Career Values Assessment",
+        "paragraphs": [
+          "In career choices, what truly matters to you? Is it financial reward, a sense of achievement, or work-life balance?",
+          "Career values are the core driver of your professional decisions. Through this assessment, you'll discover your top 14 career value orientations and ultimately lock in your 3 core values.",
+          "This exercise isn't about putting a career type label on you — it's helping you clarify what you really want in your work."
+        ]
+      },
+      "ability-assessment": {
+        "title": "Social Ability Self-Assessment",
+        "paragraphs": [
+          "Beyond personality traits and value orientations, your ability structure is another important dimension of self-understanding.",
+          "Based on McKinsey's social ability system, this assessment covers 42 core competencies across three dimensions — cognition, interpersonal, and self-management — giving you a comprehensive scan of your ability landscape.",
+          "You'll discover your strengths, potential areas, and areas for improvement — which is far more actionable than simply knowing 'I'm an INTJ' or 'I'm high in openness.'"
+        ]
+      },
+      "social-roles": {
+        "title": "My Social Roles",
+        "paragraphs": [
+          "From birth, we've been assigned various roles: child, student, employee, parent, partner...",
+          "These roles shape us, but also limit us to some extent. We've grown accustomed to defining ourselves by our roles, forgetting that beyond them, there is still an 'I.'",
+          "This exercise helps you sort through the various roles you carry and see how much space they occupy in your life."
+        ]
+      },
+      "summary": {
+        "title": "Rediscover Yourself",
+        "paragraphs": [
+          "Through the exercises in this chapter, you may have gained new insights about yourself. These insights may be incomplete or not entirely accurate, but they are a beginning.",
+          "Self-discovery is an ongoing process, not something completed in one go. Be patient, stay curious."
+        ],
+        "questions": [
+          "Through these exercises, try to identify your innate habits and temperament patterns.",
+          "What areas or abilities are you clearly superior in compared to others?",
+          "Which social role makes you feel the most tired? Why?",
+          "Which label do you most want to shed?",
+          "If you had to describe yourself stripped of all roles in one word, what would it be?",
+          "How would you like to redefine yourself?"
+        ]
+      }
     },
     "chapter-2": {
-      "life-countdown": "See the Timeline of Life",
-      "emotional-check": "Emotional State Check",
-      "passive-vs-active": "Chosen Life vs Active Choice",
-      "life-fun": "Life's Joys & Health Foundation",
-      "health-body": "Caring for Your Body · Investing in the Future",
-      "community-aging": "Plan Ahead · New Community Aging",
-      "summary": "Live in the Now, Invest in the Future"
+      "life-countdown": {
+        "title": "See the Timeline of Life",
+        "paragraphs": [
+          "Before discussing how to 'live positively,' we must first face a truth: time is limited.",
+          "Most people have a vague sense of 'someday' about life, never truly calculating — after sleep, work, and chores — how much truly 'self-directed' time remains.",
+          "This exercise transforms abstract lifespan into concrete visual marks. When you see the past squares already colored in and the future ones still blank, the urgency of 'living for yourself' becomes real."
+        ]
+      },
+      "emotional-check": {
+        "title": "Emotional State Check",
+        "paragraphs": [
+          "Before discussing 'being positive,' we also need an objective understanding of our current state. Emotional shadows or chronic tension can silently dim the light in life.",
+          "We've prepared a three-dimensional assessment covering emotions, stress, and tension to help you identify potential psychological risks from a professional perspective.",
+          "This isn't about diagnosing illness, but about gaining clear awareness of your mental foundation before making active choices."
+        ]
+      },
+      "passive-vs-active": {
+        "title": "Chosen Life vs Active Choice",
+        "paragraphs": [
+          "Looking back at your life — how many choices did you truly make yourself? How many were driven by circumstances, others, or society?",
+          "A passively chosen life is like a pre-written script; you're just an actor, an NPC following the script set by societal norms.",
+          "An actively chosen life may be full of uncertainty, but at least it is YOUR life.",
+          "Having seen the finiteness of time, think again: which life do you want?"
+        ]
+      },
+      "life-fun": {
+        "title": "Life's Joys & Health Foundation",
+        "paragraphs": [
+          "Positive living requires both the enthusiasm to experience and the physical and mental capacity to do so. Health isn't everything in life, but it is the foundation of all possibilities.",
+          "Modern psychological research (Mark Travers, 2025) shows that specific types of hobbies effectively build psychological resilience against depression and anxiety. We categorize hobbies into three types, corresponding to three layers of health protection:",
+          "'Physical Foundation' — physical hobbies (running, swimming, tai chi) maintain bodily function through physiological mechanisms, providing a physical base for mental health.",
+          "'Creative Capacity' — creative hobbies (writing, painting, cooking) provide a sense of achievement through producing tangible work, effectively combating depression and loneliness.",
+          "'Cognitive Reserve' — intellectual hobbies (reading, chess, learning new skills) continuously challenge cognitive boundaries, strengthen neural connections, and directly reduce the risk of cognitive decline.",
+          "Interest also has levels: from passive sensory stimulation ('sensory interest') to active exploration ('conscious interest') to deep alignment with personal values ('vocational interest') — the higher the level of interest, the stronger its protective power for health. High-level interests are the best brain health supplements."
+        ]
+      },
+      "health-body": {
+        "title": "Caring for Your Body · Investing in the Future",
+        "paragraphs": [
+          "Many people equate 'living positively' with a positive mindset, forgetting that the body is the foundation that carries everything.",
+          "Alzheimer's disease is the seventh leading cause of death globally, with one new case every three seconds. However, a 2024 Lancet study shows that addressing 14 modifiable risk factors can reduce the risk by 45%.",
+          "You don't need to become a health expert. But if you want your future self to have enough cognitive and physical capacity to experience life — now is the best time to start taking action."
+        ]
+      },
+      "community-aging": {
+        "title": "Plan Ahead · New Community Aging",
+        "paragraphs": [
+          "In previous sections, we discussed how to actively care for your body, cultivate hobbies, and manage emotions — all investments in your future. But there's a question often avoided: when there are no children by your side, who will accompany you in old age?",
+          "'No children by your side' doesn't only apply to single or childfree individuals. Children living abroad, losing an only child, estranged parent-child relationships, or children with insufficient care capacity — these situations are more common than we think. China now has over 120 million one-person households; living alone is no longer a fringe phenomenon. The traditional elderly care system assumes children as the primary caregivers, but this premise no longer holds for a growing number of people.",
+          "'New Community Aging' starts from this premise: beyond family and market-based solutions, actively building and cultivating a 'non-blood-related mutual support community.' It doesn't require you to move in with anyone right now, but asks you to start nurturing relationships that can age together with you. Meanwhile, embodied AI robots are approaching — handling monitoring, reminders, alerts, and other repetitive care tasks, allowing human energy to focus on emotional support and shared decision-making.",
+          "Placing this in the 'Live Positively' chapter is intentional: its essence is proactively arranging for your later years — just like investing in body, brain, and relationships."
+        ]
+      },
+      "summary": {
+        "title": "Live in the Now, Invest in the Future",
+        "paragraphs": [
+          "Living positively doesn't mean trying so hard — it means living actively and with awareness.",
+          "Take care of your body and emotions. Spend time with people and things that give you meaning.",
+          "Start today, start with every small choice — for present joy and future freedom."
+        ],
+        "questions": [
+          "After seeing your life countdown, what is the one thing you most want to do immediately?",
+          "How many choices in your life have you truly made for yourself?",
+          "What things in life bring you joy?",
+          "Starting today, what proactive health choices are you willing to make?",
+          "If your future self had enough mental and physical capacity, what would you most like to do?"
+        ]
+      }
     },
     "chapter-3": {
-      "responsibility": "What is Responsibility",
-      "responsibility-list": "My Responsibility Checklist",
-      "three-questions": "Three Questions for Major Decisions",
-      "choice-rights": "Advance Directives",
-      "arrangement": "Choosing Your Designated Agent",
-      "summary": "Leaving No Regrets Behind"
+      "responsibility": {
+        "title": "What is Responsibility",
+        "paragraphs": [
+          "Everyone has responsibilities: to family, to work, to society, to oneself.",
+          "Some responsibilities we take on voluntarily; others are assigned to us. Regardless, responsibility is an indispensable part of life.",
+          "Stating clearly means facing these responsibilities honestly, not avoiding them."
+        ]
+      },
+      "responsibility-list": {
+        "title": "My Responsibility Checklist",
+        "paragraphs": [
+          "Let's sort through your responsibilities.",
+          "Caring for family, commitments at work, promises to friends, promises to yourself...",
+          "This exercise helps you list your responsibility checklist and think about how to better fulfill these responsibilities."
+        ]
+      },
+      "three-questions": {
+        "title": "Three Questions for Major Decisions",
+        "paragraphs": [
+          "While sorting through responsibilities, we often encounter difficult decisions: Should I accept a high-risk treatment? Should I change my current family structure? Should I hold onto a certain belief?",
+          "These decisions often affect the quality of the rest of your life. We need a more rational tool than 'going with your gut' to guide our thinking.",
+          "'The Three Questions' uses values, psychological expectations, and scarcity as three dimensions to probe deeply. It doesn't provide answers, but it acts as a mirror reflecting your truest trade-offs and boundaries, helping you make decisions without regret."
+        ]
+      },
+      "choice-rights": {
+        "title": "Advance Directives",
+        "paragraphs": [
+          "An advance directive (Living Will) is a medical wish statement written in advance while you are still clear-minded. It's not a will giving up treatment, but a legal document that speaks for you when you can no longer make decisions.",
+          "In your final days, do you want life-sustaining medical measures? Where do you want to spend your remaining time? What things do you want your family to know that you've never been able to say?",
+          "Thoughtfully consider and articulate your five wishes — preserving your final dignity and choices. This directive isn't cold legal language; it's your final act of gentleness to your family — letting them not have to guess your wishes in difficult times."
+        ]
+      },
+      "arrangement": {
+        "title": "Choosing Your Designated Agent",
+        "paragraphs": [
+          "Who is the person you trust most? When you can no longer make decisions for yourself, who do you want to speak on your behalf?",
+          "A designated decision-maker isn't predetermined by birth — it's your active choice. This person could be your spouse, child, close friend, or even a professional institution.",
+          "Choosing a designated agent isn't just about picking someone 'reliable.' Consider: Do they understand your values? Can they make decisions under pressure? Are they willing to take on this responsibility?",
+          "This exercise helps you systematically evaluate and choose your designated agent."
+        ]
+      },
+      "summary": {
+        "title": "Leaving No Regrets Behind",
+        "paragraphs": [
+          "You've made it here, completing the core work of the 'State Clearly' chapter.",
+          "You've sorted your responsibility checklist, identified what's urgent and important, and what needs advance transition planning. You've examined the real trade-offs behind major decisions, and written down your five wishes in advance directives — those things you want your family to know but never found the words to say.",
+          "You've evaluated who can be your designated agent, and where no suitable person exists, learned about professional alternatives. These aren't cold procedures — they are your final order and tenderness left for this world.",
+          "Stating clearly isn't pessimism — it's responsibility. It ensures you leave no regrets behind. These arrangements don't need to be completed all at once — you can come back anytime to revise, supplement, or update. Life changes, and your arrangements can change too."
+        ],
+        "questions": [
+          "In your responsibility checklist, which item worries you most? Have you thought of a transition plan?",
+          "Which major decision did the Three Questions help clarify the real sticking point of?",
+          "Among your five wishes in advance directives, which one do you most want your family to know?",
+          "Have you confirmed your designated agent? If not, which alternative plan will you start with?",
+          "If today were your last chance to review these arrangements clearly, how ready would you say you are?"
+        ]
+      }
     },
     "chapter-4": {
-      "face-goodbye": "Facing Farewell",
-      "no-regrets": "Leave No Regrets",
-      "goodbye-list": "My Farewell Checklist",
-      "goodbye-way": "Ways to Say Goodbye",
-      "ready": "Final Preparations",
-      "summary": "A Graceful Farewell"
+      "face-goodbye": {
+        "title": "Facing Farewell",
+        "paragraphs": [
+          "Farewell is a theme everyone must face. But we rarely talk about it proactively, rarely prepare for it.",
+          "Perhaps out of fear, perhaps out of taboo. But regardless, farewell will eventually come.",
+          "Rather than facing it passively, it's better to prepare actively. So when it arrives, you can be more composed."
+        ]
+      },
+      "no-regrets": {
+        "title": "Leave No Regrets",
+        "paragraphs": [
+          "Before diving into the specifics of saying goodbye, let's pause for a crucial 'life rehearsal.'",
+          "If today were the end of your life, looking back — do you have unfinished dreams, unspoken words, unreconciled relationships? This isn't fear-mongering; it's a question rooted in the real regrets of hundreds of dying people.",
+          "Australian nurse Bronnie Ware recorded the top five regrets of the dying, and Fudan University research revealed the top three regrets of Chinese elderly. These cross-cultural findings point to the same truth: too many people only realize at the end of their lives — that they've been living by the wrong priorities all along.",
+          "This tool helps you assess your current life state across seven dimensions — including self-authenticity, relationship quality, health foundation — generates your 'Life Coherence Index,' and provides personalized improvement suggestions. The best farewell begins with the best way of living."
+        ]
+      },
+      "goodbye-list": {
+        "title": "My Farewell Checklist",
+        "paragraphs": [
+          "Before saying goodbye, what things do you want to accomplish?",
+          "Some are practical arrangements; others are emotional farewells. Both are important.",
+          "This exercise helps you list your farewell checklist."
+        ]
+      },
+      "goodbye-way": {
+        "title": "Ways to Say Goodbye",
+        "paragraphs": [
+          "Everyone has different preferences for how to say goodbye. Some want a lively celebration of life; others prefer a quiet departure. Some want the solemnity of traditional rituals; others want the freedom of a living funeral.",
+          "This tool helps you design your own farewell — from ceremony format to resting place, from farewell words to background music. Leave the world one final creative brief, your way.",
+          "There's no right or wrong — only your choice. Write these arrangements down in advance so the people you care about know your wishes."
+        ]
+      },
+      "ready": {
+        "title": "Final Preparations",
+        "paragraphs": [
+          "Having completed the exercises above, you'll find: farewell isn't as frightening as it seems.",
+          "You simply exist in a different form. Your memories, your love, your influence continue on.",
+          "Being ready isn't about waiting for death — it's about being prepared to say goodbye."
+        ]
+      },
+      "summary": {
+        "title": "A Graceful Farewell",
+        "paragraphs": [
+          "You've made it here, completing all the work of the 'Farewell Gracefully' chapter.",
+          "Through the Life Coherence Assessment, you've seen your true state across three dimensions — health, relationships, and self-actualization — and received your personalized improvement roadmap. You've written your farewell checklist — things you want to do before leaving. Some may already be done; others are still in progress.",
+          "You've designed your own way of saying goodbye: chosen your preferred ceremony, your ideal resting place, a farewell message for the world, and even selected background music and who to see you off. These arrangements aren't cold checklists — they are your final, gentle creative brief to the world.",
+          "Farewell is part of life, as natural as birth. Preparing in advance isn't pessimism — it's wisdom. It lets you leave without regret, without fear, without attachment. These arrangements can be revised anytime — life changes, and your farewell can change too.",
+          "May you say goodbye gracefully."
+        ],
+        "questions": [
+          "In the Life Coherence Assessment, what was your index score? Which dimension was weakest? What's your first step for improvement?",
+          "How many items are on your farewell checklist? Which one are you most looking forward to completing?",
+          "In designing your farewell, which choice are you most satisfied with? Was any option surprising even to yourself?",
+          "If your farewell message were engraved somewhere, what would you want passersby to think when they see it?",
+          "If today were your last time reviewing these arrangements, how ready would you say you are? What's missing?"
+        ]
+      }
     }
   },
   "aboutContent": {

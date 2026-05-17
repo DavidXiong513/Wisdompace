@@ -154,7 +154,7 @@ export default function ChapterTopNav({
             onClick={() => setIsMenuOpen(prev => !prev)}
             className="rounded-md border border-[#E8D9C2]/70 px-3 py-2 text-xs font-semibold text-[#F5EDE0] transition duration-300 hover:bg-[#F5EDE0] hover:text-[#4A3728] md:hidden"
           >
-            菜单
+            {currentLanguage.startsWith('zh') ? '菜单' : 'Menu'}
           </button>
           {isLoggedIn && user ? (
             <div className="flex items-center gap-2">

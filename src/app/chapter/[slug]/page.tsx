@@ -5,6 +5,7 @@ import ChapterTopNav from '@/components/ChapterTopNav';
 import { ChapterToc } from '@/components/ChapterToc';
 import { ScrollToTopButton } from '@/components/chapter/ScrollToTopButton';
 import ChapterHeader from '@/components/chapter/ChapterHeader';
+import ChapterCopyright from '@/components/chapter/ChapterCopyright';
 import ClientChapterContent from '@/components/chapter/ClientChapterContent';
 import DonateButton from '@/components/DonateButton';
 import { getChapterBySlug, chapters } from '@/data/chapters';
@@ -83,9 +84,7 @@ export default async function ChapterPage({ params }: Props) {
 
                   {/* 底部版权信息 */}
                   <div className="mt-10 border-t border-[#E8E4DD] pt-10 text-center">
-                    <p className="text-xs tracking-wider text-[#6A6256]">
-                      内容来源：《一生的整理》V1.0版 · 全网同名：借假修真的思考熊
-                    </p>
+                    <ChapterCopyright />
                     <div className="mt-3 flex items-center justify-center gap-3">
                       <DonateButton />
                       <ScrollToTopButton />
