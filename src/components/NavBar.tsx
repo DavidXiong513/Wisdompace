@@ -17,7 +17,7 @@ const NavBar = () => {
 
   return (
     <header className="fixed top-0 right-0 left-0 z-50 p-4 sm:p-6">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between overflow-hidden">
         <div>
           {/* Placeholder for logo or site title if needed in the future */}
           <Link href="/" className="text-lg font-bold text-white">

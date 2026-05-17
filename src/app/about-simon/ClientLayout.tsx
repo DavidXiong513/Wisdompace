@@ -24,21 +24,21 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     <div className="min-h-screen bg-[var(--as-bg-primary)] font-[var(--as-font-sans)]">
       {/* ... (keep existing header and main) ... */}
       <header className="fixed top-0 right-0 left-0 z-50 border-b border-[var(--as-gray-100)] bg-[var(--as-bg-primary)]/90 backdrop-blur-md">
-        <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+        <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between overflow-hidden px-4 sm:px-6">
           {/* Logo / 返回主站 */}
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <Link
               href="/"
               scroll={false}
-              className="text-sm text-[var(--as-gray-500)] transition-colors hover:text-[var(--as-primary-600)]"
+              className="shrink-0 text-sm text-[var(--as-gray-500)] transition-colors hover:text-[var(--as-primary-600)]"
             >
               {t('about.backToMain')}
             </Link>
-            <span className="text-[var(--as-gray-300)]">|</span>
+            <span className="shrink-0 text-[var(--as-gray-300)]">|</span>
             <Link
               href="/about-simon"
               scroll={false}
-              className="font-serif text-base font-bold text-[var(--as-primary-700)]"
+              className="truncate font-serif text-base font-bold text-[var(--as-primary-700)]"
             >
               {t('about.siteName')}
             </Link>

@@ -71,7 +71,7 @@ export default function ChapterTopNav({
     <header className="sticky top-0 z-50 bg-[#4A3728]">
       <div className="relative w-full">
         <div
-          className={`mx-auto flex h-[72px] w-full max-w-6xl items-center px-4 sm:px-6 ${containerClassName}`}
+          className={`mx-auto flex h-[72px] w-full max-w-6xl items-center overflow-hidden px-4 sm:px-6 ${containerClassName}`}
         >
           <div className="flex shrink-0 items-center justify-start text-left">
             <Link
@@ -247,7 +247,7 @@ export default function ChapterTopNav({
       {/* ── Prev / Next chapter bar ── */}
       {(prevChapter || nextChapter) && (
         <div
-          className="flex items-center justify-between px-6 py-2 text-sm"
+          className="flex items-center justify-between overflow-hidden px-6 py-2 text-sm"
           style={{ borderTop: '1px solid rgba(255,255,255,0.1)', background: '#3d2e22' }}
         >
           {prevChapter ? (

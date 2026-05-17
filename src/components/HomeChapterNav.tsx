@@ -2,35 +2,41 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import DonateButton from '@/components/DonateButton';
 
 const navItems = [
-  { chinese: '预备此生', english: 'Prepare Wisely', href: '/chapter/read-instructions' },
-  { chinese: '看见自己', english: 'See Yourself', href: '/chapter/chapter-1' },
-  { chinese: '积极生活', english: 'Live Positively', href: '/chapter/chapter-2' },
-  { chinese: '清楚交代', english: 'State Clearly', href: '/chapter/chapter-3' },
-  { chinese: '好好告别', english: 'Farewell Gracefully', href: '/chapter/chapter-4' },
+  { cnKey: 'chapterNav.prepare', enKey: 'chapterNav.prepare', href: '/chapter/read-instructions' },
+  { cnKey: 'chapterNav.see', enKey: 'chapterNav.see', href: '/chapter/chapter-1' },
+  { cnKey: 'chapterNav.live', enKey: 'chapterNav.live', href: '/chapter/chapter-2' },
+  { cnKey: 'chapterNav.state', enKey: 'chapterNav.state', href: '/chapter/chapter-3' },
+  { cnKey: 'chapterNav.farewell', enKey: 'chapterNav.farewell', href: '/chapter/chapter-4' },
 ];
 
 const HomeChapterNav = () => {
+  const { t, i18n } = useTranslation();
+  const isChinese = (i18n.language || 'zh-CN').startsWith('zh');
+
   return (
     <footer className="absolute right-0 bottom-0 left-0 z-20 pb-4 sm:pb-3">
       <div className="mx-auto w-full max-w-7xl px-3 sm:px-12 lg:px-20">
         <div className="rounded-xl bg-black/55 py-4 backdrop-blur-sm">
           <ul className="flex flex-col items-center justify-center gap-1 text-center text-white sm:flex-row sm:justify-around">
             {navItems.map(item => (
-              <li key={item.english} className="py-2 sm:py-0">
+              <li key={item.href} className="py-2 sm:py-0">
                 <Link
                   href={item.href}
                   scroll={true}
                   className="group block rounded-md px-4 py-3 transition duration-300 hover:bg-white/10"
                 >
                   <span className="block text-base font-semibold tracking-widest text-white transition-colors duration-300 group-hover:text-yellow-200 sm:text-lg">
-                    {item.chinese}
+                    {isChinese ? t(item.cnKey) : t(item.enKey)}
                   </span>
-                  <span className="mt-1 block text-sm font-medium tracking-wider text-white/90 uppercase transition-colors duration-300 group-hover:text-yellow-200/80 sm:text-base">
-                    {item.english}
-                  </span>
+                  {isChinese && (
+                    <span className="mt-1 block text-sm font-medium tracking-wider text-white/90 uppercase transition-colors duration-300 group-hover:text-yellow-200/80 sm:text-base">
+                      {t(item.enKey, { lng: 'en' })}
+                    </span>
+                  )}
                 </Link>
               </li>
             ))}
