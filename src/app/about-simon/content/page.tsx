@@ -215,8 +215,8 @@ export default function ContentPage() {
               </span>
             </h2>
           </div>
-          <div className="grid gap-x-6 gap-y-8 lg:grid-cols-3">
-            <div className="space-y-3">
+          <div className="grid items-stretch gap-x-6 gap-y-8 lg:grid-cols-3">
+            <div className="grid h-full grid-rows-[auto_1fr_1fr] gap-3">
               <h2 className="as-serif text-2xl font-bold text-[var(--as-primary-700)]">
                 🎙️ {isEn ? 'Podcasts' : '播客系列'}
               </h2>
@@ -234,7 +234,7 @@ export default function ContentPage() {
                 </div>
               ))}
             </div>
-            <div className="space-y-3">
+            <div className="grid h-full grid-rows-[auto_1fr_1fr] gap-3">
               <h2 className="as-serif text-2xl font-bold text-[var(--as-primary-700)]">
                 🎵 {isEn ? 'Music' : '音乐系列'}
               </h2>
@@ -252,7 +252,7 @@ export default function ContentPage() {
                 </div>
               ))}
             </div>
-            <div className="space-y-3">
+            <div className="grid h-full grid-rows-[auto_1fr_1fr] gap-3">
               <h2 className="as-serif text-2xl font-bold text-[var(--as-primary-700)]">
                 📺 {isEn ? 'Live Series' : '直播系列'}
               </h2>
