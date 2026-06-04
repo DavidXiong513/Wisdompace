@@ -64,9 +64,8 @@ function getSecurityHeaders() {
 }
 
 const nextConfig: NextConfig = {
-  // React Compiler 在 Windows 上导致子进程崩溃(0xc0000142)，暂时禁用
-  // TODO: 升级内存至32GB+WSL2后重新启用
-  // reactCompiler: true,
+  // React Compiler: Windows 开发环境禁用，Vercel (Linux) 生产构建时启用
+  reactCompiler: process.env.NODE_ENV === 'production',
 
   // 安全响应头（根据环境自动调整）
   async headers() {
