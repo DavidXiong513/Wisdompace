@@ -325,21 +325,31 @@ export default function ServicesPage() {
           </div>
           <div className="mx-auto max-w-4xl space-y-4">
             <p className="text-sm leading-relaxed text-[var(--as-gray-600)]">
-              {isEn ? t('aboutPageData.services.storyP1') : '5000不是一个冰冷的数字...'}
+              {isEn
+                ? t('aboutPageData.services.storyP1')
+                : '5000不是一个冰冷的数字。它是5000个深夜的电话，5000次艰难的对话，5000个人生的转折点。每个数字背后，都是一张具体的脸、一个家庭、一段正在经历暴风雨的人生。'}
             </p>
             <p className="text-sm leading-relaxed text-[var(--as-gray-600)]">
-              {isEn ? t('aboutPageData.services.storyP2') : '说到底，公司打工的本质...'}
+              {isEn
+                ? t('aboutPageData.services.storyP2')
+                : '说到底，公司打工的本质，是组织与个体之间的一场共赢平衡——你贡献能力与时间，公司给予平台与回报。但当业务调整、战略转向，或者你自己的价值主张变了，这个平衡就会被打破。主动跳槽也好，被动裁撤也罢，本质都是一回事：平衡没了，就该重新选择了。'}
             </p>
             <p className="text-sm leading-relaxed text-[var(--as-gray-600)]">
-              {isEn ? t('aboutPageData.services.storyP3') : '我见过下午刚拿优秀员工奖...'}
+              {isEn
+                ? t('aboutPageData.services.storyP3')
+                : '我见过下午刚拿优秀员工奖、晚上就被裁的95后——不是她不够好，只是业务线被砍了。我见过在这家公司干了18年的老HR，亲手拟完自己的离职协议后，在车里坐了整整两个小时。我也见过被裁后反而松了一口气的中年人：他说"我早就想走了，只是一直没有勇气"。'}
             </p>
             <p className="text-sm leading-relaxed text-[var(--as-gray-600)]">
               {isEn
                 ? t('aboutPageData.services.storyP4')
-                : '我能做的，不是在冷酷和温情之间做选择...'}
+                : '我能做的，不是在"冷酷"和"温情"之间做选择——因为这件事本身就充满矛盾的张力。我尽量做到的是：让离开的人有尊严，让留下的人不恐惧，让每一次平衡被打破时，双方都能体面转身。'}
             </p>
             <p className="as-serif mt-6 text-center text-base font-semibold text-[var(--as-primary-600)]">
-              「{isEn ? t('aboutPageData.services.storyQuote') : '裁员是组织的新陈代谢...'}」
+              「
+              {isEn
+                ? t('aboutPageData.services.storyQuote')
+                : '裁员是组织的新陈代谢，但每一个被代谢的人，都值得被看见。'}
+              」
             </p>
           </div>
         </div>
