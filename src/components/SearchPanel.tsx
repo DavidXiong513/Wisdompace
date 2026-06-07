@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { searchAll } from "@/lib/search-index";
 import { validateSearchQuery } from "@/lib/security";
@@ -13,6 +14,7 @@ export function SearchPanel({
   open: boolean;
   onClose: () => void;
 }) {
+  const { t, i18n } = useTranslation();
   const [query, setQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -38,7 +40,7 @@ export function SearchPanel({
     
     // 限制输入长度
     if (rawValue.length > 100) {
-      setError("搜索内容不能超过100个字符");
+      setError(t("search.errorTooLong"));
       return;
     }
     
@@ -52,8 +54,8 @@ export function SearchPanel({
     if (!validation.valid) {
       return [];
     }
-    return searchAll(validation.sanitized);
-  }, [query]);
+    return searchAll(validation.sanitized, i18n.language || "zh-CN");
+  }, [query, i18n.language]);
 
   if (!open) return null;
 
@@ -72,7 +74,7 @@ export function SearchPanel({
             ref={inputRef}
             value={query}
             onChange={handleQueryChange}
-            placeholder="检索全站（占位实现：基于本地数据）"
+            placeholder={t("search.placeholder")}
             className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted"
             maxLength={100}
             autoComplete="off"
@@ -83,7 +85,7 @@ export function SearchPanel({
             onClick={onClose}
             type="button"
           >
-            关闭
+            {t("nav.logout") === "Logout" ? "Close" : "关闭"}
           </button>
         </div>
 
@@ -94,7 +96,7 @@ export function SearchPanel({
             </div>
           ) : query.trim() && results.length === 0 ? (
             <div className="px-3 py-10 text-center text-sm text-muted">
-              没有找到结果
+              {t("search.noResults")}
             </div>
           ) : null}
 
@@ -113,7 +115,7 @@ export function SearchPanel({
 
           {!query.trim() ? (
             <div className="px-3 py-10 text-center text-sm text-muted">
-              输入关键词开始检索
+              {t("search.hotLabel") === "🔥 Trending:" ? "Type to search..." : "输入关键词开始检索"}
             </div>
           ) : null}
         </div>
@@ -121,7 +123,7 @@ export function SearchPanel({
 
       <button
         className="absolute inset-0 -z-10"
-        aria-label="关闭搜索面板"
+        aria-label={t("nav.logout") === "Logout" ? "Close Search Panel" : "关闭搜索面板"}
         onClick={onClose}
         type="button"
       />

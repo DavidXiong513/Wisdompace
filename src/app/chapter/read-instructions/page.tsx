@@ -8,13 +8,14 @@ import { ChapterToc } from '@/components/ChapterToc';
 import { ChapterReader } from '@/components/chapter/ChapterReader';
 import { ScrollToTopButton } from '@/components/chapter/ScrollToTopButton';
 import DonateButton from '@/components/DonateButton';
+import ChapterCopyright from '@/components/chapter/ChapterCopyright';
 import { getChapterBySlug } from '@/data/chapters';
 import { useTranslatedChapter } from '@/lib/hooks/useTranslatedChapter';
 
 const CHAPTER_SLUG = 'read-instructions';
 
 export default function ReadInstructionsPage() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const chapter = getChapterBySlug(CHAPTER_SLUG);
   if (!chapter) notFound();
 
@@ -34,24 +35,37 @@ export default function ReadInstructionsPage() {
       <div className="relative z-10">
         <ChapterTopNav />
 
-        <main className="mx-auto max-w-[min(1800px,96vw)] px-6 pt-8 pb-20 sm:pt-10">
-          {/* 左侧固定目录导航 */}
-          <div className="lg:fixed lg:top-32 lg:left-6 lg:w-64">
-            <ChapterToc chapterSlug={display.slug} sections={display.sections} variant="sidebar" />
+        <main className="mx-auto max-w-[min(1800px,96vw)] px-4 pt-8 pb-20 sm:px-6 sm:pt-10">
+          {/* 移动端目录导航 */}
+          <div className="lg:hidden">
+            <ChapterToc
+              chapterSlug={display.slug}
+              sections={display.sections}
+              variant="bar"
+            />
+          </div>
+
+          {/* 桌面端固定目录导航 */}
+          <div className="hidden lg:fixed lg:top-32 lg:left-6 lg:block lg:w-64">
+            <ChapterToc
+              chapterSlug={display.slug}
+              sections={display.sections}
+              variant="sidebar"
+            />
           </div>
 
           <div className="lg:ml-[280px]">
             <div className="mx-auto w-full max-w-[min(1316px,92vw)]">
-              <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-6 sm:gap-8">
                 {/* 头部卡片 */}
-                <header className="rounded-xl border border-[#E8E4DD] bg-white p-8 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)] sm:p-12">
-                  <p className="text-xs font-medium tracking-[0.22em] text-[#7A6A52] uppercase">
-                    {isChinese ? 'Prologue' : '序言'}
+                <header className="rounded-xl border border-[#E8E4DD] bg-white p-6 text-center shadow-[0_2px_12px_rgba(0,0,0,0.06)] sm:p-12">
+                  <p className="text-[10px] font-medium tracking-[0.22em] text-[#7A6A52] uppercase sm:text-xs">
+                    {isChinese ? '序言' : 'Prologue'}
                   </p>
-                  <h1 className="mt-4 text-3xl font-bold tracking-tight text-[#4A3728] sm:text-4xl lg:text-5xl">
+                  <h1 className="mt-4 text-2xl font-bold tracking-tight text-[#4A3728] sm:text-4xl lg:text-5xl">
                     {display.title}
                   </h1>
-                  <p className="mt-3 text-lg font-medium text-[#6A6256]">{display.subtitle}</p>
+                  <p className="mt-3 text-base font-medium text-[#6A6256] sm:text-lg">{display.subtitle}</p>
                   <div className="mx-auto mt-6 h-[2px] w-16 bg-[#C9A15A]" />
                   <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-[#8A7E6A]">
                     {display.description}
@@ -65,9 +79,7 @@ export default function ReadInstructionsPage() {
 
                 {/* 底部版权信息 */}
                 <div className="mt-10 border-t border-[#E8E4DD] pt-10 text-center">
-                  <p className="text-xs tracking-wider text-[#6A6256]">
-                    内容来源：《一生的整理》V1.0版 · 全网同名：借假修真的思考熊
-                  </p>
+                  <ChapterCopyright />
                   <div className="mt-3 flex items-center justify-center gap-3">
                     <DonateButton />
                     <ScrollToTopButton />

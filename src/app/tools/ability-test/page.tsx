@@ -70,9 +70,9 @@ function WelcomePage() {
           <span className="text-[15px] text-[#5D4A3A]">形成更清晰的生涯发展线索</span>
         </div>
 
-        {/* 7大能力域预览 */}
+        {/* 6大能力域预览 */}
         <div className="mt-5 border-t border-[#E8E4DD] pt-5">
-          <p className="mb-3 text-xs font-medium text-[#8A7E6A]">涵盖7大能力域</p>
+          <p className="mb-3 text-xs font-medium text-[#8A7E6A]">涵盖6大能力域</p>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {DOMAINS.map((d, i) => (
               <div
@@ -936,9 +936,9 @@ function ReportPage() {
         </div>
       </div>
 
-      {/* 7大能力域概览 */}
+      {/* 6大能力域概览 */}
       <div className="mb-5 rounded-xl border border-[#E8E4DD] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:p-7">
-        <h2 className="mb-4 text-lg font-bold text-[#4A3728]">7大能力域概览</h2>
+        <h2 className="mb-4 text-lg font-bold text-[#4A3728]">6大能力域概览</h2>
         {report.domainStats.map((ds, i) => (
           <div key={i} className="mb-3 last:mb-0">
             <div className="flex items-center justify-between rounded-t-lg bg-[#F5F6F8] px-4 py-2">

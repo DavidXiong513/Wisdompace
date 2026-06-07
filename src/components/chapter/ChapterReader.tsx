@@ -21,7 +21,7 @@ function SectionCard({ chapterSlug, section, index }: { chapterSlug: string; sec
   return (
     <div
       id={section.id}
-      className="scroll-mt-[120px] rounded-xl border p-6 sm:p-8"
+      className="scroll-mt-[120px] rounded-xl border p-5 sm:p-8"
       style={{
         paddingBottom: '2.5rem',
         background: isEven ? 'rgba(255,255,255,0.72)' : 'var(--wp-bg-alt)',
@@ -51,7 +51,7 @@ function SectionCard({ chapterSlug, section, index }: { chapterSlug: string; sec
           {index + 1}
         </span>
         <h2
-          className="text-xl font-bold sm:text-2xl"
+          className="text-lg font-bold sm:text-2xl"
           style={{
             fontFamily: 'var(--wp-font-serif)',
             color:      'var(--wp-ink)',
@@ -85,7 +85,7 @@ function SectionCard({ chapterSlug, section, index }: { chapterSlug: string; sec
       {/* Reflection questions — 思考题模块 */}
       {section.questions && section.questions.length > 0 && (
         <div
-          className="relative mt-10 overflow-hidden rounded-2xl p-6 sm:p-8"
+          className="relative mt-10 overflow-hidden rounded-2xl p-5 sm:p-8"
           style={{
             background: 'linear-gradient(135deg, #FDF8F0 0%, #F5EDE0 100%)',
             border: '1px solid #E8D9C2',

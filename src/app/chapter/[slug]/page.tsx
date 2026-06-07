@@ -54,10 +54,19 @@ export default async function ChapterPage({ params }: Props) {
       <div className="relative z-10">
         <ChapterTopNav />
 
-        <main className="mx-auto max-w-7xl px-6 pt-8 pb-20 sm:pt-10">
+        <main className="mx-auto max-w-7xl px-4 pt-8 pb-20 sm:px-6 sm:pt-10">
           <div className="flex flex-col lg:flex-row lg:gap-12">
-            {/* 目录导航 - 改为 sticky 随容器定位 */}
-            <aside className="lg:sticky lg:top-32 lg:h-[calc(100vh-8rem)] lg:w-64 lg:shrink-0">
+            {/* 移动端目录导航：顶置、横向滚动、吸顶 */}
+            <div className="lg:hidden">
+              <ChapterToc
+                chapterSlug={chapter.slug}
+                sections={chapter.sections}
+                variant="bar"
+              />
+            </div>
+
+            {/* 桌面端目录导航 - 保持原样 */}
+            <aside className="hidden lg:sticky lg:top-32 lg:block lg:h-[calc(100vh-8rem)] lg:w-64 lg:shrink-0">
               <ChapterToc
                 chapterSlug={chapter.slug}
                 sections={chapter.sections}
@@ -67,7 +76,7 @@ export default async function ChapterPage({ params }: Props) {
 
             <div className="min-w-0 flex-1">
               <div className="mx-auto w-full max-w-4xl">
-                <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-6 sm:gap-8">
                   {/* 章节头部卡片 */}
                   <ChapterHeader
                     slug={slug}

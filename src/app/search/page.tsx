@@ -3,10 +3,12 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import NavBar from "@/components/NavBar";
 import { searchAll, type SearchHit } from "@/lib/search-index";
 
 function SearchContent() {
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get("q") || "";
@@ -19,7 +21,7 @@ function SearchContent() {
     if (query) {
       setIsSearching(true);
       try {
-        const hits = searchAll(query);
+        const hits = searchAll(query, i18n.language || "zh-CN");
         setResults(hits);
       } catch (error) {
         console.error('Search error:', error);
@@ -30,7 +32,7 @@ function SearchContent() {
     } else {
       setResults([]);
     }
-  }, [query]);
+  }, [query, i18n.language]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,14 +68,14 @@ function SearchContent() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="搜索章节内容..."
+              placeholder={t("search.placeholder")}
               className="flex-1 bg-transparent text-base text-slate-700 placeholder:text-slate-500 focus:outline-none"
             />
             <button
               type="submit"
               className="rounded-full bg-[#C9A15A]/85 px-5 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-[#B58A3A]/85"
             >
-              搜索
+              {t("search.button")}
             </button>
           </div>
         </form>
@@ -83,11 +85,17 @@ function SearchContent() {
           <div>
             <div className="mb-6 text-sm" style={{ color: "var(--wp-ink-muted)" }}>
               {isSearching ? (
-                "搜索中..."
+                t("tool.loadError") === "Tool failed to load. Please refresh the page." ? "Searching..." : "搜索中..."
               ) : results.length > 0 ? (
-                <>找到 <strong className="font-semibold" style={{ color: "var(--wp-ink)" }}>{results.length}</strong> 条结果</>
+                <>
+                  {t("nav.logout") === "Logout" ? "Found " : "找到 "}
+                  <strong className="font-semibold" style={{ color: "var(--wp-ink)" }}>{results.length}</strong> 
+                  {t("nav.logout") === "Logout" ? " results" : " 条结果"}
+                </>
               ) : (
-                <>未找到与 &quot;<strong>{query}</strong>&quot; 相关的内容</>
+                <>
+                  {t("nav.logout") === "Logout" ? "No results found for " : "未找到与 "}&quot;<strong>{query}</strong>&quot;{t("nav.logout") === "Logout" ? "" : " 相关的内容"}
+                </>
               )}
             </div>
 
@@ -121,7 +129,7 @@ function SearchContent() {
             ) : query && !isSearching && (
               <div className="text-center py-12">
                 <p className="text-base" style={{ color: "var(--wp-ink-muted)" }}>
-                  没有找到相关内容，请尝试其他关键词
+                  {t("search.noResults")}
                 </p>
               </div>
             )}
@@ -132,7 +140,7 @@ function SearchContent() {
         {!query && (
           <div className="text-center py-12">
             <p className="text-base" style={{ color: "var(--wp-ink-muted)" }}>
-              请输入关键词开始搜索
+              {t("nav.logout") === "Logout" ? "Enter a keyword to start searching" : "请输入关键词开始搜索"}
             </p>
           </div>
         )}
@@ -142,11 +150,12 @@ function SearchContent() {
 }
 
 export default function SearchPage() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen" style={{ background: "var(--wp-bg)" }}>
       <Suspense fallback={
         <div className="min-h-screen flex items-center justify-center">
-          <p>加载中...</p>
+          <p>{t("tool.loadError") === "Tool failed to load. Please refresh the page." ? "Loading..." : "加载中..."}</p>
         </div>
       }>
         <SearchContent />

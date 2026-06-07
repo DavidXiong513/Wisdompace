@@ -5,6 +5,7 @@ import { validateSearchQuery } from '@/lib/security';
 
 const SearchQuerySchema = z.object({
   q: z.string().min(1).max(100).trim(),
+  lng: z.string().default('zh-CN'),
   limit: z.coerce.number().int().min(1).max(20).default(12),
 });
 
@@ -20,6 +21,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const raw = {
       q: searchParams.get('q') ?? '',
+      lng: searchParams.get('lng') ?? 'zh-CN',
       limit: searchParams.get('limit') ?? '12',
     };
 
@@ -34,7 +36,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const { q, limit } = parsed.data;
+    const { q, lng, limit } = parsed.data;
 
     // 二次安全清洗（复用现有安全模块）
     const validation = validateSearchQuery(q);
@@ -42,7 +44,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: '搜索内容包含非法字符' }, { status: 400 });
     }
 
-    const hits = searchAll(validation.sanitized, limit);
+    const hits = searchAll(validation.sanitized, lng, limit);
 
     return NextResponse.json({ hits, query: q, total: hits.length });
   } catch (err) {

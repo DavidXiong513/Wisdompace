@@ -33,15 +33,15 @@ export function ChapterToc({
 
   const getSectionTitle = (section: ChapterSection) => {
     if (isChinese) return section.title;
-    // Try structured format first: chapterContent.{slug}.{id}.title
-    const structuredKey = `chapterContent.${chapterSlug}.${section.id}.title`;
+    
+    const baseKey = `chapterContent.${chapterSlug}.${section.id}`;
+    const structuredKey = `${baseKey}.title`;
     const structured = t(structuredKey);
+    
     if (structured !== structuredKey) return structured;
-    // Fall back to flat format: chapterContent.{slug}.{id}
-    const flatKey = `chapterContent.${chapterSlug}.${section.id}`;
-    const flat = t(flatKey);
-    if (flat !== flatKey) return flat;
-    return section.title;
+    
+    const flat = t(baseKey);
+    return flat !== baseKey ? flat : section.title;
   };
 
   /* 记录是否正在执行点击触发的滚动，滚动期间暂停 IntersectionObserver 更新 activeId */

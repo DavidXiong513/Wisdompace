@@ -1,6 +1,8 @@
 import { test } from '@playwright/test';
 
 const resolutions = [
+  { width: 390, height: 844, label: 'iPhone13' },
+  { width: 768, height: 1024, label: 'iPad' },
   { width: 1024, height: 768, label: '1024x768' },
   { width: 1440, height: 900, label: '1440x900' },
   { width: 1920, height: 1080, label: '1920x1080' },
