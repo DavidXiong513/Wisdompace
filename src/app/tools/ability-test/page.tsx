@@ -87,7 +87,7 @@ function WelcomePage() {
         </div>
 
         <div className="mt-4 text-center text-xs text-[#8A7E6A]">
-          ⏱ 预计 30-40 分钟 &nbsp;·&nbsp; 📋 42项能力 · 7个批次
+          ⏱ 预计 30-40 分钟 &nbsp;·&nbsp; 📋 42项能力 · {BATCH_NAMES.length}个批次
         </div>
       </div>
 
@@ -336,7 +336,7 @@ function EvaluatePage() {
       {isBatchFirst && (
         <div className="mb-4 flex items-center gap-2.5 rounded-lg bg-[#E8F0E8] px-4 py-3">
           <span className="rounded-full bg-[#6B9A68] px-2.5 py-0.5 text-[11px] font-semibold text-white">
-            第{ability.batch}批/共7批
+            第{ability.batch}批/共{BATCH_NAMES.length}批
           </span>
           <span className="text-sm font-semibold text-[#3D6B3A]">
             {BATCH_NAMES[ability.batch - 1]}
@@ -529,9 +529,10 @@ function BatchSummaryPage() {
   // 总进度
   const doneCount = Object.keys(answers).length;
   const totalPct = Math.round((doneCount / 42) * 100);
+  const maxBatch = Math.max(...getAllAbilities().map(a => a.batch));
 
   const handleNext = () => {
-    if (lastCompletedBatch === 7) {
+    if (lastCompletedBatch === maxBatch) {
       setPhase('review');
     } else {
       const nextBatch = lastCompletedBatch + 1;
@@ -626,7 +627,7 @@ function BatchSummaryPage() {
           onClick={handleNext}
           className="rounded-xl bg-[#6B9A68] px-8 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-[#5A8A57] hover:shadow-md"
         >
-          {lastCompletedBatch === 7 ? '查看回顾 →' : '继续下一批 →'}
+          {lastCompletedBatch === maxBatch ? '查看回顾 →' : '继续下一批 →'}
         </button>
       </div>
     </div>

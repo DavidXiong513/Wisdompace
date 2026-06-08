@@ -5,8 +5,8 @@ export interface Ability {
   id: number;          // 1-42
   name: string;        // 能力名称
   def: string;         // 能力定义
-  domain: number;      // 所属能力域 0-6
-  batch: number;       // 所属批次 1-7
+  domain: number;      // 所属能力域 0-5
+  batch: number;       // 所属批次 1-6
   prof: string[];      // 擅长度行为锚定描述 [4级, 3级, 2级, 1级]
   inte: string[];      // 喜欢度行为锚定描述 [4级, 3级, 2级, 1级]
   related: number[];   // 关联能力ID列表

@@ -23,7 +23,7 @@ interface AbilityState {
   // 评分数据: { [abilityId]: { p: 1-4, i: 1-4 } }
   answers: Record<number, AbilityAnswer>;
 
-  // 上次完成的批次号 (1-7)，用于批次汇总页
+  // 上次完成的批次号 (1-6)，用于批次汇总页
   lastCompletedBatch: number | null;
 
   // 最后更新时间（用于云端合并）
