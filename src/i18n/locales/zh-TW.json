@@ -16,7 +16,11 @@
     "searchPlaceholder": "全站搜尋 性格自測 價值觀測評...",
     "searchBtn": "搜尋",
     "hotLabel": "🔥 熱門搜尋：",
-    "hotTags": ["性格自測", "價值觀測評", "能力自評", "情緒", "壓力"]
+    "hotTags": ["性格自測", "價值觀測評", "能力自評", "情緒", "壓力"],
+    "footerText": "網站製作：思考熊 | 內容來源：《一生的整理》V1.0版（全網同名：借假修真的思考熊）"
+  },
+  "homeNav": {
+    "aboutBear": "🐻 了解思考熊 →"
   },
   "footer": {
     "copyright": "© 2026 《一生的整理》｜Wisdompace · 網站製作：思考熊"

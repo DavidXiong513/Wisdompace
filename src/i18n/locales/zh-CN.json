@@ -16,7 +16,11 @@
     "searchPlaceholder": "全站搜索 性格自测 价值观测评...",
     "searchBtn": "搜索",
     "hotLabel": "🔥 热门搜索：",
-    "hotTags": ["性格自测", "价值观测评", "能力自评", "情绪", "压力"]
+    "hotTags": ["性格自测", "价值观测评", "能力自评", "情绪", "压力"],
+    "footerText": "网站制作：思考熊 | 内容来源：《一生的整理》V1.0版（全网同名：借假修真的思考熊）"
+  },
+  "homeNav": {
+    "aboutBear": "🐻 了解思考熊 →"
   },
   "footer": {
     "copyright": "© 2026 《一生的整理》｜Wisdompace · 网站制作：思考熊"
