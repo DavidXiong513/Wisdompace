@@ -398,10 +398,10 @@ function PeopleInsightEntry() {
 
         <div className="flex-1 text-center sm:text-left">
           <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
-            慧眼识人·长期观察记录
+            慧眼识人.（不靠感觉，靠记录）
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
-            把日常对候选意定人的观察记录下来——言行、压力、利益、态度，累积成判断。
+            长期观察你身边重要的人，让时间帮你做判断。
           </p>
         </div>
 
