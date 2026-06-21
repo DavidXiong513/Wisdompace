@@ -116,6 +116,7 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'hobby-radar',
     'responsibility-list',
     'ta-worth-trust',
+    'people-insight',
     'no-regrets',
     'goodbye-list',
     'farewell-style',

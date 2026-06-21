@@ -384,6 +384,43 @@ function TaWorthTrustEntry() {
   );
 }
 
+// ── 慧眼识人入口卡片 ──
+function PeopleInsightEntry() {
+  return (
+    <Link
+      href="/tools/people-insight"
+      className="group mt-8 block overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+    >
+      <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FDF5EE] text-4xl shadow-inner transition-transform group-hover:scale-110">
+          👁️
+        </div>
+
+        <div className="flex-1 text-center sm:text-left">
+          <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            慧眼识人·长期观察记录
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
+            把日常对候选意定人的观察记录下来——言行、压力、利益、态度，累积成判断。
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D] group-hover:px-8">
+          开始记录
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
+          </svg>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 // ── 责任清单入口卡片 ──
 function ResponsibilityListEntry() {
   return (
@@ -633,6 +670,11 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
   // 特殊处理：意定人选择入口
   if (toolId === 'ta-worth-trust') {
     return <TaWorthTrustEntry />;
+  }
+
+  // 特殊处理：慧眼识人入口
+  if (toolId === 'people-insight') {
+    return <PeopleInsightEntry />;
   }
 
   // 特殊处理：不留遗憾入口

@@ -171,6 +171,13 @@ export const tools: Record<string, ToolInfo> = {
     description:
       '匿名投票看看大家怎么看待养老这件事——你的处境、态度、期待，一票一票投出真实的群体画像。',
   },
+  'people-insight': {
+    id: 'people-insight',
+    name: '慧眼识人·长期观察记录',
+    status: 'developing',
+    description:
+      '长期观察记录候选意定人的言行表现——TA在压力下如何？在利益冲突时如何？通过持续积累形成判断。',
+  },
 };
 
 export function getToolInfo(toolId: string): ToolInfo | null {
