@@ -11,7 +11,8 @@ import type {
 
 /**
  * 慧眼识人本地数据库（IndexedDB）
- * 所有数据纯本地存储，不上传任何服务器
+ * 主数据存储在浏览器本地，登录用户会自动通过 cloudSyncService 同步到 Supabase 云端。
+ * 未登录用户数据仅保存在本地，不会上传服务器。
  */
 
 class KnowPeopleDB extends Dexie {

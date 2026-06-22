@@ -15,20 +15,7 @@ const EXPORT_VERSION = '1.0';
  * @param password 可选密码，提供则加密导出
  */
 export async function exportAll(password?: string): Promise<string> {
-  const db = getDB();
-
-  const data: ExportData = {
-    version: EXPORT_VERSION,
-    exportedAt: new Date().toISOString(),
-    persons: await db.persons.toArray(),
-    hardwareInfos: await db.hardwareInfos.toArray(),
-    softwareTraits: await db.softwareTraits.toArray(),
-    characterScores: await db.characterScores.toArray(),
-    networkInfos: await db.networkInfos.toArray(),
-    abilities: await db.abilities.toArray(),
-    observeEvents: await db.observeEvents.toArray(),
-  };
-
+  const data = await exportAllAsObject();
   const jsonStr = JSON.stringify(data);
 
   if (password) {
@@ -41,6 +28,25 @@ export async function exportAll(password?: string): Promise<string> {
   }
 
   return jsonStr;
+}
+
+/**
+ * 导出所有数据为对象（用于云端同步，不加密）
+ */
+export async function exportAllAsObject(): Promise<ExportData> {
+  const db = getDB();
+
+  return {
+    version: EXPORT_VERSION,
+    exportedAt: new Date().toISOString(),
+    persons: await db.persons.toArray(),
+    hardwareInfos: await db.hardwareInfos.toArray(),
+    softwareTraits: await db.softwareTraits.toArray(),
+    characterScores: await db.characterScores.toArray(),
+    networkInfos: await db.networkInfos.toArray(),
+    abilities: await db.abilities.toArray(),
+    observeEvents: await db.observeEvents.toArray(),
+  };
 }
 
 /**
