@@ -12,20 +12,15 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
-
-// ── 类型 ─────────────────────────────────────────────────────────────────────
-
-type AttributeKey =
-  | 'looks'
-  | 'wealth'
-  | 'fame'
-  | 'health'
-  | 'intelligence'
-  | 'family'
-  | 'longevity'
-  | 'spirituality';
-
-type AttributeScores = Record<AttributeKey, number>;
+import {
+  type AttributeKey,
+  type AttributeScores,
+  SCORE_DESCRIPTIONS,
+  matchDestinyTag,
+  matchWeaknessTags,
+  getTopAttributes,
+  getBottomAttributes,
+} from './report-data';
 
 // ── 常量：八大属性 ───────────────────────────────────────────────────────────
 
@@ -200,20 +195,6 @@ function getScoreLabel(score: number): string {
   return '极高';
 }
 
-function getTopAttributes(scores: AttributeScores, n = 3): AttributeKey[] {
-  return (Object.entries(scores) as [AttributeKey, number][])
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, n)
-    .map(([k]) => k);
-}
-
-function getBottomAttributes(scores: AttributeScores, n = 2): AttributeKey[] {
-  return (Object.entries(scores) as [AttributeKey, number][])
-    .sort((a, b) => a[1] - b[1])
-    .slice(0, n)
-    .map(([k]) => k);
-}
-
 function generateReport(scores: AttributeScores) {
   const top3 = getTopAttributes(scores, 3);
   const bottom2 = getBottomAttributes(scores, 2);
@@ -221,106 +202,50 @@ function generateReport(scores: AttributeScores) {
   const topNames = top3.map(k => ATTRIBUTES.find(a => a.key === k)!.name);
   const bottomNames = bottom2.map(k => ATTRIBUTES.find(a => a.key === k)!.name);
 
-  const lifeArchetype = (() => {
-    const topSet = new Set(top3);
-    if (topSet.has('spirituality') && (topSet.has('health') || topSet.has('longevity'))) {
-      return '清修者';
-    }
-    if (topSet.has('wealth') && topSet.has('fame')) {
-      return '世俗成就者';
-    }
-    if (topSet.has('family') && topSet.has('health')) {
-      return '安稳家庭型';
-    }
-    if (topSet.has('intelligence') && topSet.has('wealth')) {
-      return '智识创富者';
-    }
-    if (topSet.has('looks') && topSet.has('fame')) {
-      return '光芒四射者';
-    }
-    if (topSet.has('health') && topSet.has('longevity')) {
-      return '长寿安康者';
-    }
-    return '平衡修行者';
-  })();
+  // 匹配命格标签（三层优先级：三属性 → 双属性 → 主标签）
+  const destiny = matchDestinyTag(scores);
 
-  const lifeSummary = `根据你的 50 点投胎配置，这一生最可能走向「${lifeArchetype}」的轨迹。${topNames
-    .slice(0, 2)
-    .join(
-      '、'
-    )} 是你最舍得投入福德的维度，说明来世你会把这些领域当作人生的核心战场。与此同时，${bottomNames.join('、')} 相对薄弱，这些空白处会成为你这辈子的暗角与功课。`;
+  // 匹配短板功课标签
+  const weaknesses = matchWeaknessTags(scores);
 
-  const valueReflection = (() => {
-    const parts: string[] = [];
+  // 一生大体情况：命格描述 + 高低分领域
+  const lifeSummary = destiny.desc;
 
-    if (top3.includes('wealth')) {
-      parts.push(
-        '你对物质安全感有很深的执念，可能今生尝过匮乏的滋味，所以把「拥有」放在很高的位置。'
-      );
-    }
-    if (top3.includes('fame')) {
-      parts.push(
-        '你渴望被看见、被记住，这不是虚荣，而是对「存在意义」的追问——你想证明自己没有白来一趟。'
-      );
-    }
-    if (top3.includes('family')) {
-      parts.push('亲密关系是你灵魂的锚点。你潜意识里相信：人这一辈子，归根到底是在关系里活过。');
-    }
-    if (top3.includes('intelligence')) {
-      parts.push('你信任理性与认知的力量，认为理解世界、掌握规律，是获得自由的最可靠路径。');
-    }
-    if (top3.includes('health')) {
-      parts.push('你把身体和心理的安宁视为一切的前提，没有健康，其他分数都失去意义。');
-    }
-    if (top3.includes('longevity')) {
-      parts.push('你希望有足够的时间去体验、去修正、去放下，对「活得久」本身有一种深层的渴望。');
-    }
-    if (top3.includes('spirituality')) {
-      parts.push(
-        '你的灵魂里有一份出离感，对因果、修行、解脱之类的话题有天然的亲近，今生可能已经在寻找答案。'
-      );
-    }
-    if (top3.includes('looks')) {
-      parts.push(
-        '你在意外在形象，这不一定是肤浅，而是明白世界对美貌有优待，想让自己开局轻松一点。'
-      );
-    }
+  // 各属性档位场景描述
+  const scoreScenes = top3.map(key => {
+    const attr = ATTRIBUTES.find(a => a.key === key)!;
+    const score = scores[key];
+    const scene = SCORE_DESCRIPTIONS[key][score];
+    return { attr, score, scene };
+  });
 
-    if (bottom2.includes('spirituality')) {
-      parts.push('你把修行放得很低，说明你更想在这个世界「活得好」，而不是急着「走出去」。');
-    }
-    if (bottom2.includes('wealth')) {
-      parts.push('财富不是你来世的第一优先级，也许你已经隐约觉得：钱买不来真正重要的东西。');
-    }
-    if (bottom2.includes('family')) {
-      parts.push(
-        '你把家庭关系放得很轻，可能今生在亲密关系中受过伤，或是一个天生更独立、更自我的人。'
-      );
-    }
-    if (bottom2.includes('health')) {
-      parts.push(
-        '你默认身体会跟着你走，没有给它太多分数，这提醒你来世要学会照顾这个 vessel（容器）。'
-      );
-    }
+  const weaknessScenes = bottom2.map(key => {
+    const attr = ATTRIBUTES.find(a => a.key === key)!;
+    const score = scores[key];
+    const scene = SCORE_DESCRIPTIONS[key][score];
+    return { attr, score, scene };
+  });
 
-    if (parts.length === 0) {
-      parts.push(
-        '你的配置非常均衡，没有特别突出的维度。这意味着你来世的人生大概率不会大起大落，而是在平凡中修行。'
-      );
-    }
+  // 潜意识价值观折射
+  const valueReflection = `你把最多的福德给了「${topNames.join('、')}」，这不是随意的选择——它照见了你今生最深处的价值排序。你舍得在这些领域投入，说明你潜意识里认定它们是"值得的"。而「${bottomNames.join('、')}」被你放在了末位，也往往是因为你早已放弃，或觉得"不重要"。50 分的分配，就是你灵魂的一份供词。`;
 
-    return parts.join('');
-  })();
+  // 短板功课
+  const weaknessReflection = weaknesses.map(w => `「${w.tag}」：${w.desc}`).join('\n\n');
 
-  const reminder = `50 分终究是有限资源。你在「${topNames.join('、')}」上的慷慨，是对自己灵魂需求的诚实；而在「${bottomNames.join('、')}」上的吝啬，也往往是因为你潜意识里早已放弃或不在乎。来生不会完美，但这份配置会帮你更清楚地看见：你究竟想要怎样的人生。`;
+  // 提醒总结
+  const reminder = `50 分终究是有限资源。你在「${topNames.join('、')}」上的慷慨，是对自己灵魂需求的诚实；而在「${bottomNames.join('、')}」上的吝啬，也往往是因为你潜意识里早已放弃或不在乎。来生不会完美——50 分覆盖不了 80 分的人生，缺口才是功课所在。但这份配置会帮你更清楚地看见：你究竟想要怎样的人生。`;
 
   return {
-    archetype: lifeArchetype,
+    archetype: destiny.tag,
+    matchedType: destiny.matchedType,
     totalUsed,
     topAttributes: top3,
     bottomAttributes: bottom2,
     lifeSummary,
+    scoreScenes,
+    weaknessScenes,
     valueReflection,
+    weaknessReflection,
     reminder,
   };
 }
@@ -692,6 +617,54 @@ export default function NextLifeDesignPage() {
               <p className="text-sm leading-relaxed text-[#5A5A5A] sm:text-base">
                 {report.valueReflection}
               </p>
+            </div>
+
+            {/* 各属性档位场景 */}
+            <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-6">
+              <h3 className="mb-3 text-base font-bold text-[#4A3728] sm:text-lg">
+                你最看重的领域 · 具体场景
+              </h3>
+              <div className="space-y-3">
+                {report.scoreScenes.map(({ attr, score, scene }) => (
+                  <div
+                    key={attr.key}
+                    className="flex items-start gap-3 rounded-lg bg-[#FDF5EE] p-3"
+                  >
+                    <span className="text-xl">{attr.icon}</span>
+                    <div className="flex-1">
+                      <div className="text-sm font-bold text-[#4A3728]">
+                        {attr.name} · {score}分
+                      </div>
+                      <p className="mt-1 text-xs leading-relaxed text-[#6A6256]">{scene}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 短板功课 */}
+            <div className="rounded-xl border border-[#C87941]/30 bg-[#FDF5EE] p-4 sm:p-6">
+              <h3 className="mb-3 text-base font-bold text-[#4A3728] sm:text-lg">
+                你的功课 · 被你搁置的领域
+              </h3>
+              <div className="space-y-3">
+                {report.weaknessScenes.map(({ attr, score, scene }) => (
+                  <div key={attr.key} className="flex items-start gap-3 rounded-lg bg-white p-3">
+                    <span className="text-xl opacity-50">{attr.icon}</span>
+                    <div className="flex-1">
+                      <div className="text-sm font-bold text-[#8A7E6A]">
+                        {attr.name} · {score}分
+                      </div>
+                      <p className="mt-1 text-xs leading-relaxed text-[#8A7E6A]">{scene}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 space-y-2">
+                <p className="text-sm leading-relaxed text-[#6A6256]">
+                  {report.weaknessReflection}
+                </p>
+              </div>
             </div>
 
             {/* 提醒 */}
