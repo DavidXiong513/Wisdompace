@@ -22,7 +22,7 @@
  */
 export const ALLOWED_SCRIPT_DOMAINS = [
   // 'https://www.googletagmanager.com', // Google Analytics
-  // 'https://hm.baidu.com',              // 百度统计
+  'https://hm.baidu.com', // 百度统计脚本
   // 'https://cdn.jsdelivr.net',          // JSDelivr CDN
 ];
 
@@ -56,6 +56,8 @@ export const ALLOWED_CONNECT_DOMAINS = [
   'https://api.openai.com', // OpenAI API
   'https://api.moonshot.cn', // Kimi API
   'https://api.deepseek.com', // DeepSeek API
+  'https://hm.baidu.com', // 百度统计数据上报
+  'https://ghm.baidu.com', // 百度统计备用上报
   // 'https://analytics.google.com',      // 分析服务
 ];
 
