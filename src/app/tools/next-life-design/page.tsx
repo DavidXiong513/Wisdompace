@@ -123,9 +123,13 @@ const WARM_FILL = 'rgba(200,121,65,0.25)';
 const GRID_COLOR = '#E8D9C2';
 const TEXT_COLOR = '#5D4A3A';
 
-// ── 安全工具：localStorage 读写封装（带降级） ─────────────────────────────────
+// ── 安全工具：localStorage 读写封装（带降级 + 快照缓存） ─────────────────────
 
-function safeGetScores(): AttributeScores {
+// useSyncExternalStore 要求 getSnapshot 返回值在内容不变时保持引用稳定，
+// 否则每次 render 都会触发级联更新。通过 cachedScores 缓存最近一次解析结果。
+let cachedScores: AttributeScores | null = null;
+
+function computeScores(): AttributeScores {
   if (typeof window === 'undefined') return DEFAULT_SCORES;
   try {
     const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -144,10 +148,18 @@ function safeGetScores(): AttributeScores {
   }
 }
 
+function safeGetScores(): AttributeScores {
+  if (!cachedScores) {
+    cachedScores = computeScores();
+  }
+  return cachedScores;
+}
+
 function safeSetScores(next: AttributeScores) {
   if (typeof window === 'undefined') return;
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    cachedScores = next; // 直接更新缓存，保证引用稳定
     window.dispatchEvent(new StorageEvent('storage'));
   } catch {
     // 忽略隐私模式/存储限制等异常
@@ -156,8 +168,12 @@ function safeSetScores(next: AttributeScores) {
 
 function subscribe(callback: () => void) {
   if (typeof window === 'undefined') return () => {};
-  window.addEventListener('storage', callback);
-  return () => window.removeEventListener('storage', callback);
+  const handler = () => {
+    cachedScores = null; // 其他标签页修改时清空缓存，强制重新读取
+    callback();
+  };
+  window.addEventListener('storage', handler);
+  return () => window.removeEventListener('storage', handler);
 }
 
 function getServerSnapshot(): AttributeScores {
