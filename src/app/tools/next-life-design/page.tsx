@@ -108,14 +108,14 @@ const MAX_PER_ATTR = 10;
 const STORAGE_KEY = 'next-life-design-scores';
 
 const DEFAULT_SCORES: AttributeScores = {
-  looks: 5,
-  wealth: 5,
-  fame: 5,
-  health: 5,
-  intelligence: 5,
-  family: 5,
-  longevity: 5,
-  spirituality: 5,
+  looks: 0,
+  wealth: 0,
+  fame: 0,
+  health: 0,
+  intelligence: 0,
+  family: 0,
+  longevity: 0,
+  spirituality: 0,
 };
 
 const WARM_STROKE = '#C87941';
@@ -552,8 +552,8 @@ export default function NextLifeDesignPage() {
 
         {/* 主内容：滑块 + 雷达图 */}
         <div className="grid gap-4 lg:grid-cols-2 lg:gap-6">
-          {/* 左侧滑块 */}
-          <div className="order-2 space-y-3 lg:order-1 lg:space-y-4">
+          {/* 上方（移动端）/ 左侧（桌面端）滑块 */}
+          <div className="space-y-3 lg:order-1 lg:space-y-4">
             {ATTRIBUTES.map(attr => (
               <SliderInput
                 key={attr.key}
@@ -565,8 +565,8 @@ export default function NextLifeDesignPage() {
             ))}
           </div>
 
-          {/* 右侧雷达图 */}
-          <div className="order-1 rounded-2xl border border-[#E8D9C2] bg-white p-4 shadow-sm sm:p-6 lg:sticky lg:top-6 lg:order-2 lg:self-start">
+          {/* 下方（移动端）/ 右侧（桌面端）雷达图 */}
+          <div className="rounded-2xl border border-[#E8D9C2] bg-white p-4 shadow-sm sm:p-6 lg:sticky lg:top-6 lg:order-2 lg:self-start">
             <h2 className="mb-2 text-center text-base font-bold text-[#4A3728] sm:mb-4 sm:text-lg">
               你的来生雷达图
             </h2>
