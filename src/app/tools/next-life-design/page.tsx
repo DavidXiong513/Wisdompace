@@ -461,12 +461,23 @@ export default function NextLifeDesignPage() {
               来生设计：配置你的人生属性
             </h1>
           </div>
-          <p className="text-sm leading-relaxed text-[#6A6256] sm:text-base">
-            假设你马上要投胎到下一世去做人，目前手里握着
-            <strong className="text-[#C87941]">50 点投胎福德积分</strong>。你会如何分配这 50
-            个积点到以下八大属性中？
-          </p>
-          <p className="mt-2 text-xs leading-relaxed text-[#8A7E6A] sm:text-sm">
+
+          {/* 短视频介绍文案 */}
+          <div className="mb-4 rounded-xl border border-[#C87941]/20 bg-[#FDF5EE] p-4 sm:p-5">
+            <p className="text-sm leading-loose text-[#5D4A3A] sm:text-base">
+              假如来生可以定制，你手里握着
+              <strong className="text-[#C87941]">50 点投胎福德积分</strong>
+              ，要分给八大属性。每个属性最高 10 分，总分只有
+              50——你给颜值多一分，修行就少一分；你把钱攒够了，家庭可能就顾不上。
+            </p>
+            <p className="mt-3 text-sm leading-loose text-[#5D4A3A] sm:text-base">
+              50 分覆盖不了 80 分的人生，
+              <strong className="text-[#C87941]">你选了什么，就失去了什么</strong>
+              。这不是算命，而是一面镜子，照见你今生最深处的价值排序。
+            </p>
+          </div>
+
+          <p className="text-xs leading-relaxed text-[#8A7E6A] sm:text-sm">
             每个属性 0–10 分，八大属性总分不能超过 50 分。拖动滑块或点击 ±
             按钮实时调整，雷达图会同步变化。
           </p>
