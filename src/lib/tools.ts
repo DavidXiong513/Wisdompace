@@ -77,6 +77,18 @@ export const tools: Record<string, ToolInfo> = {
     status: 'ready',
     description: '14种职业价值取向 → 筛选 → 排序 → 锁定3个核心价值观。',
   },
+  'career-values-section': {
+    id: 'career-values-section',
+    name: '生涯价值观测评',
+    status: 'ready',
+    description: '生涯价值观测评 + 来生设计趣味游戏，看清这一世最看重什么。',
+  },
+  'next-life-design': {
+    id: 'next-life-design',
+    name: '来生设计：配置你的人生属性',
+    status: 'developing',
+    description: '用50点投胎福德积分分配到八大属性，折射你内心深处的价值排序。',
+  },
   'ability-card': {
     id: 'ability-card',
     name: '社会能力自评',

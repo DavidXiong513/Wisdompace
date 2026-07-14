@@ -122,6 +122,7 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'farewell-style',
     'ai-knowledge-base',
     'community-aging-poll',
+    'career-values-section',
   ].includes(toolId);
 
   return (
