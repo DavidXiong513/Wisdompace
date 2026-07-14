@@ -1,4 +1,5 @@
 'use client';
+'use no memo';
 
 import { useMemo, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
@@ -122,17 +123,20 @@ const WARM_FILL = 'rgba(200,121,65,0.25)';
 const GRID_COLOR = '#E8D9C2';
 const TEXT_COLOR = '#5D4A3A';
 
-// ── localStorage 外部存储 ───────────────────────────────────────────────────
+// ── 安全工具：localStorage 读写封装（带降级） ─────────────────────────────────
 
-function parseScores(saved: string | null): AttributeScores {
-  if (!saved) return DEFAULT_SCORES;
+function safeGetScores(): AttributeScores {
+  if (typeof window === 'undefined') return DEFAULT_SCORES;
   try {
-    const parsed = JSON.parse(saved) as AttributeScores;
-    if (!parsed || typeof parsed !== 'object') return DEFAULT_SCORES;
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    if (!saved) return DEFAULT_SCORES;
+    const parsed = JSON.parse(saved) as Partial<AttributeScores>;
     const valid: AttributeScores = { ...DEFAULT_SCORES };
     ATTRIBUTES.forEach(attr => {
       const v = Number(parsed[attr.key]);
-      if (!Number.isNaN(v)) valid[attr.key] = Math.max(0, Math.min(MAX_PER_ATTR, v));
+      if (!Number.isNaN(v)) {
+        valid[attr.key] = Math.max(0, Math.min(MAX_PER_ATTR, v));
+      }
     });
     return valid;
   } catch {
@@ -140,22 +144,24 @@ function parseScores(saved: string | null): AttributeScores {
   }
 }
 
-function getClientSnapshot(): AttributeScores {
-  return parseScores(localStorage.getItem(STORAGE_KEY));
-}
-
-function getServerSnapshot(): AttributeScores {
-  return DEFAULT_SCORES;
+function safeSetScores(next: AttributeScores) {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    window.dispatchEvent(new StorageEvent('storage'));
+  } catch {
+    // 忽略隐私模式/存储限制等异常
+  }
 }
 
 function subscribe(callback: () => void) {
+  if (typeof window === 'undefined') return () => {};
   window.addEventListener('storage', callback);
   return () => window.removeEventListener('storage', callback);
 }
 
-function writeScores(next: AttributeScores) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-  window.dispatchEvent(new StorageEvent('storage'));
+function getServerSnapshot(): AttributeScores {
+  return DEFAULT_SCORES;
 }
 
 // ── 工具函数 ─────────────────────────────────────────────────────────────────
@@ -221,9 +227,7 @@ function generateReport(scores: AttributeScores) {
     .slice(0, 2)
     .join(
       '、'
-    )} 是你最舍得投入福德的维度，说明来世你会把这些领域当作人生的核心战场。与此同时，${bottomNames.join(
-    '、'
-  )} 相对薄弱，这些空白处会成为你这辈子的暗角与功课。`;
+    )} 是你最舍得投入福德的维度，说明来世你会把这些领域当作人生的核心战场。与此同时，${bottomNames.join('、')} 相对薄弱，这些空白处会成为你这辈子的暗角与功课。`;
 
   const valueReflection = (() => {
     const parts: string[] = [];
@@ -287,11 +291,7 @@ function generateReport(scores: AttributeScores) {
     return parts.join('');
   })();
 
-  const reminder = `50 分终究是有限资源。你在「${topNames.join(
-    '、'
-  )}」上的慷慨，是对自己灵魂需求的诚实；而在「${bottomNames.join(
-    '、'
-  )}」上的吝啬，也往往是因为你潜意识里早已放弃或不在乎。来生不会完美，但这份配置会帮你更清楚地看见：你究竟想要怎样的人生。`;
+  const reminder = `50 分终究是有限资源。你在「${topNames.join('、')}」上的慷慨，是对自己灵魂需求的诚实；而在「${bottomNames.join('、')}」上的吝啬，也往往是因为你潜意识里早已放弃或不在乎。来生不会完美，但这份配置会帮你更清楚地看见：你究竟想要怎样的人生。`;
 
   return {
     archetype: lifeArchetype,
@@ -310,42 +310,68 @@ function SliderInput({
   attr,
   value,
   onChange,
-  disabled,
+  canIncrease,
 }: {
   attr: (typeof ATTRIBUTES)[number];
   value: number;
   onChange: (v: number) => void;
-  disabled: boolean;
+  canIncrease: boolean;
 }) {
+  const isMaxed = value === MAX_PER_ATTR;
+  const isMinned = value === 0;
+
   return (
-    <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 shadow-sm transition-all hover:border-[#C87941]/30">
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">{attr.icon}</span>
-          <div>
-            <div className="font-bold text-[#4A3728]">{attr.name}</div>
-            <div className="text-xs text-[#8A7E6A]">{attr.desc}</div>
+    <div className="rounded-xl border border-[#E8D9C2] bg-white p-3 shadow-sm transition-all hover:border-[#C87941]/30 sm:p-4">
+      <div className="mb-2 flex items-center justify-between">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="text-xl sm:text-2xl">{attr.icon}</span>
+          <div className="min-w-0">
+            <div className="text-sm font-bold text-[#4A3728] sm:text-base">{attr.name}</div>
+            <div className="text-[10px] text-[#8A7E6A] sm:text-xs">{attr.desc}</div>
           </div>
         </div>
-        <div className="text-right">
-          <div className="text-2xl font-bold text-[#C87941] tabular-nums">{value}</div>
+        <div className="ml-2 text-right">
+          <div className="text-xl font-bold text-[#C87941] tabular-nums sm:text-2xl">{value}</div>
           <div className="text-[10px] text-[#8A7E6A]">{getScoreLabel(value)}</div>
         </div>
       </div>
 
-      <input
-        type="range"
-        min={0}
-        max={MAX_PER_ATTR}
-        step={1}
-        value={value}
-        disabled={disabled}
-        onChange={e => onChange(Number(e.target.value))}
-        className="w-full cursor-pointer accent-[#C87941] disabled:cursor-not-allowed"
-      />
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          aria-label={`减少 ${attr.name}`}
+          disabled={isMinned}
+          onClick={() => onChange(Math.max(0, value - 1))}
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F5F0E8] text-sm font-bold text-[#C87941] disabled:opacity-40 sm:h-9 sm:w-9"
+        >
+          −
+        </button>
+
+        <input
+          type="range"
+          min={0}
+          max={MAX_PER_ATTR}
+          step={1}
+          value={value}
+          onChange={e => onChange(Number(e.target.value))}
+          className="w-full cursor-pointer accent-[#C87941]"
+          aria-label={`调整 ${attr.name} 的分数`}
+        />
+
+        <button
+          type="button"
+          aria-label={`增加 ${attr.name}`}
+          disabled={isMaxed || !canIncrease}
+          onClick={() => onChange(Math.min(MAX_PER_ATTR, value + 1))}
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F5F0E8] text-sm font-bold text-[#C87941] disabled:opacity-40 sm:h-9 sm:w-9"
+        >
+          +
+        </button>
+      </div>
+
       <div className="mt-2 flex justify-between text-[10px] text-[#8A7E6A]">
-        <span>{attr.low}</span>
-        <span>{attr.high}</span>
+        <span className="max-w-[45%] truncate">{attr.low}</span>
+        <span className="max-w-[45%] truncate text-right">{attr.high}</span>
       </div>
     </div>
   );
@@ -366,12 +392,12 @@ function NextLifeRadarChart({ scores }: { scores: AttributeScores }) {
 
   return (
     <div className="w-full">
-      <ResponsiveContainer width="100%" height={320}>
-        <RadarChart cx="50%" cy="50%" outerRadius="72%" data={data}>
+      <ResponsiveContainer width="100%" height={280}>
+        <RadarChart cx="50%" cy="50%" outerRadius="65%" data={data}>
           <PolarGrid stroke={GRID_COLOR} />
           <PolarAngleAxis
             dataKey="attribute"
-            tick={{ fill: TEXT_COLOR, fontSize: 12, fontWeight: 600 }}
+            tick={{ fill: TEXT_COLOR, fontSize: 11, fontWeight: 600 }}
             tickLine={false}
           />
           <PolarRadiusAxis angle={90} domain={[0, MAX_PER_ATTR]} tick={false} axisLine={false} />
@@ -383,6 +409,7 @@ function NextLifeRadarChart({ scores }: { scores: AttributeScores }) {
             fillOpacity={0.35}
             strokeWidth={2}
             dot={{ r: 4, fill: WARM_STROKE, strokeWidth: 0 }}
+            isAnimationActive={false}
           />
           <Tooltip
             content={({ active, payload }) => {
@@ -407,45 +434,91 @@ function NextLifeRadarChart({ scores }: { scores: AttributeScores }) {
 // ── 主页面 ───────────────────────────────────────────────────────────────────
 
 export default function NextLifeDesignPage() {
-  const scores = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
+  const scores = useSyncExternalStore(subscribe, safeGetScores, getServerSnapshot);
   const [showReport, setShowReport] = useState(false);
+  const isMounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   const remaining = getRemainingPoints(scores);
   const isOver = remaining < 0;
   const report = useMemo(() => generateReport(scores), [scores]);
 
   const handleChange = (key: AttributeKey, value: number) => {
+    const currentValue = scores[key];
+    if (value === currentValue) return;
+
     const next = { ...scores, [key]: value };
     const used = Object.values(next).reduce((sum, v) => sum + v, 0);
-    // 如果超过 50 分，不允许继续增加（但允许减少）
-    if (used > TOTAL_POINTS && value > scores[key]) {
-      return;
+
+    if (used > TOTAL_POINTS && value > currentValue) {
+      // 如果增加会超出，则尽可能向上取到刚好用满 50 分
+      const available = TOTAL_POINTS - (used - value);
+      if (available >= currentValue) {
+        next[key] = Math.max(currentValue, Math.min(MAX_PER_ATTR, available));
+      } else {
+        return;
+      }
     }
-    writeScores(next);
+
+    safeSetScores(next);
     setShowReport(false);
   };
 
+  const handleReset = () => {
+    safeSetScores(DEFAULT_SCORES);
+    setShowReport(false);
+  };
+
+  // 每个属性是否还能继续增加（用于 + 按钮状态）
+  const canIncreaseMap = useMemo(() => {
+    const map: Record<AttributeKey, boolean> = {
+      looks: false,
+      wealth: false,
+      fame: false,
+      health: false,
+      intelligence: false,
+      family: false,
+      longevity: false,
+      spirituality: false,
+    };
+    ATTRIBUTES.forEach(attr => {
+      const afterIncrease = {
+        ...scores,
+        [attr.key]: Math.min(MAX_PER_ATTR, scores[attr.key] + 1),
+      };
+      const used = Object.values(afterIncrease).reduce((sum, v) => sum + v, 0);
+      map[attr.key] = used <= TOTAL_POINTS && scores[attr.key] < MAX_PER_ATTR;
+    });
+    return map;
+  }, [scores]);
+
   return (
-    <main className="min-h-screen bg-[#F5F0E8] px-4 py-10">
+    <main className="min-h-screen bg-[#F5F0E8] px-3 py-6 sm:px-4 sm:py-10">
       <div className="mx-auto max-w-5xl">
         {/* 头部介绍 */}
-        <div className="mb-8 rounded-2xl border border-[#E8D9C2] bg-white p-6 shadow-sm sm:p-8">
-          <div className="mb-4 flex items-center gap-3">
-            <span className="text-4xl">🌀</span>
-            <h1 className="text-2xl font-bold text-[#4A3728]">来生设计：配置你的人生属性</h1>
+        <div className="mb-6 rounded-2xl border border-[#E8D9C2] bg-white p-4 shadow-sm sm:mb-8 sm:p-6 lg:p-8">
+          <div className="mb-3 flex items-center gap-3">
+            <span className="text-3xl sm:text-4xl">🌀</span>
+            <h1 className="text-xl font-bold text-[#4A3728] sm:text-2xl lg:text-3xl">
+              来生设计：配置你的人生属性
+            </h1>
           </div>
-          <p className="leading-relaxed text-[#6A6256]">
+          <p className="text-sm leading-relaxed text-[#6A6256] sm:text-base">
             假设你马上要投胎到下一世去做人，目前手里握着
             <strong className="text-[#C87941]">50 点投胎福德积分</strong>。你会如何分配这 50
             个积点到以下八大属性中？
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
-            每个属性 0–10 分，八大属性总分不能超过 50 分。拖动滑块实时调整，雷达图会同步变化。
+          <p className="mt-2 text-xs leading-relaxed text-[#8A7E6A] sm:text-sm">
+            每个属性 0–10 分，八大属性总分不能超过 50 分。拖动滑块或点击 ±
+            按钮实时调整，雷达图会同步变化。
           </p>
         </div>
 
         {/* 积分余额条 */}
-        <div className="mb-6 rounded-xl border border-[#E8D9C2] bg-white p-4 shadow-sm">
+        <div className="mb-5 rounded-xl border border-[#E8D9C2] bg-white p-4 shadow-sm sm:mb-6">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-[#4A3728]">剩余福德积分</span>
             <span
@@ -478,45 +551,54 @@ export default function NextLifeDesignPage() {
         </div>
 
         {/* 主内容：滑块 + 雷达图 */}
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-2 lg:gap-6">
           {/* 左侧滑块 */}
-          <div className="space-y-4">
+          <div className="order-2 space-y-3 lg:order-1 lg:space-y-4">
             {ATTRIBUTES.map(attr => (
               <SliderInput
                 key={attr.key}
                 attr={attr}
                 value={scores[attr.key]}
-                disabled={isOver && scores[attr.key] === MAX_PER_ATTR}
+                canIncrease={canIncreaseMap[attr.key]}
                 onChange={v => handleChange(attr.key, v)}
               />
             ))}
           </div>
 
           {/* 右侧雷达图 */}
-          <div className="rounded-2xl border border-[#E8D9C2] bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-center text-lg font-bold text-[#4A3728]">你的来生雷达图</h2>
-            <NextLifeRadarChart scores={scores} />
-            <p className="mt-4 text-center text-xs text-[#8A7E6A]">
-              雷达图会随你的配置实时变化。点击数据点可查看具体分数。
-            </p>
+          <div className="order-1 rounded-2xl border border-[#E8D9C2] bg-white p-4 shadow-sm sm:p-6 lg:sticky lg:top-6 lg:order-2 lg:self-start">
+            <h2 className="mb-2 text-center text-base font-bold text-[#4A3728] sm:mb-4 sm:text-lg">
+              你的来生雷达图
+            </h2>
+            {isMounted ? (
+              <>
+                <NextLifeRadarChart scores={scores} />
+                <p className="mt-2 text-center text-[10px] text-[#8A7E6A] sm:mt-4 sm:text-xs">
+                  雷达图会随你的配置实时变化。悬停数据点可查看分数。
+                </p>
+              </>
+            ) : (
+              <div className="flex h-[280px] items-center justify-center text-sm text-[#8A7E6A]">
+                加载中…
+              </div>
+            )}
           </div>
         </div>
 
         {/* 生成报告按钮 */}
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
+        <div className="mt-6 flex flex-wrap justify-center gap-3 sm:mt-8 sm:gap-4">
           <button
+            type="button"
             onClick={() => setShowReport(true)}
-            disabled={isOver}
-            className="rounded-full bg-[#C87941] px-8 py-3 text-base font-bold text-white shadow-md transition-all hover:bg-[#A85E2D] disabled:cursor-not-allowed disabled:opacity-40"
+            disabled={isOver || remaining > 0}
+            className="rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:bg-[#A85E2D] disabled:cursor-not-allowed disabled:opacity-40 sm:px-8 sm:py-3 sm:text-base"
           >
             {showReport ? '已生成来生档案' : '生成我的来生档案'}
           </button>
           <button
-            onClick={() => {
-              writeScores(DEFAULT_SCORES);
-              setShowReport(false);
-            }}
-            className="rounded-full border border-[#E8D9C2] bg-white px-6 py-3 text-sm font-bold text-[#4A3728] transition-all hover:border-[#C87941] hover:text-[#C87941]"
+            type="button"
+            onClick={handleReset}
+            className="rounded-full border border-[#E8D9C2] bg-white px-5 py-2.5 text-sm font-bold text-[#4A3728] transition-all hover:border-[#C87941] hover:text-[#C87941]"
           >
             重置配置
           </button>
@@ -524,12 +606,12 @@ export default function NextLifeDesignPage() {
 
         {/* 报告区域 */}
         {showReport && !isOver && (
-          <div className="mt-10 space-y-6 rounded-2xl border border-[#C87941]/20 bg-[#FDF5EE] p-6 shadow-sm sm:p-8">
+          <div className="mt-8 space-y-4 rounded-2xl border border-[#C87941]/20 bg-[#FDF5EE] p-4 shadow-sm sm:mt-10 sm:space-y-6 sm:p-6 lg:p-8">
             <div className="text-center">
               <span className="inline-block rounded-full bg-[#C87941] px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-white uppercase">
                 来生档案
               </span>
-              <h2 className="mt-3 text-2xl font-bold text-[#4A3728]">
+              <h2 className="mt-3 text-xl font-bold text-[#4A3728] sm:text-2xl">
                 你的来世身份：{report.archetype}
               </h2>
               <p className="mt-2 text-sm text-[#8A7E6A]">
@@ -538,8 +620,8 @@ export default function NextLifeDesignPage() {
             </div>
 
             {/* 高分与低分 */}
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-xl border border-[#E8D9C2] bg-white p-5">
+            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+              <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-5">
                 <h3 className="mb-3 text-sm font-bold text-[#4A3728]">你最舍得投入的领域</h3>
                 <div className="flex flex-wrap gap-2">
                   {report.topAttributes.map(key => {
@@ -555,7 +637,7 @@ export default function NextLifeDesignPage() {
                   })}
                 </div>
               </div>
-              <div className="rounded-xl border border-[#E8D9C2] bg-white p-5">
+              <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-5">
                 <h3 className="mb-3 text-sm font-bold text-[#4A3728]">你相对淡薄的领域</h3>
                 <div className="flex flex-wrap gap-2">
                   {report.bottomAttributes.map(key => {
@@ -574,35 +656,41 @@ export default function NextLifeDesignPage() {
             </div>
 
             {/* 人生大体情况 */}
-            <div className="rounded-xl border border-[#E8D9C2] bg-white p-6">
-              <h3 className="mb-3 text-lg font-bold text-[#4A3728]">一生大体情况</h3>
-              <p className="leading-relaxed text-[#5A5A5A]">{report.lifeSummary}</p>
+            <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-6">
+              <h3 className="mb-3 text-base font-bold text-[#4A3728] sm:text-lg">一生大体情况</h3>
+              <p className="text-sm leading-relaxed text-[#5A5A5A] sm:text-base">
+                {report.lifeSummary}
+              </p>
             </div>
 
             {/* 潜意识价值观折射 */}
-            <div className="rounded-xl border border-[#E8D9C2] bg-white p-6">
-              <h3 className="mb-3 text-lg font-bold text-[#4A3728]">潜意识价值观折射</h3>
-              <p className="leading-relaxed text-[#5A5A5A]">{report.valueReflection}</p>
+            <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-6">
+              <h3 className="mb-3 text-base font-bold text-[#4A3728] sm:text-lg">
+                潜意识价值观折射
+              </h3>
+              <p className="text-sm leading-relaxed text-[#5A5A5A] sm:text-base">
+                {report.valueReflection}
+              </p>
             </div>
 
             {/* 提醒 */}
-            <div className="rounded-xl border border-[#C87941]/30 bg-[#FDF5EE] p-6">
+            <div className="rounded-xl border border-[#C87941]/30 bg-[#FDF5EE] p-4 sm:p-6">
               <p className="text-sm leading-relaxed text-[#6A6256]">{report.reminder}</p>
             </div>
           </div>
         )}
 
         {/* 底部导航 */}
-        <div className="mt-10 flex flex-wrap justify-center gap-4">
+        <div className="mt-8 flex flex-wrap justify-center gap-3 sm:mt-10 sm:gap-4">
           <Link
             href="/chapter/chapter-1"
-            className="rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:bg-[#A85E2D]"
+            className="rounded-full bg-[#C87941] px-5 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:bg-[#A85E2D]"
           >
             返回看见自己
           </Link>
           <Link
             href="/tools/career-values-test"
-            className="rounded-full border border-[#C87941] px-6 py-2.5 text-sm font-bold text-[#C87941] transition-all hover:bg-[#FDF5EE]"
+            className="rounded-full border border-[#C87941] px-5 py-2.5 text-sm font-bold text-[#C87941] transition-all hover:bg-[#FDF5EE]"
           >
             去生涯价值观测评
           </Link>
