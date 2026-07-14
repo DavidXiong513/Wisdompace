@@ -64,8 +64,10 @@ function getSecurityHeaders() {
 }
 
 const nextConfig: NextConfig = {
-  // React Compiler: Windows 开发环境禁用，Vercel (Linux) 生产构建时启用
-  reactCompiler: process.env.NODE_ENV === 'production',
+  // React Compiler: 暂禁用，避免与 Recharts 雷达图/ResponsiveContainer 内部
+  // useEffect setState 冲突导致 React #185 无限循环（Maximum update depth）。
+  // 后续可在所有 Recharts 工具页严格用 'use no memo' 后再行启用。
+  reactCompiler: false,
 
   // 安全响应头（根据环境自动调整）
   async headers() {
