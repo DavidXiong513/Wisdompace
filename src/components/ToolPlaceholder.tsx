@@ -444,8 +444,7 @@ function CareerValuesSectionEntry() {
               来生设计：用 50 点投胎积分配置你的来世人生
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
-              颜值身材、财富财商、名誉地位、身心健康、学习能力、和睦家庭、长寿善终、修行善根——八大属性，总分
-              50。如何分配，照见你今生最深处的价值排序。
+              50 点积分 × 8 大属性，照见你的价值排序。
             </p>
           </div>
 
