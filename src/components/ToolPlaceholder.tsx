@@ -441,10 +441,11 @@ function CareerValuesSectionEntry() {
 
           <div className="flex-1 text-center sm:text-left">
             <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
-              来生设计：配置你的人生属性
+              来生设计：用 50 点投胎积分配置你的来世人生
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
-              假设你即将投胎到下一世做人，手握50点投胎福德积分。你会如何把这50点分配到八大属性中？这不是算命，而是一次深度价值观的折射：你在这一世最看重的东西，往往会在下一世的选择里暴露无遗。
+              颜值身材、财富财商、名誉地位、身心健康、学习能力、和睦家庭、长寿善终、修行善根——八大属性，总分
+              50。如何分配，照见你今生最深处的价值排序。
             </p>
           </div>
 
