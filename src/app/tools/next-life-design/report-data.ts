@@ -385,62 +385,147 @@ export const WEAKNESS_TAGS: Record<AttributeKey, { tag: string; desc: string }> 
 
 // ── 匹配逻辑 ───────────────────────────────────────────────────────────────────
 
-export function getTopAttributes(scores: AttributeScores, n: number): AttributeKey[] {
-  return (Object.entries(scores) as [AttributeKey, number][])
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, n)
-    .map(([k]) => k);
+// ── 等级阈值 ───────────────────────────────────────────────────────────────────
+
+/** 高分阈值：分数 ≥ 此值才算"突出优势" */
+export const HIGH_THRESHOLD = 7;
+/** 低分阈值：分数 ≤ 此值才算"明显短板" */
+export const LOW_THRESHOLD = 4;
+/** 极差阈值：最高分与最低分之差 < 此值时视为"中庸配置" */
+export const MIN_SPREAD = 2;
+
+// ── 中庸标签（无显著高低分时使用） ─────────────────────────────────────────────
+
+export const BALANCED_TAG = {
+  tag: '中庸平和命',
+  desc: '你的 50 分没有特别偏袒任何一个维度，所有属性都在 5-6 分的中段。这不是敷衍，而是一种难得的平衡——来世大概率是个各方面都过得去、但没有特别突出的人。没有大富大贵的得意，没有疾病缠身的失意，也没有众叛亲离的孤绝。这份"什么都有一点"的中庸，在很多人看来反而是最大的福分：不必为了某一件事拼尽全力，也不会被某一件事逼到死角。你可能一辈子都"没什么故事可讲"，但这种平淡里藏着的安稳，本身就是 50 分能买到的最好配方。',
+};
+
+// ── 匹配 Top / Bottom ──────────────────────────────────────────────────────────
+
+export interface ScoredGroup {
+  keys: AttributeKey[];
+  isBalanced: boolean;
+  reason: string;
 }
 
-export function getBottomAttributes(scores: AttributeScores, n: number): AttributeKey[] {
-  return (Object.entries(scores) as [AttributeKey, number][])
-    .sort((a, b) => a[1] - b[1])
-    .slice(0, n)
-    .map(([k]) => k);
+/**
+ * 获取高分属性（≥ 7 分才算）
+ * 极差 < 2 时视为中庸，返回空数组
+ */
+export function getTopAttributes(scores: AttributeScores): ScoredGroup {
+  const sorted = (Object.entries(scores) as [AttributeKey, number][]).sort((a, b) => b[1] - a[1]);
+
+  const max = sorted[0][1];
+  const min = sorted[sorted.length - 1][1];
+  const spread = max - min;
+
+  if (spread < MIN_SPREAD) {
+    return { keys: [], isBalanced: true, reason: '极差过小，无显著高低' };
+  }
+
+  const high = sorted.filter(([, v]) => v >= HIGH_THRESHOLD).map(([k]) => k);
+  if (high.length === 0) {
+    return {
+      keys: [],
+      isBalanced: true,
+      reason: `最高分仅 ${max}，未达 ${HIGH_THRESHOLD} 分的优势线`,
+    };
+  }
+
+  return { keys: high, isBalanced: false, reason: '' };
+}
+
+/**
+ * 获取低分属性（≤ 4 分才算）
+ * 极差 < 2 时视为中庸，返回空数组
+ */
+export function getBottomAttributes(scores: AttributeScores): ScoredGroup {
+  const sorted = (Object.entries(scores) as [AttributeKey, number][]).sort((a, b) => a[1] - b[1]);
+
+  const max = sorted[sorted.length - 1][1];
+  const min = sorted[0][1];
+  const spread = max - min;
+
+  if (spread < MIN_SPREAD) {
+    return { keys: [], isBalanced: true, reason: '极差过小，无显著高低' };
+  }
+
+  const low = sorted.filter(([, v]) => v <= LOW_THRESHOLD).map(([k]) => k);
+  if (low.length === 0) {
+    return {
+      keys: [],
+      isBalanced: true,
+      reason: `最低分 ${min}，未达 ${LOW_THRESHOLD} 分的短板线`,
+    };
+  }
+
+  return { keys: low, isBalanced: false, reason: '' };
 }
 
 /**
  * 匹配命格标签
- * 1. 优先匹配三属性经典组合
- * 2. 未命中则匹配双属性组合
- * 3. 都不命中则取主标签兜底
+ * 1. 中庸配置（极差过小或无显著高低）→ 套用中庸标签
+ * 2. 优先匹配三属性经典组合
+ * 3. 未命中则匹配双属性组合
+ * 4. 都不命中则取主标签兜底
  */
 export function matchDestinyTag(scores: AttributeScores): {
   tag: string;
   desc: string;
-  matchedType: 'triple' | 'pair' | 'primary';
+  matchedType: 'balanced' | 'triple' | 'pair' | 'primary';
+  isBalanced: boolean;
 } {
-  const top3 = getTopAttributes(scores, 3);
-  const top3Set = new Set(top3);
+  const topGroup = getTopAttributes(scores);
 
-  // 1. 三属性经典组合匹配
-  for (const triple of TRIPLE_TAGS) {
-    if (triple.keys.every(k => top3Set.has(k))) {
-      return { tag: triple.tag, desc: triple.desc, matchedType: 'triple' };
+  // 中庸配置：直接返回中庸标签
+  if (topGroup.isBalanced) {
+    return {
+      tag: BALANCED_TAG.tag,
+      desc: BALANCED_TAG.desc,
+      matchedType: 'balanced',
+      isBalanced: true,
+    };
+  }
+
+  const topKeys = topGroup.keys;
+  const topSet = new Set(topKeys);
+
+  // 1. 三属性经典组合匹配（需要至少 3 个高分属性）
+  if (topKeys.length >= 3) {
+    for (const triple of TRIPLE_TAGS) {
+      if (triple.keys.every(k => topSet.has(k))) {
+        return { tag: triple.tag, desc: triple.desc, matchedType: 'triple', isBalanced: false };
+      }
     }
   }
 
-  // 2. 双属性组合匹配（取 Top 2）
-  const top2 = top3.slice(0, 2);
-  const pk = pairKey(top2[0], top2[1]);
-  const pairMatch = PAIR_TAGS[pk];
-  if (pairMatch) {
-    return { tag: pairMatch.tag, desc: pairMatch.desc, matchedType: 'pair' };
+  // 2. 双属性组合匹配（需要至少 2 个高分属性）
+  if (topKeys.length >= 2) {
+    const pk = pairKey(topKeys[0], topKeys[1]);
+    const pairMatch = PAIR_TAGS[pk];
+    if (pairMatch) {
+      return { tag: pairMatch.tag, desc: pairMatch.desc, matchedType: 'pair', isBalanced: false };
+    }
   }
 
-  // 3. 主标签兜底
-  const primary = PRIMARY_TAGS[top3[0]];
-  return { tag: primary.tag, desc: primary.desc, matchedType: 'primary' };
+  // 3. 主标签兜底（只有 1 个高分属性）
+  const primary = PRIMARY_TAGS[topKeys[0]];
+  return { tag: primary.tag, desc: primary.desc, matchedType: 'primary', isBalanced: false };
 }
 
 /**
  * 匹配短板功课标签
+ * 中庸配置下返回空数组
  */
 export function matchWeaknessTags(
   scores: AttributeScores
 ): { key: AttributeKey; tag: string; desc: string }[] {
-  const bottom2 = getBottomAttributes(scores, 2);
-  return bottom2.map(key => ({
+  const bottomGroup = getBottomAttributes(scores);
+  if (bottomGroup.isBalanced) {
+    return [];
+  }
+  return bottomGroup.keys.map(key => ({
     key,
     tag: WEAKNESS_TAGS[key].tag,
     desc: WEAKNESS_TAGS[key].desc,

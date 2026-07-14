@@ -196,30 +196,33 @@ function getScoreLabel(score: number): string {
 }
 
 function generateReport(scores: AttributeScores) {
-  const top3 = getTopAttributes(scores, 3);
-  const bottom2 = getBottomAttributes(scores, 2);
+  const topGroup = getTopAttributes(scores);
+  const bottomGroup = getBottomAttributes(scores);
   const totalUsed = TOTAL_POINTS - getRemainingPoints(scores);
-  const topNames = top3.map(k => ATTRIBUTES.find(a => a.key === k)!.name);
-  const bottomNames = bottom2.map(k => ATTRIBUTES.find(a => a.key === k)!.name);
 
-  // 匹配命格标签（三层优先级：三属性 → 双属性 → 主标签）
+  // 匹配命格标签
   const destiny = matchDestinyTag(scores);
 
   // 匹配短板功课标签
   const weaknesses = matchWeaknessTags(scores);
 
-  // 一生大体情况：命格描述 + 高低分领域
+  // 一生大体情况：命格描述
   const lifeSummary = destiny.desc;
 
-  // 各属性档位场景描述
-  const scoreScenes = top3.map(key => {
+  // 高分领域详情（可能为空：中庸配置时无）
+  const topKeys = topGroup.keys;
+  const topNames = topKeys.map(k => ATTRIBUTES.find(a => a.key === k)!.name);
+  const scoreScenes = topKeys.map(key => {
     const attr = ATTRIBUTES.find(a => a.key === key)!;
     const score = scores[key];
     const scene = SCORE_DESCRIPTIONS[key][score];
     return { attr, score, scene };
   });
 
-  const weaknessScenes = bottom2.map(key => {
+  // 低分领域详情（可能为空：中庸配置时无）
+  const bottomKeys = bottomGroup.keys;
+  const bottomNames = bottomKeys.map(k => ATTRIBUTES.find(a => a.key === k)!.name);
+  const weaknessScenes = bottomKeys.map(key => {
     const attr = ATTRIBUTES.find(a => a.key === key)!;
     const score = scores[key];
     const scene = SCORE_DESCRIPTIONS[key][score];
@@ -227,20 +230,26 @@ function generateReport(scores: AttributeScores) {
   });
 
   // 潜意识价值观折射
-  const valueReflection = `你把最多的福德给了「${topNames.join('、')}」，这不是随意的选择——它照见了你今生最深处的价值排序。你舍得在这些领域投入，说明你潜意识里认定它们是"值得的"。而「${bottomNames.join('、')}」被你放在了末位，也往往是因为你早已放弃，或觉得"不重要"。50 分的分配，就是你灵魂的一份供词。`;
+  const valueReflection = destiny.isBalanced
+    ? `你把 50 分均匀地分给了八大属性，没有特别偏袒谁，也没有刻意忽视谁。这种"谁都不得罪"的分法，照见的是你内心的一种——不冒险、不冒尖、不让自己陷入极端的中庸哲学。你可能已经隐约觉得：人生没有什么一定要抓住的，也没有什么一定要放下的。50 分的分配，就是你灵魂的"都不选"。`
+    : `你把最多的福德给了「${topNames.join('、')}」，这不是随意的选择——它照见了你今生最深处的价值排序。你舍得在这些领域投入，说明你潜意识里认定它们是"值得的"。而「${bottomNames.join('、')}」被你放在了末位，也往往是因为你早已放弃，或觉得"不重要"。50 分的分配，就是你灵魂的一份供词。`;
 
   // 短板功课
-  const weaknessReflection = weaknesses.map(w => `「${w.tag}」：${w.desc}`).join('\n\n');
+  const weaknessReflection =
+    weaknesses.length === 0 ? '' : weaknesses.map(w => `「${w.tag}」：${w.desc}`).join('\n\n');
 
   // 提醒总结
-  const reminder = `50 分终究是有限资源。你在「${topNames.join('、')}」上的慷慨，是对自己灵魂需求的诚实；而在「${bottomNames.join('、')}」上的吝啬，也往往是因为你潜意识里早已放弃或不在乎。来生不会完美——50 分覆盖不了 80 分的人生，缺口才是功课所在。但这份配置会帮你更清楚地看见：你究竟想要怎样的人生。`;
+  const reminder = destiny.isBalanced
+    ? `50 分终究是有限资源，但你这次没有把任何一项逼到死角。这种"中庸配置"在很多人眼里反而是最难的：你不贪，所以不会因贪婪失足；你不求，所以不会因求不得而痛苦。来生不会完美，但这份"什么都有一点"的均衡，已经是你能给自己的最大善意。`
+    : `50 分终究是有限资源。你在「${topNames.join('、')}」上的慷慨，是对自己灵魂需求的诚实；而在「${bottomNames.join('、')}」上的吝啬，也往往是因为你潜意识里早已放弃或不在乎。来生不会完美——50 分覆盖不了 80 分的人生，缺口才是功课所在。但这份配置会帮你更清楚地看见：你究竟想要怎样的人生。`;
 
   return {
     archetype: destiny.tag,
     matchedType: destiny.matchedType,
+    isBalanced: destiny.isBalanced,
     totalUsed,
-    topAttributes: top3,
-    bottomAttributes: bottom2,
+    topAttributes: topKeys,
+    bottomAttributes: bottomKeys,
     lifeSummary,
     scoreScenes,
     weaknessScenes,
@@ -565,41 +574,43 @@ export default function NextLifeDesignPage() {
               </p>
             </div>
 
-            {/* 高分与低分 */}
-            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
-              <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-5">
-                <h3 className="mb-3 text-sm font-bold text-[#4A3728]">你最舍得投入的领域</h3>
-                <div className="flex flex-wrap gap-2">
-                  {report.topAttributes.map(key => {
-                    const attr = ATTRIBUTES.find(a => a.key === key)!;
-                    return (
-                      <span
-                        key={key}
-                        className="rounded-full bg-[#FDF5EE] px-3 py-1 text-sm font-semibold text-[#C87941]"
-                      >
-                        {attr.icon} {attr.name} {scores[key]}分
-                      </span>
-                    );
-                  })}
+            {/* 高分与低分 - 中庸配置时不显示 */}
+            {!report.isBalanced && (
+              <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+                <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-5">
+                  <h3 className="mb-3 text-sm font-bold text-[#4A3728]">你最舍得投入的领域</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {report.topAttributes.map(key => {
+                      const attr = ATTRIBUTES.find(a => a.key === key)!;
+                      return (
+                        <span
+                          key={key}
+                          className="rounded-full bg-[#FDF5EE] px-3 py-1 text-sm font-semibold text-[#C87941]"
+                        >
+                          {attr.icon} {attr.name} {scores[key]}分
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-5">
+                  <h3 className="mb-3 text-sm font-bold text-[#4A3728]">你相对淡薄的领域</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {report.bottomAttributes.map(key => {
+                      const attr = ATTRIBUTES.find(a => a.key === key)!;
+                      return (
+                        <span
+                          key={key}
+                          className="rounded-full bg-[#F5F0E8] px-3 py-1 text-sm font-semibold text-[#8A7E6A]"
+                        >
+                          {attr.icon} {attr.name} {scores[key]}分
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-              <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-5">
-                <h3 className="mb-3 text-sm font-bold text-[#4A3728]">你相对淡薄的领域</h3>
-                <div className="flex flex-wrap gap-2">
-                  {report.bottomAttributes.map(key => {
-                    const attr = ATTRIBUTES.find(a => a.key === key)!;
-                    return (
-                      <span
-                        key={key}
-                        className="rounded-full bg-[#F5F0E8] px-3 py-1 text-sm font-semibold text-[#8A7E6A]"
-                      >
-                        {attr.icon} {attr.name} {scores[key]}分
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+            )}
 
             {/* 人生大体情况 */}
             <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-6">
@@ -619,53 +630,57 @@ export default function NextLifeDesignPage() {
               </p>
             </div>
 
-            {/* 各属性档位场景 */}
-            <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-6">
-              <h3 className="mb-3 text-base font-bold text-[#4A3728] sm:text-lg">
-                你最看重的领域 · 具体场景
-              </h3>
-              <div className="space-y-3">
-                {report.scoreScenes.map(({ attr, score, scene }) => (
-                  <div
-                    key={attr.key}
-                    className="flex items-start gap-3 rounded-lg bg-[#FDF5EE] p-3"
-                  >
-                    <span className="text-xl">{attr.icon}</span>
-                    <div className="flex-1">
-                      <div className="text-sm font-bold text-[#4A3728]">
-                        {attr.name} · {score}分
+            {/* 各属性档位场景 - 中庸配置不显示 */}
+            {!report.isBalanced && report.scoreScenes.length > 0 && (
+              <div className="rounded-xl border border-[#E8D9C2] bg-white p-4 sm:p-6">
+                <h3 className="mb-3 text-base font-bold text-[#4A3728] sm:text-lg">
+                  你最看重的领域 · 具体场景
+                </h3>
+                <div className="space-y-3">
+                  {report.scoreScenes.map(({ attr, score, scene }) => (
+                    <div
+                      key={attr.key}
+                      className="flex items-start gap-3 rounded-lg bg-[#FDF5EE] p-3"
+                    >
+                      <span className="text-xl">{attr.icon}</span>
+                      <div className="flex-1">
+                        <div className="text-sm font-bold text-[#4A3728]">
+                          {attr.name} · {score}分
+                        </div>
+                        <p className="mt-1 text-xs leading-relaxed text-[#6A6256]">{scene}</p>
                       </div>
-                      <p className="mt-1 text-xs leading-relaxed text-[#6A6256]">{scene}</p>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* 短板功课 */}
-            <div className="rounded-xl border border-[#C87941]/30 bg-[#FDF5EE] p-4 sm:p-6">
-              <h3 className="mb-3 text-base font-bold text-[#4A3728] sm:text-lg">
-                你的功课 · 被你搁置的领域
-              </h3>
-              <div className="space-y-3">
-                {report.weaknessScenes.map(({ attr, score, scene }) => (
-                  <div key={attr.key} className="flex items-start gap-3 rounded-lg bg-white p-3">
-                    <span className="text-xl opacity-50">{attr.icon}</span>
-                    <div className="flex-1">
-                      <div className="text-sm font-bold text-[#8A7E6A]">
-                        {attr.name} · {score}分
+            {/* 短板功课 - 中庸配置不显示 */}
+            {!report.isBalanced && report.weaknessScenes.length > 0 && (
+              <div className="rounded-xl border border-[#C87941]/30 bg-[#FDF5EE] p-4 sm:p-6">
+                <h3 className="mb-3 text-base font-bold text-[#4A3728] sm:text-lg">
+                  你的功课 · 被你搁置的领域
+                </h3>
+                <div className="space-y-3">
+                  {report.weaknessScenes.map(({ attr, score, scene }) => (
+                    <div key={attr.key} className="flex items-start gap-3 rounded-lg bg-white p-3">
+                      <span className="text-xl opacity-50">{attr.icon}</span>
+                      <div className="flex-1">
+                        <div className="text-sm font-bold text-[#8A7E6A]">
+                          {attr.name} · {score}分
+                        </div>
+                        <p className="mt-1 text-xs leading-relaxed text-[#8A7E6A]">{scene}</p>
                       </div>
-                      <p className="mt-1 text-xs leading-relaxed text-[#8A7E6A]">{scene}</p>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <div className="mt-4 space-y-2">
+                  <p className="text-sm leading-relaxed text-[#6A6256]">
+                    {report.weaknessReflection}
+                  </p>
+                </div>
               </div>
-              <div className="mt-4 space-y-2">
-                <p className="text-sm leading-relaxed text-[#6A6256]">
-                  {report.weaknessReflection}
-                </p>
-              </div>
-            </div>
+            )}
 
             {/* 提醒 */}
             <div className="rounded-xl border border-[#C87941]/30 bg-[#FDF5EE] p-4 sm:p-6">
