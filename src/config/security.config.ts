@@ -22,7 +22,7 @@
  */
 export const ALLOWED_SCRIPT_DOMAINS = [
   // 'https://www.googletagmanager.com', // Google Analytics
-  'https://hm.baidu.com', // 百度统计脚本
+  'https://hm.baidu.com', // 百度统计脚本（当前 layout.tsx 中已临时移除脚本，保留白名单供后续恢复）
   // 'https://cdn.jsdelivr.net',          // JSDelivr CDN
 ];
 
