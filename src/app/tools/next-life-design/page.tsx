@@ -164,6 +164,11 @@ function getServerSnapshot(): AttributeScores {
   return DEFAULT_SCORES;
 }
 
+// 稳定的挂载检测订阅（避免每次 render 传入新函数导致 useSyncExternalStore 反复订阅）
+const mountedSubscribe = () => () => {};
+const mountedClientSnapshot = () => true;
+const mountedServerSnapshot = () => false;
+
 // ── 工具函数 ─────────────────────────────────────────────────────────────────
 
 function getRemainingPoints(scores: AttributeScores): number {
@@ -437,9 +442,9 @@ export default function NextLifeDesignPage() {
   const scores = useSyncExternalStore(subscribe, safeGetScores, getServerSnapshot);
   const [showReport, setShowReport] = useState(false);
   const isMounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
+    mountedSubscribe,
+    mountedClientSnapshot,
+    mountedServerSnapshot
   );
 
   const remaining = getRemainingPoints(scores);
