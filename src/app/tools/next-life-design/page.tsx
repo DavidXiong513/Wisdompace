@@ -560,12 +560,10 @@ export default function NextLifeDesignPage() {
               假如来生可以定制，你手里握着
               <strong className="text-[#C87941]">50 点投胎福德积分</strong>
               ，要分给八大属性。每个属性最高 10 分，总分只有
-              50——你给颜值多一分，修行就少一分；你把钱攒够了，家庭可能就顾不上。
+              50——你给颜值多一分，修行善根可能就会少一分；你把钱攒够了，家庭和睦可能就顾不上了...正所谓：
             </p>
             <p className="mt-3 text-sm leading-loose text-[#5D4A3A] sm:text-base">
-              50 分覆盖不了 80 分的人生，
-              <strong className="text-[#C87941]">你选了什么，就失去了什么</strong>
-              。这不是算命，而是一面镜子，照见你今生最深处的价值排序。
+              没有十全十美的人生，你选了什么，就失去了什么。这不是算命，而是一面镜子，照见你内心最深处的价值排序。
             </p>
           </div>
 

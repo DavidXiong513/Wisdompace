@@ -445,7 +445,7 @@ function CareerValuesSectionEntry() {
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
               50 点积分 × 8
-              大属性，没有圆满的人生，只有真实的取舍。你拼命抓住的，是来生真正想要的；你忍痛放下的，也许正是今生的遗憾。来测测，你的来生会是什么命。
+              大属性，没有圆满的人生，只有真实的取舍。如果来生再来做人，你又会定制什么样的人生呢？
             </p>
           </div>
 
