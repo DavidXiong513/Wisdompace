@@ -266,11 +266,13 @@ function SliderInput({
   value,
   onChange,
   canIncrease,
+  onShowGuide,
 }: {
   attr: (typeof ATTRIBUTES)[number];
   value: number;
   onChange: (v: number) => void;
   canIncrease: boolean;
+  onShowGuide: () => void;
 }) {
   const isMaxed = value === MAX_PER_ATTR;
   const isMinned = value === 0;
@@ -281,7 +283,17 @@ function SliderInput({
         <div className="flex min-w-0 items-center gap-2">
           <span className="text-xl sm:text-2xl">{attr.icon}</span>
           <div className="min-w-0">
-            <div className="text-sm font-bold text-[#4A3728] sm:text-base">{attr.name}</div>
+            <div className="flex items-center gap-1">
+              <div className="text-sm font-bold text-[#4A3728] sm:text-base">{attr.name}</div>
+              <button
+                type="button"
+                onClick={onShowGuide}
+                aria-label={`查看 ${attr.name} 0-10 分说明`}
+                className="flex h-5 w-5 items-center justify-center rounded-full text-xs text-[#C87941] transition hover:bg-[#FDF5EE] hover:text-[#A85E2D]"
+              >
+                ⓘ
+              </button>
+            </div>
             <div className="text-[10px] text-[#8A7E6A] sm:text-xs">{attr.desc}</div>
           </div>
         </div>
@@ -327,6 +339,85 @@ function SliderInput({
       <div className="mt-2 flex justify-between text-[10px] text-[#8A7E6A]">
         <span className="max-w-[45%] truncate">{attr.low}</span>
         <span className="max-w-[45%] truncate text-right">{attr.high}</span>
+      </div>
+    </div>
+  );
+}
+
+// ── 评分指南弹窗 ───────────────────────────────────────────────────────────────
+
+function ScoreGuideModal({
+  attr,
+  onClose,
+}: {
+  attr: (typeof ATTRIBUTES)[number] | null;
+  onClose: () => void;
+}) {
+  if (!attr) return null;
+
+  const descriptions = SCORE_DESCRIPTIONS[attr.key];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} aria-hidden="true" />
+      <div className="relative w-full max-w-md">
+        <div className="max-h-[85vh] overflow-y-auto rounded-t-[1.75rem] bg-white p-5 shadow-[0_-4px_24px_rgba(0,0,0,0.1)] sm:rounded-[1.75rem] sm:p-6">
+          {/* 移动端拖拽指示条 */}
+          <div className="mb-3 flex justify-center sm:hidden">
+            <div className="h-1 w-10 rounded-full bg-[#e0dbd4]" />
+          </div>
+
+          <div className="mb-5 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">{attr.icon}</span>
+              <div>
+                <h2 className="text-lg font-bold text-[#4A3728]">{attr.name}</h2>
+                <p className="text-xs text-[#8A7E6A]">{attr.desc} · 0-10 分说明</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="关闭"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f5f2ed] text-[#9c958c] transition hover:bg-[#edeae5]"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            {descriptions.map((text, score) => (
+              <div
+                key={score}
+                className="flex items-start gap-3 rounded-xl border border-[#E8D9C2] bg-[#FDF5EE] p-3"
+              >
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-sm font-bold text-[#C87941] shadow-sm">
+                  {score}
+                </span>
+                <p className="text-sm leading-relaxed text-[#5D4A3A]">{text}</p>
+              </div>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="mt-5 w-full rounded-full bg-[#C87941] py-3 text-sm font-bold text-white transition hover:bg-[#A85E2D]"
+          >
+            知道了
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -391,6 +482,7 @@ function NextLifeRadarChart({ scores }: { scores: AttributeScores }) {
 export default function NextLifeDesignPage() {
   const scores = useSyncExternalStore(subscribe, safeGetScores, getServerSnapshot);
   const [showReport, setShowReport] = useState(false);
+  const [guideAttr, setGuideAttr] = useState<(typeof ATTRIBUTES)[number] | null>(null);
   const isMounted = useSyncExternalStore(
     mountedSubscribe,
     mountedClientSnapshot,
@@ -527,6 +619,7 @@ export default function NextLifeDesignPage() {
                 value={scores[attr.key]}
                 canIncrease={canIncreaseMap[attr.key]}
                 onChange={v => handleChange(attr.key, v)}
+                onShowGuide={() => setGuideAttr(attr)}
               />
             ))}
           </div>
@@ -716,6 +809,8 @@ export default function NextLifeDesignPage() {
           </Link>
         </div>
       </div>
+
+      <ScoreGuideModal attr={guideAttr} onClose={() => setGuideAttr(null)} />
     </main>
   );
 }
