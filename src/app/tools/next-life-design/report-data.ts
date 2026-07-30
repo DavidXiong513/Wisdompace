@@ -437,7 +437,7 @@ export function getTopAttributes(scores: AttributeScores): ScoredGroup {
 }
 
 /**
- * 获取低分属性（≤ 4 分才算）
+ * 获取低分属性（≤ 5 分才算）
  * 极差 < 2 时视为中庸，返回空数组
  */
 export function getBottomAttributes(scores: AttributeScores): ScoredGroup {
