@@ -72,3 +72,6 @@ test-preservation.html
 test-navigation.html
 validate-css-fixes.js
 CHECKPOINT-SUMMARY.md
+
+# Git repository backup directories
+.git.bak-*/

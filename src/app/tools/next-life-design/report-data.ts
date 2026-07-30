@@ -390,7 +390,7 @@ export const WEAKNESS_TAGS: Record<AttributeKey, { tag: string; desc: string }> 
 /** 高分阈值：分数 ≥ 此值才算"突出优势" */
 export const HIGH_THRESHOLD = 7;
 /** 低分阈值：分数 ≤ 此值才算"明显短板" */
-export const LOW_THRESHOLD = 4;
+export const LOW_THRESHOLD = 5;
 /** 极差阈值：最高分与最低分之差 < 此值时视为"中庸配置" */
 export const MIN_SPREAD = 2;
 
