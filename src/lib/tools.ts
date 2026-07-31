@@ -86,7 +86,7 @@ export const tools: Record<string, ToolInfo> = {
   'next-life-design': {
     id: 'next-life-design',
     name: '来生设计：配置你的人生属性',
-    status: 'developing',
+    status: 'ready',
     description: '用50点投胎福德积分分配到八大属性，折射你内心深处的价值排序。',
   },
   'ability-card': {
