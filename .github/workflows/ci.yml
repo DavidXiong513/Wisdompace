@@ -25,7 +25,7 @@ jobs:
           cache: 'npm'
 
       - name: Cache Next.js build
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .next/cache
@@ -56,7 +56,7 @@ jobs:
           cache: 'npm'
 
       - name: Cache Vitest
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             node_modules/.vitest
@@ -128,7 +128,7 @@ jobs:
           cache: 'npm'
 
       - name: Cache Next.js build
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .next/cache
