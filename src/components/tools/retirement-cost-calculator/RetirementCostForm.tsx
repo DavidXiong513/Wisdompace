@@ -190,24 +190,43 @@ export function RetirementCostForm() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <div className="mb-5 flex items-center gap-1.5" aria-label="填写进度">
-        {STEP_LABELS.map((label, index) => (
-          <div key={label} className="flex-1">
-            <div
-              className={`h-1.5 rounded-full transition-all ${
-                step >= index ? 'bg-[#C87941]' : 'bg-[#E8D9C2]'
-              }`}
-            />
-            <p
-              className={`mt-1.5 hidden text-center text-[10px] sm:block ${
-                step === index ? 'font-bold text-[#C87941]' : 'text-[#A99C88]'
-              }`}
+      <nav className="mb-5 flex items-start gap-1.5" aria-label="填写步骤，可点击切换">
+        {STEP_LABELS.map((label, index) => {
+          const isCurrent = step === index;
+          const isVisited = step > index;
+          return (
+            <button
+              key={label}
+              type="button"
+              onClick={() => setStep(index)}
+              aria-current={isCurrent ? 'step' : undefined}
+              title={`切换到：${label}`}
+              className="group flex-1 cursor-pointer rounded-md pb-1 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C87941]/50"
             >
-              {label}
-            </p>
-          </div>
-        ))}
-      </div>
+              <span
+                className={`block h-1.5 rounded-full transition-all ${
+                  isCurrent
+                    ? 'bg-[#C87941]'
+                    : isVisited
+                      ? 'bg-[#C87941]/45 group-hover:bg-[#C87941]/70'
+                      : 'bg-[#E8D9C2] group-hover:bg-[#D9C6AA]'
+                }`}
+              />
+              <span
+                className={`mt-1.5 block text-center text-[9px] transition-colors sm:text-[10px] ${
+                  isCurrent
+                    ? 'font-bold text-[#C87941]'
+                    : isVisited
+                      ? 'font-medium text-[#A87245] group-hover:text-[#C87941]'
+                      : 'text-[#A99C88] group-hover:text-[#8A7E6A]'
+                }`}
+              >
+                {label}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
 
       <div className="rounded-2xl border border-[#E8D9C2] bg-white p-5 shadow-sm sm:p-8">
         {step === 0 && (
