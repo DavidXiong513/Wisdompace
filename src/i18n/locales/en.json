@@ -285,6 +285,14 @@
           "'The Three Questions' uses values, psychological expectations, and scarcity as three dimensions to probe deeply. It doesn't provide answers, but it acts as a mirror reflecting your truest trade-offs and boundaries, helping you make decisions without regret."
         ]
       },
+      "retirement-cost": {
+        "title": "Estimating Later-Life Costs",
+        "paragraphs": [
+          "Once responsibilities are clear and major decisions have a framework, one question still has to land on numbers: how much do I actually need from retirement to the end of life?",
+          "Daily living, housing, healthcare, caregiving, travel and hobbies may each look manageable on their own, but together they can exceed expectation. The final period of care is often the heaviest part of the whole ledger.",
+          "This tool does not ask you to give up what you love. It lays out the structure of later-life spending so you can see where the gap is, which stage is tightest, and which trade-offs are truly worth making."
+        ]
+      },
       "choice-rights": {
         "title": "Advance Directives",
         "paragraphs": [
@@ -314,13 +322,14 @@
         "title": "Leaving No Regrets Behind",
         "paragraphs": [
           "You've made it here, completing the core work of the 'State Clearly' chapter.",
-          "You've sorted your responsibility checklist, identified what's urgent and important, and what needs advance transition planning. You've examined the real trade-offs behind major decisions, and written down your five wishes in advance directives — those things you want your family to know but never found the words to say.",
+          "You've sorted your responsibility checklist, identified what's urgent and important, and what needs advance transition planning. You've examined the real trade-offs behind major decisions, and seen the financial structure of daily living, healthcare and caregiving in later-life cost estimates. You've written down your five wishes in advance directives — those things you want your family to know but never found the words to say.",
           "You've evaluated who can be your designated agent, and where no suitable person exists, learned about professional alternatives. These aren't cold procedures — they are your final order and tenderness left for this world.",
           "Stating clearly isn't pessimism — it's responsibility. It ensures you leave no regrets behind. These arrangements don't need to be completed all at once — you can come back anytime to revise, supplement, or update. Life changes, and your arrangements can change too."
         ],
         "questions": [
           "In your responsibility checklist, which item worries you most? Have you thought of a transition plan?",
           "Which major decision did the Three Questions help clarify the real sticking point of?",
+          "In the later-life cost estimate, which expense was most beyond your expectation, and what will you do to prepare for it?",
           "Among your five wishes in advance directives, which one do you most want your family to know?",
           "Have you confirmed your designated agent? If not, which alternative plan will you start with?",
           "If today were your last chance to review these arrangements clearly, how ready would you say you are?"

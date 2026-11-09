@@ -157,6 +157,43 @@ function ThreeQuestionsEntry() {
   );
 }
 
+// ── 晚年花费测算入口卡片 ──
+function RetirementCostEntry() {
+  return (
+    <Link
+      href="/tools/retirement-cost-calculator"
+      className="group mt-8 block overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+    >
+      <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FDF5EE] text-4xl shadow-inner transition-transform group-hover:scale-110">
+          🧾
+        </div>
+
+        <div className="flex-1 text-center sm:text-left">
+          <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            晚年花费测算 · 从退休到离世的那本账
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
+            日常、医疗、照护、旅行与爱好放进同一本账。先算总数，再拆开每一项，看看你的退休金和储备能不能接住余生。
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D] group-hover:px-8">
+          开始测算
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
+          </svg>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 // ── 生前预嘱入口卡片 ──
 function LivingWillEntry() {
   return (
@@ -685,6 +722,11 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
   // 特殊处理：三思清单入口
   if (toolId === 'three-questions-tool') {
     return <ThreeQuestionsEntry />;
+  }
+
+  // 特殊处理：晚年花费测算入口
+  if (toolId === 'retirement-cost-calculator') {
+    return <RetirementCostEntry />;
   }
 
   // 特殊处理：生前预嘱入口

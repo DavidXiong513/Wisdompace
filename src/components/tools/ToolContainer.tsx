@@ -110,6 +110,7 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'framework-grid',
     'reminder-list',
     'three-questions-tool',
+    'retirement-cost-calculator',
     'emotional-assessment',
     'choice-rights',
     'dementia-prevention-entry',

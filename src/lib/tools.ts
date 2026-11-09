@@ -131,6 +131,12 @@ export const tools: Record<string, ToolInfo> = {
     status: 'ready',
     description: '梳理你的人生责任，评估优先级，规划交接方案。',
   },
+  'retirement-cost-calculator': {
+    id: 'retirement-cost-calculator',
+    name: '晚年花费测算',
+    status: 'ready',
+    description: '从退休到离世，算清日常、医疗、照护与热爱需要多少钱。',
+  },
   'choice-rights': {
     id: 'choice-rights',
     name: '生前预嘱',

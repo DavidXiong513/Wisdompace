@@ -64,6 +64,11 @@ function getSecurityHeaders() {
 }
 
 const nextConfig: NextConfig = {
+  // 本地/CI 可用 NEXT_BUILD_DIST_DIR 指定独立构建目录，避免清理既有 .next 缓存。
+  ...(process.env.NEXT_BUILD_DIST_DIR
+    ? { distDir: process.env.NEXT_BUILD_DIST_DIR }
+    : {}),
+
   // React Compiler: 暂禁用，避免与 Recharts 雷达图/ResponsiveContainer 内部
   // useEffect setState 冲突导致 React #185 无限循环（Maximum update depth）。
   // 后续可在所有 Recharts 工具页严格用 'use no memo' 后再行启用。
