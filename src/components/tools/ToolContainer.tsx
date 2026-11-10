@@ -129,7 +129,6 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'ta-worth-trust',
     'people-insight',
     'will-preparation',
-    'will-templates',
     'will-literacy',
     'no-regrets',
     'goodbye-list',

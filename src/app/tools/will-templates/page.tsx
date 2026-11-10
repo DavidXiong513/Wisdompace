@@ -48,6 +48,9 @@ export default function WillTemplatesPage() {
           <h2 className="mt-3 font-serif text-3xl font-bold tracking-wide text-[#4A3728] sm:text-4xl">
             自书遗嘱的双刃剑
           </h2>
+          <p className="mt-2 font-serif text-sm tracking-wide text-[#A85E2D]">
+            模板是拿来读的，不是拿来抄的。
+          </p>
           <p className="mt-4 text-[15px] leading-[1.85] text-[#5A5A5A]">
             自书遗嘱是成本最低的一种：自己写、自己签、不用见证人、不用花钱。但它的每一项便利，背面都连着一个代价。到底算性价比最高，还是最容易失效，取决于一件很具体的事——你走了以后，有没有人愿意并且有动机去质疑它。
           </p>
