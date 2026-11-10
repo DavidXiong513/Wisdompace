@@ -141,6 +141,10 @@ export const RATE_LIMITS = {
   chat: { windowMs: 60_000, max: 10, keyPrefix: 'chat' },
   /** 搜索：30次/分钟 */
   search: { windowMs: 60_000, max: 30, keyPrefix: 'search' },
+  /** 投票提交：6次/分钟（正常用户 1 次，留少量重试余量，防脚本刷票） */
+  poll: { windowMs: 60_000, max: 6, keyPrefix: 'poll' },
+  /** 投票结果查询：60次/分钟 */
+  pollRead: { windowMs: 60_000, max: 60, keyPrefix: 'poll-read' },
   /** 通用 API：60次/分钟 */
   api: { windowMs: 60_000, max: 60, keyPrefix: 'api' },
 } as const;

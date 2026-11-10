@@ -82,21 +82,25 @@ ALTER TABLE poll_votes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE poll_aggregates ENABLE ROW LEVEL SECURITY;
 
 -- poll_votes 只允许匿名 insert（由 API 用 service_role 写入）
+DROP POLICY IF EXISTS "allow_public_insert_poll_votes" ON poll_votes;
 CREATE POLICY "allow_public_insert_poll_votes"
   ON poll_votes FOR INSERT
   WITH CHECK (true);
 
 -- poll_votes 禁止公开读取（隐私保护）
+DROP POLICY IF EXISTS "no_read_poll_votes" ON poll_votes;
 CREATE POLICY "no_read_poll_votes"
   ON poll_votes FOR SELECT
   USING (false);
 
 -- poll_aggregates 允许公开读取（展示投票结果用）
+DROP POLICY IF EXISTS "allow_public_read_poll_aggregates" ON poll_aggregates;
 CREATE POLICY "allow_public_read_poll_aggregates"
   ON poll_aggregates FOR SELECT
   USING (true);
 
 -- poll_aggregates 只允许 trigger 内部更新（禁止直接修改）
+DROP POLICY IF EXISTS "no_public_write_poll_aggregates" ON poll_aggregates;
 CREATE POLICY "no_public_write_poll_aggregates"
   ON poll_aggregates FOR ALL
   USING (false)
