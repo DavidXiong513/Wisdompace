@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080, initial-scale=1.0" />
+  <title>晚年花费测算 · 宣传海报</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --paper: #f6f0e7;
+      --ink: #3d2d22;
+      --ink-soft: #6b5847;
+      --muted: #9a8875;
+      --clay: #b9643e;
+      --clay-deep: #95482b;
+      --sage: #718776;
+      --line: rgba(122, 96, 70, 0.18);
+    }
+    html, body {
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: var(--paper);
+    }
+    body {
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+    .poster {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      padding: 46px 58px 38px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 88% 3%, rgba(185, 100, 62, 0.15), transparent 26%),
+        radial-gradient(circle at 0% 60%, rgba(113, 135, 118, 0.10), transparent 28%),
+        linear-gradient(180deg, #f8f3eb 0%, var(--paper) 46%, #f0e5d7 100%);
+    }
+    .poster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(120, 95, 70, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(120, 95, 70, 0.045) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.5), transparent 30%, transparent 74%, rgba(0,0,0,0.26));
+      pointer-events: none;
+    }
+    .poster::after {
+      content: "";
+      position: absolute;
+      width: 540px;
+      height: 540px;
+      right: -260px;
+      bottom: 90px;
+      border: 1px solid rgba(185, 100, 62, 0.18);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 56px rgba(185, 100, 62, 0.035),
+        0 0 0 114px rgba(185, 100, 62, 0.025);
+      pointer-events: none;
+    }
+
+    /* ── 顶部品牌条 ── */
+    .topbar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .seal {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border: 1.6px solid var(--clay);
+      border-radius: 50%;
+      color: var(--clay);
+      font-family: "SimSun", "Songti SC", serif;
+      font-size: 27px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .brand-name {
+      font-size: 23px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+    .brand-en {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+    }
+    .top-note {
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-align: right;
+      line-height: 1.75;
+    }
+
+    /* ── 主视觉 ── */
+    .hero {
+      position: relative;
+      z-index: 2;
+      padding-top: 34px;
+    }
+    .tool-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px 11px;
+      border: 1px solid rgba(185, 100, 62, 0.52);
+      border-radius: 999px;
+      color: var(--clay-deep);
+      background: rgba(255, 250, 244, 0.7);
+      font-size: 23px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+    .tool-chip .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--clay);
+      box-shadow: 0 0 0 5px rgba(185, 100, 62, 0.12);
+    }
+    .kicker {
+      margin-top: 20px;
+      color: var(--clay);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+    }
+    h1 {
+      margin-top: 14px;
+      font-size: 98px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.045em;
+    }
+    h1 .accent {
+      position: relative;
+      color: var(--clay-deep);
+    }
+    h1 .accent::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      right: 2px;
+      bottom: 6px;
+      height: 12px;
+      background: rgba(185, 100, 62, 0.16);
+      border-radius: 12px;
+      z-index: -1;
+    }
+    .slogan {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-top: 22px;
+      color: var(--ink-soft);
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+    }
+    .slogan::before {
+      content: "";
+      flex: 0 0 auto;
+      width: 34px;
+      height: 3px;
+      margin-top: 23px;
+      background: var(--clay);
+    }
+
+    /* ── 四阶段深色卡 ── */
+    .stage-card {
+      position: relative;
+      z-index: 2;
+      margin-top: 28px;
+      padding: 28px 34px 22px;
+      border-radius: 26px;
+      color: #f9f1e7;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(217, 162, 108, 0.24), transparent 40%),
+        linear-gradient(135deg, #443126 0%, #38281f 100%);
+      box-shadow: 0 18px 44px rgba(74, 48, 32, 0.17);
+    }
+    .stage-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(250, 241, 231, 0.14);
+    }
+    .stage-head h2 {
+      font-size: 36px;
+      font-weight: 700;
+    }
+    .stage-head p {
+      margin-top: 8px;
+      color: rgba(249, 241, 231, 0.66);
+      font-size: 18px;
+      letter-spacing: 0.03em;
+    }
+    .stage-tag {
+      flex: 0 0 auto;
+      margin-bottom: 4px;
+      padding: 8px 14px;
+      border: 1px solid rgba(249, 241, 231, 0.24);
+      border-radius: 999px;
+      color: rgba(249, 241, 231, 0.66);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+    }
+    .stages {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 34px;
+    }
+    .stage {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      padding: 13px 0 11px;
+      border-bottom: 1px solid rgba(249, 241, 231, 0.10);
+    }
+    .stage:nth-last-child(-n+2) { border-bottom: 0; }
+    .stage-index {
+      padding-top: 4px;
+      color: rgba(249, 241, 231, 0.38);
+      font-family: Georgia, serif;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+    }
+    .stage-title {
+      font-size: 27px;
+      font-weight: 700;
+    }
+    .stage-desc {
+      margin-top: 5px;
+      color: rgba(249, 241, 231, 0.64);
+      font-size: 18px;
+      line-height: 1.45;
+    }
+    .stage.highlight {
+      margin: -2px -14px -2px -10px;
+      padding-left: 10px;
+      padding-right: 14px;
+      border-radius: 14px;
+      background: rgba(185, 100, 62, 0.30);
+      border-bottom-color: transparent;
+    }
+    .stage.highlight .stage-title { color: #ffd8bf; }
+    .stage.highlight .stage-index { color: #e8ad8a; }
+
+    /* ── 功能四宫格 ── */
+    .feature-block {
+      position: relative;
+      z-index: 2;
+      margin-top: 34px;
+    }
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--clay);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+    }
+    .section-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .feature {
+      padding: 16px 20px 14px;
+      border: 1px solid rgba(122, 96, 70, 0.16);
+      border-radius: 18px;
+      background: rgba(255, 251, 246, 0.66);
+    }
+    .feature-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .feature-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--clay);
+    }
+    .feature h3 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .feature p {
+      margin-top: 6px;
+      color: var(--ink-soft);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .quote {
+      position: relative;
+      z-index: 2;
+      margin-top: 20px;
+      text-align: center;
+      font-family: "SimSun", "Songti SC", serif;
+      font-size: 30px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .quote::before,
+    .quote::after {
+      content: "—";
+      margin: 0 16px;
+      color: var(--clay);
+      font-family: Georgia, serif;
+    }
+
+    /* ── 二维码面板（竖向居中） ── */
+    .qr-panel {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+      padding: 22px 30px 24px;
+      border: 1px solid rgba(185, 100, 62, 0.40);
+      border-radius: 26px;
+      background: rgba(255, 250, 243, 0.8);
+      text-align: center;
+    }
+    .qr-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 356px;
+      height: 356px;
+      padding: 12px;
+      border: 1px solid rgba(185, 100, 62, 0.34);
+      border-radius: 20px;
+      background: #ffffff;
+      box-shadow:
+        0 12px 28px rgba(74, 48, 32, 0.10),
+        0 2px 6px rgba(74, 48, 32, 0.06);
+    }
+    .qr-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+    .qr-copy {
+      margin-top: 16px;
+    }
+    .qr-copy .overline {
+      color: var(--clay);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.26em;
+    }
+    .qr-copy h3 {
+      margin-top: 9px;
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1.22;
+      letter-spacing: -0.02em;
+    }
+    .qr-copy h3 em {
+      color: var(--clay-deep);
+      font-style: normal;
+    }
+    .qr-copy p {
+      margin-top: 10px;
+      color: var(--ink-soft);
+      font-size: 21px;
+      line-height: 1.5;
+    }
+    .pill-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 16px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .pill-plain {
+      background: rgba(185, 100, 62, 0.10);
+      color: var(--clay-deep);
+    }
+    .pill-plain::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--clay);
+    }
+    .pill-sage {
+      background: rgba(113, 135, 118, 0.13);
+      color: #5d715f;
+    }
+    .pill-sage::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--sage);
+    }
+
+    .footer {
+      position: absolute;
+      left: 58px;
+      right: 58px;
+      bottom: 36px;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid rgba(122, 96, 70, 0.14);
+      color: var(--muted);
+      font-size: 15px;
+      letter-spacing: 0.1em;
+    }
+    .footer strong {
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <main class="poster">
+    <header class="topbar">
+      <div class="brand">
+        <div class="seal">一</div>
+        <div>
+          <div class="brand-name">一生的整理</div>
+          <div class="brand-en">LIFELONG ORGANIZING</div>
+        </div>
+      </div>
+      <div class="top-note">
+        清楚交代 · 晚年规划<br />
+        WISDOMPACE.COM
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="tool-chip"><span class="dot"></span>晚年花费测算</div>
+      <p class="kicker">LATER-LIFE COST PLANNER</p>
+      <h1>从退休到离世，<br />我需要准备<span class="accent">多少钱</span>？</h1>
+      <p class="slogan">把说不清的养老焦虑，算成看得见的数字。</p>
+    </section>
+
+    <section class="stage-card">
+      <div class="stage-head">
+        <div>
+          <h2>不同阶段，支出重点不同</h2>
+          <p>日常、住房、医疗、照护、热爱与身后安排，放进同一本账。</p>
+        </div>
+        <span class="stage-tag">支出结构示意</span>
+      </div>
+      <div class="stages">
+        <div class="stage">
+          <div class="stage-index">01</div>
+          <div>
+            <div class="stage-title">活力期</div>
+            <div class="stage-desc">日常起居 · 旅行 · 兴趣社交</div>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="stage-index">02</div>
+          <div>
+            <div class="stage-title">机能下降期</div>
+            <div class="stage-desc">医疗自付 · 家政 · 适老改造</div>
+          </div>
+        </div>
+        <div class="stage highlight">
+          <div class="stage-index">03</div>
+          <div>
+            <div class="stage-title">照护期</div>
+            <div class="stage-desc">净照护自付，账本最重的一段</div>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="stage-index">04</div>
+          <div>
+            <div class="stage-title">身后期</div>
+            <div class="stage-desc">治丧 · 归处 · 最后一份安排</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-block">
+      <div class="section-label">你能得到什么</div>
+      <div class="features">
+        <article class="feature">
+          <div class="feature-head"><span class="feature-dot"></span><h3>连接生命余光</h3></div>
+          <p>用你熟悉的寿命估算，作为晚年规划的起点。</p>
+        </article>
+        <article class="feature">
+          <div class="feature-head"><span class="feature-dot"></span><h3>看清支出结构</h3></div>
+          <p>哪一段最花钱，哪一项最容易漏算，一目了然。</p>
+        </article>
+        <article class="feature">
+          <div class="feature-head"><span class="feature-dot"></span><h3>提前识别缺口</h3></div>
+          <p>退休金和可动用储备，究竟能覆盖多少晚年。</p>
+        </article>
+        <article class="feature">
+          <div class="feature-head"><span class="feature-dot"></span><h3>拖动数字调整</h3></div>
+          <p>把“要不要少旅行”变成可推演的取舍方案。</p>
+        </article>
+      </div>
+    </section>
+
+    <p class="quote">不是劝你少花，而是让每一次取舍更清楚</p>
+
+    <section class="qr-panel">
+      <div class="qr-box">
+        <img class="qr-img" src="qr-code.png" alt="晚年花费测算工具二维码" />
+      </div>
+      <div class="qr-copy">
+        <div class="overline">SCAN OR LONG-PRESS</div>
+        <h3>扫码或长按识别，算出<em>属于你的晚年账本</em></h3>
+        <p>微信内长按二维码图片即可识别 · 相机或「扫一扫」同样可用</p>
+        <div class="pill-row">
+          <span class="pill pill-plain">无需登录，不猜未来</span>
+          <span class="pill pill-sage">数据仅保存在本机 · 不上传云端</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span><strong>把余生算清楚</strong>，不是悲观，是温柔的准备</span>
+      <span>一生的整理 · 清楚交代</span>
+    </footer>
+  </main>
+</body>
+</html>
