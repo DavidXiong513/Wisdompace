@@ -3,7 +3,7 @@ import { getToolInfo, getToolStatusText } from '@/lib/tools';
 import PersonalityTestCards from '@/components/PersonalityTestCards';
 import PreparednessSlider from '@/app/chapter/read-instructions/PreparednessSlider';
 import CareerValuesCard from '@/components/CareerValuesCard';
-import FarewellLetterBox from '@/components/tools/FarewellLetterBox';
+import WillLiteracyBox from '@/components/tools/WillLiteracyBox';
 
 // ── 框架卡片数据与组件 ──
 const frameworkCards = [
@@ -816,11 +816,11 @@ function WillTemplatesEntry() {
   );
 }
 
-// ── 留给家人的话：内嵌内容框（挂在「无憾的交代」末尾）──
-function FarewellLetterEntry() {
+// ── 遗嘱科普：内嵌内容框（挂在「无憾的交代」末尾）──
+function WillLiteracyEntry() {
   return (
     <div className="mt-8">
-      <FarewellLetterBox />
+      <WillLiteracyBox />
     </div>
   );
 }
@@ -944,8 +944,8 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
   }
 
   // 特殊处理：留给家人的话（内嵌内容框）
-  if (toolId === 'farewell-letter') {
-    return <FarewellLetterEntry />;
+  if (toolId === 'will-literacy') {
+    return <WillLiteracyEntry />;
   }
 
   const tool = getToolInfo(toolId);
