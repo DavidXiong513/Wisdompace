@@ -196,6 +196,20 @@ export const tools: Record<string, ToolInfo> = {
     description:
       '长期观察记录候选意定人的言行表现——TA在压力下如何？在利益冲突时如何？通过持续积累形成判断。',
   },
+  'will-preparation': {
+    id: 'will-preparation',
+    name: '遗嘱准备',
+    status: 'developing',
+    description:
+      '写遗嘱之前该想清楚的事：资产盘点、析产判断、意愿梳理、形式对照与八条红线自检，最后得到一份可带去公证处或律师的准备备忘。',
+  },
+  'will-templates': {
+    id: 'will-templates',
+    name: '遗嘱模板库',
+    status: 'developing',
+    description:
+      '房产、存款与金融资产、概括兜底三份自书遗嘱手抄范本，每份配逐句注解与失效风险清单。',
+  },
 };
 
 export function getToolInfo(toolId: string): ToolInfo | null {

@@ -318,12 +318,32 @@
           "It's time to make this judgment. Bring the observations you've accumulated in \"Insight into People,\" and use this tool for a systematic assessment."
         ]
       },
+      "will-preparation": {
+        "title": "Preparing Your Will",
+        "paragraphs": [
+          "Your designated agent is settled — you've addressed who makes decisions for you. One last thing remains unaccounted for: after I'm gone, who gets these worldly possessions?",
+          "Medical wishes, entrustment, decision-making authority — all arranged. Yet property is the part most people never bring up with family in their entire lives. Not because they don't want to, but because they don't know how. And it's precisely the part most likely to go wrong: real estate, savings, equity, insurance — each has its own rules. Write one sentence incorrectly, and the whole document may not count.",
+          "A will is not the same as an advance directive. An advance directive expresses wishes — loose in form, weaker in effect. A will is a document that produces legal effect: get the form wrong, and no matter how clear your intent, it may be ruled invalid. At that point, every word you wrote amounts to nothing.",
+          "This tool won't write a will for you. It helps you think through what must be clear before you write: what's actually yours, who you want to give it to, which form suits your situation, and whether you've stepped on any tripwire that would void the whole thing. When you're done, you'll have a Will Preparation Memo to bring to a notary or a lawyer."
+        ]
+      },
+      "will-templates": {
+        "title": "Will Template Library",
+        "paragraphs": [
+          "Templates are for reading, not for copying.",
+          "Most will templates circulating online give you a fill-in-the-blank paragraph without telling you which sentence is mandatory, or which omission voids the document. Every template here comes with line-by-line annotations: why this sentence must be written, why this date can't be skipped, why this property can't be described this way.",
+          "After reading all three, one thing becomes clear: a handwritten will is indeed the lowest-cost option — and also the least forgiving. Lowest cost and lowest price are never the same thing."
+        ]
+      },
       "summary": {
         "title": "Leaving No Regrets Behind",
         "paragraphs": [
           "You've made it here, completing the core work of the 'State Clearly' chapter.",
           "You've sorted your responsibility checklist, identified what's urgent and important, and what needs advance transition planning. You've examined the real trade-offs behind major decisions, and seen the financial structure of daily living, healthcare and caregiving in later-life cost estimates. You've written down your five wishes in advance directives — those things you want your family to know but never found the words to say.",
           "You've evaluated who can be your designated agent, and where no suitable person exists, learned about professional alternatives. These aren't cold procedures — they are your final order and tenderness left for this world.",
+          "Finally, you prepared for your will — sorting through your possessions one by one, seeing clearly what is yours and who you want it to go to, and working out which form fits your situation.",
+          "There is one more thing that belongs in no form and no notarized document: a letter for your family. It disposes of no property and carries no legal effect, but it holds what a will can never hold — the sentence never spoken, the thanks never made clear, the apology never offered.",
+          "A will handles money; this letter handles people. Only when both are done have you truly said everything.",
           "Stating clearly isn't pessimism — it's responsibility. It ensures you leave no regrets behind. These arrangements don't need to be completed all at once — you can come back anytime to revise, supplement, or update. Life changes, and your arrangements can change too."
         ],
         "questions": [
@@ -332,6 +352,8 @@
           "In the later-life cost estimate, which expense was most beyond your expectation, and what will you do to prepare for it?",
           "Among your five wishes in advance directives, which one do you most want your family to know?",
           "Have you confirmed your designated agent? If not, which alternative plan will you start with?",
+          "In preparing your will, which step made you hesitate most: not being able to inventory what you have, or not being able to decide who should get it?",
+          "That letter for your family — who do you most want to write to first?",
           "If today were your last chance to review these arrangements clearly, how ready would you say you are?"
         ]
       }

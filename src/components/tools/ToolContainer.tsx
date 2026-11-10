@@ -94,6 +94,16 @@ interface ToolContainerProps {
 export function ToolContainer({ toolId }: ToolContainerProps) {
   const def = getToolDefinition(toolId);
 
+  // 内嵌型内容框：不注册为独立工具（不出现在工具中心），只作为章节内的填写区。
+  // 必须在 def 检查之前处理，否则会落到下面的「未知工具」分支。
+  if (toolId === 'farewell-letter') {
+    return (
+      <ToolErrorBoundary>
+        <ToolPlaceholder toolId={toolId} />
+      </ToolErrorBoundary>
+    );
+  }
+
   // Unknown tool
   if (!def) {
     return (
@@ -118,6 +128,9 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'responsibility-list',
     'ta-worth-trust',
     'people-insight',
+    'will-preparation',
+    'will-templates',
+    'farewell-letter',
     'no-regrets',
     'goodbye-list',
     'farewell-style',

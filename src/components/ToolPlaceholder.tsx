@@ -3,6 +3,7 @@ import { getToolInfo, getToolStatusText } from '@/lib/tools';
 import PersonalityTestCards from '@/components/PersonalityTestCards';
 import PreparednessSlider from '@/app/chapter/read-instructions/PreparednessSlider';
 import CareerValuesCard from '@/components/CareerValuesCard';
+import FarewellLetterBox from '@/components/tools/FarewellLetterBox';
 
 // ── 框架卡片数据与组件 ──
 const frameworkCards = [
@@ -705,6 +706,125 @@ function CommunityAgingEntry() {
   );
 }
 
+// ── 遗嘱准备 + 遗嘱模板库（并排双卡）──
+function WillPrepPair() {
+  return (
+    <div className="mt-8 grid gap-4 sm:grid-cols-2">
+      {/* 主卡：遗嘱准备 */}
+      <Link
+        href="/tools/will-preparation"
+        className="group flex flex-col overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+      >
+        <div className="flex flex-1 flex-col p-5">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FDF5EE] text-3xl shadow-inner transition-transform group-hover:scale-110">
+            📜
+          </div>
+          <h3 className="mt-4 text-lg leading-snug font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            我的遗嘱准备 · 写之前先想清楚
+          </h3>
+          <p className="mt-2 flex-1 text-sm leading-relaxed text-[#8A7E6A]">
+            资产盘点、意愿梳理、形式对照、风险自检，四步做完拿到一份准备备忘，带去公证处或律师。
+          </p>
+          <span className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#C87941] px-5 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D]">
+            开始准备
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+          </span>
+        </div>
+        <div className="border-t border-[#F0E6D6] px-5 py-2.5">
+          <p className="text-[11px] leading-relaxed text-[#A8927A]">
+            不生成可直接签署的遗嘱 · 不构成法律意见
+          </p>
+        </div>
+      </Link>
+
+      {/* 副卡：遗嘱模板库 */}
+      <Link
+        href="/tools/will-templates"
+        className="group flex flex-col overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+      >
+        <div className="flex flex-1 flex-col p-5">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FDF5EE] text-3xl shadow-inner transition-transform group-hover:scale-110">
+            📄
+          </div>
+          <h3 className="mt-4 text-lg leading-snug font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            遗嘱模板库 · 三份手抄范本
+          </h3>
+          <p className="mt-2 flex-1 text-sm leading-relaxed text-[#8A7E6A]">
+            房产、存款与金融资产、概括兜底。每份配逐句注解和失效风险清单，读完再决定怎么写。
+          </p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {['手抄范本', '逐句注解', '红线清单'].map(chip => (
+              <span
+                key={chip}
+                className="rounded-full bg-[#FDF5EE] px-2.5 py-1 text-[11px] font-medium text-[#A85E2D]"
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
+          <span className="mt-4 inline-flex items-center justify-center gap-2 rounded-full border border-[#C87941] bg-white px-5 py-2.5 text-sm font-bold text-[#C87941] transition-all group-hover:bg-[#FDF5EE]">
+            查看范本
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+          </span>
+        </div>
+        <div className="border-t border-[#F0E6D6] px-5 py-2.5">
+          <p className="text-[11px] leading-relaxed text-[#A8927A]">
+            范本仅供阅读参照，不能打印签署；手抄不等于有效
+          </p>
+        </div>
+      </Link>
+    </div>
+  );
+}
+
+// ── 遗嘱模板库：章节内文字链接（卡片已在上一节并排呈现，此处不重复）──
+function WillTemplatesEntry() {
+  return (
+    <Link
+      href="/tools/will-templates"
+      className="group mt-4 inline-flex items-center gap-2 text-sm font-medium text-[#C87941] transition-colors hover:text-[#A85E2D]"
+    >
+      先看看三份范本长什么样
+      <svg
+        className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M13 7l5 5m0 0l-5 5m5-5H6"
+        />
+      </svg>
+    </Link>
+  );
+}
+
+// ── 留给家人的话：内嵌内容框（挂在「无憾的交代」末尾）──
+function FarewellLetterEntry() {
+  return (
+    <div className="mt-8">
+      <FarewellLetterBox />
+    </div>
+  );
+}
+
 // 生产环境检测
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -811,6 +931,21 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
   // 特殊处理：社群养老投票
   if (toolId === 'community-aging-poll') {
     return <CommunityAgingEntry />;
+  }
+
+  // 特殊处理：遗嘱准备 + 模板库（并排双卡）
+  if (toolId === 'will-preparation') {
+    return <WillPrepPair />;
+  }
+
+  // 特殊处理：遗嘱模板库（章节内文字链接）
+  if (toolId === 'will-templates') {
+    return <WillTemplatesEntry />;
+  }
+
+  // 特殊处理：留给家人的话（内嵌内容框）
+  if (toolId === 'farewell-letter') {
+    return <FarewellLetterEntry />;
   }
 
   const tool = getToolInfo(toolId);

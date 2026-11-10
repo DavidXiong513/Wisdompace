@@ -10,6 +10,8 @@ const eslintConfig = defineConfig([
     // Default ignores of eslint-config-next:
     ".next/**",
     ".next-verify*/**",
+    // 临时脚本与验证产物（已加入 .gitignore）
+    ".tmp-*/**",
     "out/**",
     "build/**",
     "next-env.d.ts",
