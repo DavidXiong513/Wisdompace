@@ -84,14 +84,12 @@ function VoteQuestion({
   question,
   onVote,
   onNext,
-  isLast,
   submitting,
   nextLabel,
 }: {
   question: Question;
   onVote: (answer: string | string[]) => void;
   onNext: () => void;
-  isLast: boolean;
   submitting: boolean;
   nextLabel: string;
 }) {
@@ -293,7 +291,7 @@ function ReportView({
       <div className="mt-8">
         <h2 className="font-serif text-xl font-bold text-[#4A3728]">投票结果 · 真实数据</h2>
         <p className="mt-1 text-xs text-[#B0A090]">{totalVotes.toLocaleString()} 人已参与</p>
-        {[0, 2, 3, 4, 5, 6, 7]
+        {QUESTIONS.map((_, i) => i)
           .filter(i => aggregates[i])
           .map(qi => (
             <div key={qi} className="mt-4 rounded-xl border border-[#E8D9C2] bg-white p-5">
@@ -454,6 +452,16 @@ export default function CommunityAgingPollPage() {
         if (!grouped[qi]) grouped[qi] = [];
         grouped[qi].push({ label: row.option_label, count: row.count, pct: 0 });
       }
+      // 按题目原始选项顺序排序（数据库返回的是插入顺序，直接渲染会乱序）
+      // 不在题库里的未知选项排到最后，避免历史脏数据被吞掉
+      for (const qi of Object.keys(grouped)) {
+        const opts = QUESTIONS[Number(qi)]?.options ?? [];
+        const rank = (label: string) => {
+          const idx = opts.indexOf(label);
+          return idx === -1 ? Number.MAX_SAFE_INTEGER : idx;
+        };
+        grouped[qi].sort((a, b) => rank(a.label) - rank(b.label));
+      }
       // Calculate percentages
       for (const qi of Object.keys(grouped)) {
         const total = grouped[qi].reduce((s, x) => s + x.count, 0);
@@ -611,7 +619,6 @@ export default function CommunityAgingPollPage() {
                 handleAllComplete();
               }
             }}
-            isLast={store.currentQIndex === QUESTIONS.length - 1}
             submitting={submitting}
             nextLabel={
               store.currentQIndex === QUESTIONS.length - 1
