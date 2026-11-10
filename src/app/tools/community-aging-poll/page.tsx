@@ -482,24 +482,32 @@ export default function CommunityAgingPollPage() {
       if (voteData.exists && voteData.data) {
         setAlreadyVoted(true);
         setVotedAt(voteData.data.created_at ?? null);
-        store.setStep('report');
-        store.setAnswers(voteData.data.answers);
+        // 用 getState 取 action，而不是闭包里的 store：
+        // store 每次 setState 都是新引用，放进依赖会让 init 反复重建 → effect 无限重跑
+        const { setStep, setAnswers } = useCommunityAgingPollStore.getState();
+        setStep('report');
+        setAnswers(voteData.data.answers);
       }
     } catch (err) {
       console.error('Init error:', err);
     } finally {
       setLoading(false);
     }
-  }, [sessionId, loadAggregates, store]);
+  }, [sessionId, loadAggregates]);
 
+  // 初始化只跑一次，避免任何依赖抖动导致重复请求
+  const initRef = React.useRef(false);
   useEffect(() => {
-    if (hydrated) init();
+    if (!hydrated || initRef.current) return;
+    initRef.current = true;
+    void init();
   }, [hydrated, init]);
 
   // 2) Submit vote to Supabase
   const submitVote = useCallback(async () => {
     setSubmitting(true);
-    const score = calcScore(store.answers);
+    const storeState = useCommunityAgingPollStore.getState();
+    const score = calcScore(storeState.answers);
     try {
       const res = await fetch('/api/poll/vote', {
         method: 'POST',
@@ -507,18 +515,18 @@ export default function CommunityAgingPollPage() {
         body: JSON.stringify({
           tool_id: 'community-aging-poll',
           session_id: sessionId,
-          answers: store.answers,
+          answers: storeState.answers,
           readiness_score: score,
         }),
       });
       if (res.ok) {
-        store.setSynced(true);
+        storeState.setSynced(true);
         setVotedAt(new Date().toISOString());
-        store.setStep('report');
+        storeState.setStep('report');
         void loadAggregates();
       } else if (res.status === 409) {
         // 已投过票：回查一次拿到真实时间，别让页面显示“未同步”
-        store.setSynced(true);
+        storeState.setSynced(true);
         try {
           const vr = await fetch(
             `/api/poll/vote-check?session_id=${sessionId}&tool_id=community-aging-poll`
@@ -528,19 +536,19 @@ export default function CommunityAgingPollPage() {
         } catch {
           // 拿不到时间就不显示，不影响进入报告
         }
-        store.setStep('report');
+        storeState.setStep('report');
       } else {
         console.error('Vote submit failed');
         // Still allow going to report even if sync fails
-        store.setStep('report');
+        storeState.setStep('report');
       }
     } catch (err) {
       console.error('Vote error:', err);
-      store.setStep('report');
+      useCommunityAgingPollStore.getState().setStep('report');
     } finally {
       setSubmitting(false);
     }
-  }, [sessionId, store, loadAggregates]);
+  }, [sessionId, loadAggregates]);
 
   // 3) Handle completing all questions
   const handleAllComplete = useCallback(() => {
