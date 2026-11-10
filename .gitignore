@@ -76,3 +76,6 @@ CHECKPOINT-SUMMARY.md
 
 # Git repository backup directories
 .git.bak-*/
+
+# 临时调试产物（Edge 截图目录、Playwright 验证脚本）
+.tmp-*/
