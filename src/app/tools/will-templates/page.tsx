@@ -1,16 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import WillTemplateCard from '@/components/tools/WillTemplateCard';
 import {
   selfWrittenTradeoffs,
   familyScenarios,
-  templatePreviews,
   type ScenarioVerdict,
 } from '@/data/will-templates/selfWrittenTradeoff';
+import { willTemplates } from '@/data/will-templates/templates';
 
 export const metadata: Metadata = {
   title: '遗嘱模板库 | 《一生的整理》',
   description:
-    '自书遗嘱的双刃剑：成本最低、举证最弱。对照你的家庭结构，看它到底够不够用——以及三份手抄范本的筹备进展。',
+    '自书遗嘱的双刃剑：成本最低、举证最弱。对照你的家庭结构判断它够不够用，再读三份手抄范本——房产、存款与金融资产、概括兜底，每份配逐句注解与失效风险。',
 };
 
 const verdictStyle: Record<ScenarioVerdict, string> = {
@@ -126,27 +127,25 @@ export default function WillTemplatesPage() {
           </div>
         </section>
 
-        <section className="mt-8 rounded-2xl border border-dashed border-[#D9C6AC] bg-[#FAF8F3] p-5 sm:p-6">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-[#EFE6D8] px-2.5 py-0.5 text-[11px] font-bold tracking-[0.1em] text-[#8A7E6A]">
-              筹备中
-            </span>
-            <h3 className="text-base font-bold text-[#4A3728]">三份手抄范本</h3>
-          </div>
+        <section className="mt-8">
+          <h3 className="flex items-center gap-3 text-base font-bold text-[#4A3728]">
+            <span className="h-4 w-1 rounded-full bg-[#C87941]" />
+            三份手抄范本
+          </h3>
           <p className="mt-2 text-sm leading-[1.8] text-[#8A7E6A]">
-            范本正在编写中。每一份都会包含：适用情形 / 不适用情形 / 抄完必查五项、一句一行的手抄正文、逐句注解，以及成本对照。它们只供阅读参照，不能打印签署。
+            每一份都标了适合谁、不适合谁、抄完要复查哪五项，正文后面逐句注解，
+            最后附成本对照。范本只供阅读参照——自书遗嘱必须一字一句亲笔书写，不能打印签署。
           </p>
-          <ul className="mt-4 space-y-3">
-            {templatePreviews.map(item => (
-              <li key={item.name} className="flex gap-3">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C87941]" />
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold text-[#4A3728]">{item.name}</div>
-                  <p className="mt-0.5 text-[13px] leading-[1.7] text-[#8A7E6A]">{item.fit}</p>
-                </div>
-              </li>
+          <div className="mt-4 space-y-3">
+            {willTemplates.map((template, i) => (
+              <WillTemplateCard
+                key={template.slug}
+                template={template}
+                index={i}
+                defaultOpen={i === 0}
+              />
             ))}
-          </ul>
+          </div>
         </section>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">

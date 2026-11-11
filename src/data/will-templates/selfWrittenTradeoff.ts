@@ -75,24 +75,3 @@ export const familyScenarios: FamilyScenario[] = [
     note: '权属没落地之前写遗嘱，等于把争议写进文书里。',
   },
 ];
-
-/** 三份范本的筹备清单 */
-export type TemplatePreview = {
-  name: string;
-  fit: string;
-};
-
-export const templatePreviews: TemplatePreview[] = [
-  {
-    name: '房产自书遗嘱',
-    fit: '单一不动产、权属清晰、无共有人争议',
-  },
-  {
-    name: '存款与金融资产自书遗嘱',
-    fit: '银行卡、理财、保险的分配与查询方式',
-  },
-  {
-    name: '概括兜底自书遗嘱',
-    fit: '全部财产归配偶或某一子女，家庭结构简单',
-  },
-];
