@@ -198,15 +198,15 @@ export const tools: Record<string, ToolInfo> = {
   },
   'will-preparation': {
     id: 'will-preparation',
-    name: '遗嘱准备',
-    status: 'developing',
+    name: '我的遗嘱准备',
+    status: 'ready',
     description:
       '写遗嘱之前该想清楚的事：资产盘点、析产判断、意愿梳理、形式对照与八条红线自检，最后得到一份可带去公证处或律师的准备备忘。',
   },
   'will-templates': {
     id: 'will-templates',
     name: '遗嘱模板库',
-    status: 'developing',
+    status: 'ready',
     description:
       '房产、存款与金融资产、概括兜底三份自书遗嘱手抄范本，每份配逐句注解与失效风险清单。',
   },
