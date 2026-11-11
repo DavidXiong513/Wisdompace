@@ -148,6 +148,8 @@
       position: relative;
       color: var(--accent-deep);
     }
+    /* 全角逗号在 104px 下右侧留白过大，行中断成两块；按中文排版惯例做标点挤压 */
+    h1 .comma { margin-right: -0.30em; }
     h1 .accent::after {
       content: "";
       position: absolute;
@@ -298,7 +300,7 @@
     <section class="hero">
       <div class="tool-chip"><span class="dot"></span>好好告别 · 工具合集</div>
       <p class="kicker">CHAPTER 04 · FOUR TOOLS</p>
-      <h1>四件事，<br />做完了才走得<span class="accent">从容</span></h1>
+      <h1>四件事<span class="comma">，</span>做完了<br />才走得<span class="accent">自洽从容</span></h1>
       <p class="slogan">告别不是最后一刻的事，是从现在开始的事。</p>
     </section>
 
