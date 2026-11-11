@@ -5,7 +5,7 @@ import WillPrepWizard from '@/components/tools/WillPrepWizard';
 export const metadata: Metadata = {
   title: '我的遗嘱准备 | 《一生的整理》',
   description:
-    '写遗嘱之前该想清楚的事：资产盘点、析产判断、意愿梳理、形式对照与八条红线自检，最后生成一份可打印、可带去公证处或律师的准备备忘。不生成任何可直接签署的文书。',
+    '写遗嘱之前该想清楚的事：资产盘点（含数字资产与账号交代）、析产判断、意愿梳理、形式对照与八条红线自检，最后生成一份可打印、可带去公证处或律师的准备备忘。不生成任何可直接签署的文书。',
 };
 
 export default function WillPreparationPage() {

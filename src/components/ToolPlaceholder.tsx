@@ -729,7 +729,7 @@ function WillPrepPair() {
               我的遗嘱准备 · 写之前先想清楚
             </h3>
             <p className="mt-2 flex-1 text-sm leading-relaxed text-[#8A7E6A]">
-              资产盘点、意愿梳理、形式对照、风险自检，四步做完拿到一份准备备忘，带去公证处或律师。
+              六步走完——资产盘点（含数字资产与账号交代）、析产判断、意愿梳理、形式对照、红线自检，最后拿到一份准备备忘。
             </p>
             <span className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#C87941] px-5 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D]">
               开始准备

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   assetCategories,
+  accountPlans,
   maritalOptions,
   coownerChecks,
   intentChecks,
@@ -22,6 +23,10 @@ const STORAGE_KEY = 'wisdompace:will-prep:v1';
 
 type Draft = {
   assets: string[];
+  /** 数字资产明细（assetCategories 里数字资产的 subItems） */
+  digital: string[];
+  /** 账号交代方式，取 accountPlans 的 id */
+  accountPlan: string | null;
   marital: string | null;
   coowners: string[];
   intents: string[];
@@ -29,8 +34,21 @@ type Draft = {
   redlines: string[];
 };
 
+const DIGITAL_SUB_ITEMS = assetCategories.find(a => a.id === 'digital')?.subItems ?? [];
+const DIGITAL_IDS = new Set(DIGITAL_SUB_ITEMS.map(s => s.id));
+const ACCOUNT_PLAN_IDS = new Set(accountPlans.map(p => p.id));
+
 function emptyDraft(): Draft {
-  return { assets: [], marital: null, coowners: [], intents: [], form: null, redlines: [] };
+  return {
+    assets: [],
+    digital: [],
+    accountPlan: null,
+    marital: null,
+    coowners: [],
+    intents: [],
+    form: null,
+    redlines: [],
+  };
 }
 
 function loadDraft(): Draft {
@@ -45,6 +63,10 @@ function loadDraft(): Draft {
       Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : [];
     const draft = emptyDraft();
     draft.assets = takeIds(o.assets);
+    // 旧草稿没有 digital 字段；明细 id 也要按当前数据白名单过一次，避免残留脏值
+    draft.digital = takeIds(o.digital).filter(id => DIGITAL_IDS.has(id));
+    draft.accountPlan =
+      typeof o.accountPlan === 'string' && ACCOUNT_PLAN_IDS.has(o.accountPlan) ? o.accountPlan : null;
     draft.coowners = takeIds(o.coowners);
     draft.intents = takeIds(o.intents);
     draft.redlines = takeIds(o.redlines);
@@ -127,7 +149,7 @@ export default function WillPrepWizard() {
   }, [draft]);
 
   const toggle = useCallback(
-    (key: 'assets' | 'coowners' | 'intents' | 'redlines', id: string) => {
+    (key: 'assets' | 'digital' | 'coowners' | 'intents' | 'redlines', id: string) => {
       setDraft(prev => {
         const list = prev[key];
         return {
@@ -153,6 +175,15 @@ export default function WillPrepWizard() {
   const pickedAssets = useMemo(
     () => assetCategories.filter(a => draft.assets.includes(a.id)),
     [draft.assets]
+  );
+  const digitalActive = draft.assets.includes('digital');
+  const pickedDigital = useMemo(
+    () => DIGITAL_SUB_ITEMS.filter(s => draft.digital.includes(s.id)),
+    [draft.digital]
+  );
+  const chosenPlan = useMemo(
+    () => accountPlans.find(p => p.id === draft.accountPlan) ?? null,
+    [draft.accountPlan]
   );
   const pickedCoowners = useMemo(
     () => coownerChecks.filter(c => draft.coowners.includes(c.id)),
@@ -253,6 +284,102 @@ export default function WillPrepWizard() {
           <p className="mt-3 text-[12px] leading-[1.7] text-[#A8927A]">
             已勾选 {draft.assets.length} 类。所有内容只存在你的浏览器里，不上传服务器。
           </p>
+
+          {/* 数字资产是唯一需要展开明细的一类：钱在手机里，家人看不见 */}
+          {digitalActive && (
+            <div className="mt-4 rounded-2xl border border-[#E8D9C2] bg-white p-4 sm:p-5">
+              <div className="flex items-baseline justify-between gap-3">
+                <h3 className="flex items-center gap-2 text-[14px] font-bold text-[#4A3728]">
+                  <span className="h-3.5 w-1 rounded-full bg-[#C87941]" />
+                  数字资产与账号交代
+                </h3>
+                <span className="text-[11px] text-[#A8927A]">
+                  已选 {pickedDigital.length} / {DIGITAL_SUB_ITEMS.length}
+                </span>
+              </div>
+              <p className="mt-2 text-[12.5px] leading-[1.8] text-[#6A6256]">
+                这一类没有任何凭证：没有存折、没有权证，只有一部手机。
+                你不在了，家人连「有哪些」都不知道。先把有的勾出来。
+              </p>
+
+              <div className="mt-3 grid gap-1.5 sm:grid-cols-2">
+                {DIGITAL_SUB_ITEMS.map(s => {
+                  const on = draft.digital.includes(s.id);
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() => toggle('digital', s.id)}
+                      className={`flex items-start gap-2 rounded-lg border px-3 py-2 text-left transition ${
+                        on
+                          ? 'border-[#C87941] bg-[#FDF5EE]'
+                          : 'border-[#EDE2D0] bg-white hover:border-[#D9C6AC]'
+                      }`}
+                    >
+                      <CheckMark active={on} />
+                      <span className="text-[12.5px] leading-snug text-[#4A3728]">{s.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <h4 className="mt-5 flex items-center gap-2 text-[13.5px] font-bold text-[#4A3728]">
+                <span className="h-3 w-1 rounded-full bg-[#C87941]" />
+                这些账号，你打算怎么交代
+              </h4>
+              <p className="mt-1.5 text-[12px] leading-[1.75] text-[#A8927A]">
+                三条路，可以只选一条。无论选哪一条，密码都不写进遗嘱正文。
+              </p>
+              <div className="mt-2.5 space-y-1.5">
+                {accountPlans.map(p => {
+                  const on = draft.accountPlan === p.id;
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() => setDraft(prev => ({ ...prev, accountPlan: on ? null : p.id }))}
+                      className={`w-full rounded-xl border px-3.5 py-2.5 text-left transition ${
+                        on
+                          ? 'border-[#C87941] bg-white shadow-sm'
+                          : 'border-[#EDE2D0] bg-white hover:border-[#D9C6AC]'
+                      }`}
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <span
+                          className={`mt-[3px] flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border ${
+                            on ? 'border-[#C87941]' : 'border-[#D9C6AC]'
+                          }`}
+                        >
+                          {on && <span className="h-2 w-2 rounded-full bg-[#C87941]" />}
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-[13px] font-semibold text-[#4A3728]">
+                            {p.label}
+                          </span>
+                          {on ? (
+                            <>
+                              <span className="mt-1 block text-[12.5px] leading-[1.75] text-[#6A6256]">
+                                {p.desc}
+                              </span>
+                              <span className="mt-1.5 block rounded-lg border border-[#F0D9B0] bg-[#FDF5EE] px-3 py-2 text-[12px] leading-[1.75] text-[#8A5A17]">
+                                {p.caution}
+                              </span>
+                            </>
+                          ) : (
+                            <span className="mt-0.5 block text-[11.5px] leading-snug text-[#A8927A]">
+                              {p.brief}
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </section>
       )}
 
@@ -551,6 +678,16 @@ export default function WillPrepWizard() {
                         <span>
                           <span className="font-semibold">{a.name}</span>
                           <span className="text-[#8A7E6A]">（{a.examples}）</span>
+                          {a.id === 'digital' &&
+                            (pickedDigital.length > 0 ? (
+                              <span className="mt-1 block text-[12.5px] leading-[1.7] text-[#6A6256]">
+                                明细：{pickedDigital.map(s => s.name).join('、')}
+                              </span>
+                            ) : (
+                              <span className="mt-1 block text-[12px] text-[#A8927A]">
+                                明细未勾选——建议至少留下账号清单。
+                              </span>
+                            ))}
                         </span>
                       </li>
                     ))}
@@ -594,8 +731,19 @@ export default function WillPrepWizard() {
                 <h4 className="text-[13px] font-bold tracking-[0.08em] text-[#C87941]">
                   三、意愿要点
                 </h4>
-                {pickedIntents.length > 0 ? (
+                {pickedIntents.length > 0 || chosenPlan ? (
                   <ul className="mt-2 space-y-2">
+                    {chosenPlan && (
+                      <li className="text-[13px] leading-[1.75] text-[#4A3728]">
+                        <span className="font-semibold">· 数字资产的交代方式：{chosenPlan.label}</span>
+                        <span className="mt-0.5 block text-[12.5px] text-[#8A7E6A]">
+                          {chosenPlan.desc}
+                        </span>
+                        <span className="mt-0.5 block text-[12px] text-[#8A5A17]">
+                          注意：{chosenPlan.caution}
+                        </span>
+                      </li>
+                    )}
                     {pickedIntents.map(i => (
                       <li key={i.id} className="text-[13px] leading-[1.75] text-[#4A3728]">
                         <span className="font-semibold">· {i.label}</span>
@@ -604,7 +752,9 @@ export default function WillPrepWizard() {
                     ))}
                   </ul>
                 ) : (
-                  <p className="mt-2 text-[13px] text-[#A8927A]">尚未勾选。</p>
+                  <p className="mt-2 text-[13px] text-[#A8927A]">
+                    尚未勾选意向，也未选择账号交代方式。
+                  </p>
                 )}
               </div>
 

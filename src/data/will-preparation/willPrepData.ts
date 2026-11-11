@@ -12,13 +12,33 @@
 
 /* ─────────────── 一、资产盘点（只收类别，不收金额） ─────────────── */
 
+export interface AssetSubItem {
+  id: string;
+  name: string;
+}
+
 export interface AssetCategory {
   id: string;
   name: string;
   examples: string;
   /** 写遗嘱时的注意点 */
   note: string;
+  /** 该类别下的明细子项（目前只有数字资产需要） */
+  subItems?: AssetSubItem[];
 }
+
+/** 数字资产明细。这一类最容易被漏掉——钱在手机里，家人根本不知道。 */
+export const digitalSubItems: AssetSubItem[] = [
+  { id: 'wechat', name: '微信零钱与零钱通' },
+  { id: 'alipay', name: '支付宝余额与余额宝' },
+  { id: 'cloud', name: '云盘与照片（iCloud、网盘等）' },
+  { id: 'social', name: '社交账号（微信、微博、小红书）' },
+  { id: 'official', name: '公众号、视频号、自媒体账号' },
+  { id: 'game', name: '游戏账号与虚拟道具' },
+  { id: 'crypto', name: '虚拟货币与数字钱包' },
+  { id: 'domain', name: '域名、网站与小程序' },
+  { id: 'points', name: '积分、会员与预付卡余额' },
+];
 
 export const assetCategories: AssetCategory[] = [
   {
@@ -73,13 +93,54 @@ export const assetCategories: AssetCategory[] = [
     id: 'digital',
     name: '数字资产',
     examples: '支付宝、微信零钱、数字人民币、虚拟货币、自媒体账号',
-    note: '平台协议多不允许账号继承，遗嘱写了也可能执行不了。至少留下账号清单与处理意愿。',
+    note: '平台协议多不允许账号继承，遗嘱写了也可能执行不了。至少留下账号清单与交代意愿——下面单独列一栏。',
+    subItems: digitalSubItems,
   },
   {
     id: 'debt',
     name: '债权与债务',
     examples: '借出的款项、应收账款、房贷、经营负债',
     note: '债务不因遗嘱而消失，继承人在遗产范围内承担。写明由谁处理，能减少扯皮。',
+  },
+];
+
+/**
+ * 账号交代的三条路。
+ * 唯一不能越的底线：密码不写进遗嘱正文——遗嘱可能被多人翻阅、复印。
+ */
+export interface AccountPlan {
+  id: string;
+  label: string;
+  /** 未选中时显示的一句话摘要 */
+  brief: string;
+  desc: string;
+  caution: string;
+}
+
+export const accountPlans: AccountPlan[] = [
+  {
+    id: 'in-will',
+    label: '写进遗嘱：指明由谁处理',
+    brief: '有实际财产价值的部分，写清平台与绑定手机号。',
+    desc: '适合有实际财产价值的部分——余额、理财、可变现的虚拟财产。写明平台名称与账号绑定的手机号，不写密码。',
+    caution:
+      '多数平台的用户协议不允许账号本身被继承。遗嘱能安排的是里面的财产权益和「由谁去处理」，家属仍要按平台流程申诉支取。',
+  },
+  {
+    id: 'separate-list',
+    label: '另存清单：只告诉一个人它放在哪',
+    brief: '账号密码单独成册，遗嘱只写它存放于何处。',
+    desc: '把账号、绑定手机号、大致余额记在一份单独的清单里，密封保存。遗嘱里只写一句「另有账号清单一份，存放于某处」。',
+    caution:
+      '这份清单不要放进遗嘱正文。密码和账号一旦跟着遗嘱被复印、被多人翻看，风险比便利大得多。',
+  },
+  {
+    id: 'leave-known',
+    label: '先不细究：至少让家人知道范围',
+    brief: '不列明细，只说明你在哪些平台有账户。',
+    desc: '不列明细，只说明「我在哪些平台有账户」，避免整整一类财产被彻底遗忘。',
+    caution:
+      '这是下限方案。平台对长期不活跃的账户有清理规则，拖太久可能连申诉入口都关闭，钱就真的取不出来了。',
   },
 ];
 
@@ -350,6 +411,7 @@ export const memoNextSteps: string[] = [
   '核对每一项财产的权属凭证，确认哪些真正属于你个人',
   '把可处分范围算清楚，尤其是夫妻共同财产只写自己那一半',
   '确定继承人姓名与身份证号，避免同名歧义',
+  '给数字资产单独做一份账号清单，密封另存，遗嘱里只写它的存放位置',
   '选定遗嘱形式，若是自书，准备整页亲笔抄写',
   '想好遗嘱原件放在哪里、由谁在什么情况下取出',
   '如涉及公证，提前致电当地公证处确认所需材料',
