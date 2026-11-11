@@ -78,7 +78,7 @@ export default function WillLiteracyBox() {
         <h3 className="text-lg font-bold text-[#4A3728]">关于遗嘱，先回答三个问题</h3>
       </div>
       <p className="mt-2 text-sm leading-[1.85] text-[#6A6256]">
-        前面讲的都是「怎么写」。但大多数人卡住的地方不是格式，是那个决定：现在写，还是再等等。
+        上面讲的都是「怎么写」。但大多数人卡住的地方不是格式，是那个决定：现在写，还是再等等。
         这三问没有标准答案，却能告诉你接下来该做什么——或者，让你安心地暂时不做。
       </p>
 
