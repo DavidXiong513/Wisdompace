@@ -7,6 +7,7 @@ import { RolePieChartCard } from '@/components/RolePieChartCard';
 import CareerValuesCard from '@/components/CareerValuesCard';
 import AbilityCard from '@/components/AbilityCard';
 import { ToolPlaceholder } from '@/components/ToolPlaceholder';
+import FutureVowBox from '@/components/tools/FutureVowBox';
 
 // ── Error Boundary ─────────────────────────────────────────────────────────
 
@@ -93,6 +94,16 @@ interface ToolContainerProps {
  */
 export function ToolContainer({ toolId }: ToolContainerProps) {
   const def = getToolDefinition(toolId);
+
+  // 内嵌内容框：来生志愿。故意不注册进 tools.ts，
+  // 否则会作为一个独立工具出现在工具列表里。
+  if (toolId === 'future-vow') {
+    return (
+      <ToolErrorBoundary>
+        <FutureVowBox />
+      </ToolErrorBoundary>
+    );
+  }
 
   // Unknown tool
   if (!def) {
