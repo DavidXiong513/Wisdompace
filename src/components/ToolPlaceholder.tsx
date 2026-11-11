@@ -706,11 +706,16 @@ function CommunityAgingEntry() {
   );
 }
 
-// ── 遗嘱准备 + 遗嘱模板库（并排双卡）──
+// ── 遗嘱准备 + 遗嘱模板库（科普在上，双卡在下）──
 function WillPrepPair() {
   return (
     <>
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+      {/* 科普子栏目：先想清楚要不要做，再给两个入口 */}
+      <div className="mt-6">
+        <WillLiteracyBox />
+      </div>
+
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {/* 主卡：遗嘱准备 */}
         <Link
           href="/tools/will-preparation"
@@ -788,11 +793,6 @@ function WillPrepPair() {
             </p>
           </div>
         </Link>
-      </div>
-
-      {/* 科普子栏目：动手之前的三个问题 */}
-      <div className="mt-6">
-        <WillLiteracyBox />
       </div>
     </>
   );
