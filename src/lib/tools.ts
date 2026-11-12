@@ -162,6 +162,13 @@ export const tools: Record<string, ToolInfo> = {
     description:
       '设计属于你的告别——仪式形式、归处选择、告别语、背景音乐，用你喜欢的方式留给世界最后一份创意简报。',
   },
+  'future-vow': {
+    id: 'future-vow',
+    name: '来生志愿',
+    status: 'ready',
+    description:
+      '写一句关于「之后」的话：回到自然、再活一次、去一个地方、与更大的合一、就此结束，或者只求被记住。七条路没有高下，也可以先留白。不提供宗教服务。',
+  },
   'no-regrets': {
     id: 'no-regrets',
     name: '不留遗憾 · 生命自洽评估',

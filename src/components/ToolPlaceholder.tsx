@@ -798,6 +798,58 @@ function WillPrepPair() {
   );
 }
 
+// ── 来生志愿入口卡片 ──
+function FutureVowEntry() {
+  return (
+    <Link
+      href="/tools/future-vow"
+      className="group mt-6 block overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+    >
+      <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FDF5EE] text-4xl shadow-inner transition-transform group-hover:scale-110">
+          🕯
+        </div>
+
+        <div className="flex-1 text-center sm:text-left">
+          <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            来生志愿 · 写一句，或者留空
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
+            这件事不交代给别人，是给自己。有信仰的可以立愿；不信来生的，可以写希望被怎样记住；还没想好的，可以先留一句空。
+          </p>
+          <div className="mt-3 flex flex-wrap justify-center gap-1.5 sm:justify-start">
+            {['七条路', '没有高下', '只存本地'].map(chip => (
+              <span
+                key={chip}
+                className="rounded-full bg-[#FDF5EE] px-2.5 py-1 text-[11px] font-medium text-[#A85E2D]"
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D] group-hover:px-8">
+          开始写
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
+          </svg>
+        </div>
+      </div>
+      <div className="border-t border-[#F0E6D6] px-5 py-2.5">
+        <p className="text-center text-[11px] leading-relaxed text-[#A8927A] sm:text-left">
+          约 3 分钟 · 不提供宗教服务，不代表任何宗教立场
+        </p>
+      </div>
+    </Link>
+  );
+}
+
 // 生产环境检测
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -909,6 +961,11 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
   // 特殊处理：遗嘱准备 + 模板库（并排双卡，下方接科普子栏目）
   if (toolId === 'will-preparation') {
     return <WillPrepPair />;
+  }
+
+  // 特殊处理：来生志愿（章节内只放入口卡，完整流程在 /tools/future-vow）
+  if (toolId === 'future-vow') {
+    return <FutureVowEntry />;
   }
 
   const tool = getToolInfo(toolId);
