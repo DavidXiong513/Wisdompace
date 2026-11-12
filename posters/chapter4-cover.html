@@ -14,6 +14,11 @@
       --accent: #b9643e;
       --accent-deep: #95482b;
       --line: rgba(122, 96, 70, 0.18);
+      /* 四张工具海报的主色（深色底上的提亮版），用作四个条目的色标 */
+      --m1: #a3bde8; /* 不留遗憾 · 深蓝 #45608a */
+      --m2: #e2bd77; /* 告别清单 · 赭金 #a8863f */
+      --m3: #eeb3b9; /* 告别的方式 · 玫红 #9c4a55 */
+      --m4: #a5d3cb; /* 来生志愿 · 青竹绿 #3e7f76 */
     }
     html, body {
       width: 1080px;
@@ -226,19 +231,32 @@
     }
     .stage {
       display: grid;
-      grid-template-columns: 40px 1fr;
-      gap: 11px;
-      padding: 46px 0 42px;
+      grid-template-columns: 38px 1fr;
+      gap: 16px;
+      padding: 40px 0 36px;
       border-bottom: 1px solid rgba(249, 241, 231, 0.09);
     }
     .stage:nth-last-child(-n+2) { border-bottom: 0; }
+    /* 编号改为四色徽标：颜色对应该工具海报的主色 */
     .stage-index {
-      padding-top: 7px;
-      color: rgba(249, 241, 231, 0.34);
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      margin-top: 1px;
+      border: 1px solid var(--mc-bd, rgba(249, 241, 231, 0.16));
+      border-radius: 11px;
+      color: var(--mc, rgba(249, 241, 231, 0.4));
+      background: var(--mc-bg, linear-gradient(160deg, rgba(249, 241, 231, 0.08), rgba(249, 241, 231, 0.01)));
       font-family: Georgia, serif;
-      font-size: 17px;
-      letter-spacing: 0.06em;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
     }
+    .stage:nth-child(1) { --mc: var(--m1); --mc-bg: rgba(70, 98, 140, 0.34); --mc-bd: rgba(163, 189, 232, 0.42); }
+    .stage:nth-child(2) { --mc: var(--m2); --mc-bg: rgba(168, 134, 63, 0.30); --mc-bd: rgba(226, 189, 119, 0.40); }
+    .stage:nth-child(3) { --mc: var(--m3); --mc-bg: rgba(156, 74, 85, 0.28); --mc-bd: rgba(238, 179, 185, 0.38); }
+    .stage:nth-child(4) { --mc: var(--m4); --mc-bg: rgba(62, 127, 118, 0.28); --mc-bd: rgba(165, 211, 203, 0.38); }
     .stage-title {
       font-size: 29px;
       font-weight: 700;
@@ -310,35 +328,35 @@
           <h2>四件事，四处安顿</h2>
           <p>从遗憾，到清单，到方式，再到之后。</p>
         </div>
-        <span class="stage-tag">在线工具</span>
+        <span class="stage-tag">在线工具 · 随时可改</span>
       </div>
       <div class="stages">
         <div class="stage">
           <div class="stage-index">01</div>
           <div>
             <div class="stage-title">不留遗憾</div>
-            <div class="stage-desc">七维扫描，先看这一生还差什么</div>
+            <div class="stage-desc">七个维度，打成一份 0–100 的指数</div>
           </div>
         </div>
         <div class="stage">
           <div class="stage-index">02</div>
           <div>
             <div class="stage-title">告别清单</div>
-            <div class="stage-desc">临走前想做完的事，一件件写下来</div>
+            <div class="stage-desc">五个方向、三十二条灵感，写一件划一件</div>
           </div>
         </div>
         <div class="stage">
           <div class="stage-index">03</div>
           <div>
             <div class="stage-title">告别的方式</div>
-            <div class="stage-desc">仪式、归处、告别语，都由你定</div>
+            <div class="stage-desc">六个决定：从仪式形式到最后一首歌</div>
           </div>
         </div>
         <div class="stage">
           <div class="stage-index">04</div>
           <div>
             <div class="stage-title">来生志愿</div>
-            <div class="stage-desc">写一句，或者先留一句空</div>
+            <div class="stage-desc">七条路选一条；也可以先留空</div>
           </div>
         </div>
       </div>
