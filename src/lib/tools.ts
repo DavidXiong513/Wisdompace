@@ -151,13 +151,13 @@ export const tools: Record<string, ToolInfo> = {
   },
   'goodbye-list': {
     id: 'goodbye-list',
-    name: '告别清单',
+    name: '遗愿清单',
     status: 'ready',
     description: '写下你在离开这个世界之前想做的事，一件件去完成它们。',
   },
   'farewell-style': {
     id: 'farewell-style',
-    name: '告别的方式',
+    name: '告别方式',
     status: 'ready',
     description:
       '设计属于你的告别——仪式形式、归处选择、告别语、背景音乐，用你喜欢的方式留给世界最后一份创意简报。',

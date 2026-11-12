@@ -289,7 +289,7 @@ function FarewellStyleEntry() {
 
         <div className="flex-1 text-center sm:text-left">
           <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
-            告别的方式
+            告别方式
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
             你希望怎样被记住？设计属于你的告别仪式、归处选择、告别语和背景音乐。
@@ -312,7 +312,7 @@ function FarewellStyleEntry() {
   );
 }
 
-// ── 告别清单入口卡片 ──
+// ── 遗愿清单入口卡片 ──
 function GoodbyeListEntry() {
   return (
     <Link
@@ -326,7 +326,7 @@ function GoodbyeListEntry() {
 
         <div className="flex-1 text-center sm:text-left">
           <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
-            我的告别清单
+            遗愿清单
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
             在离开这个世界之前，你还有哪些想做的事？写下来，然后一件件去完成。
@@ -919,7 +919,7 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
     return <NoRegretsEntry />;
   }
 
-  // 特殊处理：告别清单入口
+  // 特殊处理：遗愿清单入口
   if (toolId === 'goodbye-list') {
     return <GoodbyeListEntry />;
   }

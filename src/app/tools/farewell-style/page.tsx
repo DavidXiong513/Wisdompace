@@ -104,7 +104,7 @@ export default function FarewellStylePage() {
           <Link href="/chapter/chapter-4" className="text-sm font-medium text-[#8A7E6A] hover:text-[#C87941]">
             ← 返回好好告别
           </Link>
-          <h1 className="text-sm font-bold text-[#4A3728]">告别的方式</h1>
+          <h1 className="text-sm font-bold text-[#4A3728]">告别方式</h1>
           <div className="w-20" />
         </div>
       </nav>

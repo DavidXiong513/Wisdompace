@@ -1,4 +1,5 @@
-// ── 告别清单数据 ──
+// ── 遗愿清单数据 ──
+// 展示名为「遗愿清单」；URL 与标识符仍用 goodbye-list，勿改。
 
 export type ListCategory =
   | "experience"

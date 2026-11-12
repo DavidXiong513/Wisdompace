@@ -117,7 +117,7 @@ export default function GoodbyeListPage() {
           <Link href="/chapter/chapter-4" className="text-sm font-medium text-[#8A7E6A] hover:text-[#C87941]">
             ← 返回好好告别
           </Link>
-          <h1 className="text-sm font-bold text-[#4A3728]">我的告别清单</h1>
+          <h1 className="text-sm font-bold text-[#4A3728]">遗愿清单</h1>
           <div className="w-20" />
         </div>
       </nav>
@@ -126,9 +126,9 @@ export default function GoodbyeListPage() {
         {/* 标题 */}
         <header className="mb-8 text-center">
           <div className="mb-3 inline-block rounded-full bg-[#FDF5EE] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-[#C87941]">
-            My Goodbye List
+            Before-I-Go List
           </div>
-          <h2 className="text-2xl font-bold text-[#4A3728]">我的告别清单</h2>
+          <h2 className="text-2xl font-bold text-[#4A3728]">遗愿清单</h2>
           <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
             在离开这个世界之前，你还有哪些想做的事？<br className="hidden sm:block" />
             把它们写下来，然后一件件去完成。
@@ -162,7 +162,7 @@ export default function GoodbyeListPage() {
 
         {/* 添加新项 */}
         <div className="mb-6 rounded-xl border border-[#E8D9C2] bg-white p-5 shadow-sm">
-          <p className="mb-3 text-sm font-bold text-[#4A3728]">添加一项告别清单</p>
+          <p className="mb-3 text-sm font-bold text-[#4A3728]">添加一件想做的事</p>
           <div className="flex flex-col gap-2 sm:flex-row">
             <input
               type="text"
@@ -280,7 +280,7 @@ export default function GoodbyeListPage() {
           {filteredItems.length === 0 && totalCount === 0 && (
             <div className="py-12 text-center">
               <p className="text-4xl mb-3">📝</p>
-              <p className="text-sm text-[#8A7E6A]">你的告别清单还是空的</p>
+              <p className="text-sm text-[#8A7E6A]">你的遗愿清单还是空的</p>
               <p className="text-xs text-[#B8A888] mt-1">在上方添加你想做的事，或点击「需要灵感」获取推荐</p>
             </div>
           )}
@@ -387,7 +387,7 @@ export default function GoodbyeListPage() {
         {totalCount > 0 && totalCount < 5 && (
           <div className="mt-6 rounded-xl border border-dashed border-[#C87941]/30 bg-[#FDF5EE] p-4 text-center">
             <p className="text-sm text-[#8A7E6A]">
-              至少写下 <span className="font-bold text-[#C87941]">5 项</span>告别清单，才能更完整地审视你的人生愿望。
+              至少写下 <span className="font-bold text-[#C87941]">5 项</span>，才能更完整地审视你真正想做的事。
             </p>
             <p className="mt-1 text-xs text-[#B8A888]">
               当前已添加 {totalCount} 项，还差 {5 - totalCount} 项

@@ -145,8 +145,8 @@ src/
 | `choice-rights` | 生前预嘱五愿望 |
 | `three-questions` | 重大决策三思清单 |
 | `retirement-cost-calculator` | 晚年花费测算 —— 从退休到离世算清日常、医疗、照护与热爱需要多少钱；多情景测算，数据仅存本机（`wp-retirement-cost-calculator-storage`），挂在 chapter-3 |
-| `goodbye-list` | 告别清单 |
-| `farewell-style` | 告别仪式设计 |
+| `goodbye-list` | 遗愿清单（展示名；URL 与标识符仍为 goodbye-list） |
+| `farewell-style` | 告别方式 |
 | `next-life-design` | 50 点投胎积分游戏 |
 
 ### 社区 / 识人
