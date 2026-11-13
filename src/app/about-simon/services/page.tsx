@@ -73,7 +73,7 @@ const C_PRODUCTS = [
     priceHref: '/about-simon/connect',
     badge: '旗舰产品',
     badgeColor: 'var(--as-accent)',
-    desc: '基于近20年HR实战经验 + 全球生涯规划师认证，帮你厘清职业方向，制定可落地的转型计划。',
+    desc: '基于20年+HR实战经验 + 全球生涯规划师认证，帮你厘清职业方向，制定可落地的转型计划。',
     features: ['现状诊断', '方向锚定', '路径规划', '行动方案'],
   },
   {

@@ -24,7 +24,7 @@ const CORE_IDEOLOGY = [
     icon: '⚡',
     title: '能力高配',
     subtitle: 'Maximal Capability',
-    desc: '20年横跨6大行业，从培训师到集团高管，甲方乙方都坐过，从HRD到Vibe Coding——永远在学，永远在练。能力是唯一不会背叛你的资产。',
+    desc: '20年+横跨6大行业，从培训师到集团高管，甲方乙方都坐过，从HRD到Vibe Coding——永远在学，永远在练。能力是唯一不会背叛你的资产。',
   },
   {
     icon: '🪷',

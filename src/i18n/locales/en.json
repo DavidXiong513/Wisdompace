@@ -457,7 +457,7 @@
     "heroName": "Musing Bear: Seek Truth Through Illusions",
     "heroRole": "{{role}} for organizations and individuals",
     "lifelongOrganizer": "Lifelong Organizer",
-    "heroDesc": "20 years of HR expertise · Group HRD · Eastern wisdom\nUnderstanding both organizational pain and individual struggles",
+    "heroDesc": "20+ years of HR expertise · Group HRD · Eastern wisdom\nUnderstanding both organizational pain and individual struggles",
     "heroSlogan": "Organizational efficiency × Personal clarity──Your next wise step",
     "ctaPhilosophy": "Explore my philosophy →",
     "ctaContact": "Contact me",
@@ -465,10 +465,10 @@
     "sectionCapabilities": "Capabilities",
     "sectionFaces": "Multifaceted Life",
     "sectionCredentials": "Education & Certifications",
-    "timelineTitle": "20 Years of Career Journey",
+    "timelineTitle": "20+ Years of Career Journey",
     "timelineDesc": "From trainer to executive, across JV, MNC, and startup — every step compounds",
     "capabilitiesTitle": "Core Capabilities",
-    "capabilitiesDesc": "20 years of practice, covering both organizational and individual dimensions",
+    "capabilitiesDesc": "20+ years of practice, covering both organizational and individual dimensions",
     "facesTitle": "Different Facets of One Person",
     "facesDesc": "Not multiple lives, but different expressions of one heart",
     "credentialsTitle": "Education & Professional Credentials",
@@ -487,7 +487,7 @@
     "faces": [
       {
         "title": "As a Consultant",
-        "text": "Nearly 20 years, 125+ corporate clients, thousands of individual clients. I've seen the harshest side of the workplace and the most beautiful transformations. If you're at a career crossroads, I might help you see the way."
+        "text": "20+ years, 125+ corporate clients, thousands of individual clients. I've seen the harshest side of the workplace and the most beautiful transformations. If you're at a career crossroads, I might help you see the way."
       },
       {
         "title": "As an HR Executive",
@@ -630,7 +630,7 @@
         },
         {
           "title": "Maximal Capability",
-          "desc": "20 years across 6 industries, from trainer to Group HRD, from client-side to consultant, from HRD to Vibe Coding — always learning, always practicing. Capability is the only asset that will never betray you."
+          "desc": "20+ years across 6 industries, from trainer to Group HRD, from client-side to consultant, from HRD to Vibe Coding — always learning, always practicing. Capability is the only asset that will never betray you."
         },
         {
           "title": "Supreme Spirit",
@@ -836,7 +836,7 @@
         {
           "title": "Career Planning Consultation",
           "price": "Contact for price",
-          "desc": "Based on 20 years of HR experience + global career counselor certification, helping you clarify career direction and create an actionable transition plan.",
+          "desc": "Based on 20+ years of HR experience + global career counselor certification, helping you clarify career direction and create an actionable transition plan.",
           "badge": "Flagship",
           "features": [
             "Current State Diagnosis",
