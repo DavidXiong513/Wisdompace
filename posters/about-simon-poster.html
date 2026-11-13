@@ -219,22 +219,21 @@
       font-size: 13px;
       letter-spacing: 0.12em;
     }
-    /* 卡头右侧：一页版标签 + 小圆头像（头像与工具海报的圆形印章同构） */
-    .head-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex: 0 0 auto;
-    }
-    .head-avatar {
-      width: 64px;
-      height: 64px;
+    /* 主视觉右侧的圆头像：与两行标题同高，右对齐页边 */
+    .hero-avatar {
+      position: absolute;
+      top: 124px;
+      right: 0;
+      width: 224px;
+      height: 224px;
       overflow: hidden;
-      border: 2px solid rgba(247, 239, 230, 0.34);
+      border: 2px solid rgba(139, 69, 19, 0.26);
       border-radius: 50%;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+      box-shadow:
+        0 16px 36px rgba(74, 48, 32, 0.16),
+        0 0 0 8px rgba(255, 251, 246, 0.55);
     }
-    .head-avatar img {
+    .hero-avatar img {
       display: block;
       width: 100%;
       height: 100%;
@@ -491,6 +490,9 @@
       <p class="kicker">ABOUT SIMON · A COMPRESSED RÉSUMÉ</p>
       <h1>既懂组织的逻辑，<br />也懂<span class="accent">个体的挣扎</span></h1>
       <p class="slogan">做组织与个体的终身整理者。</p>
+      <div class="hero-avatar">
+        <img src="avatar-simon.png" alt="思考熊 Simon" />
+      </div>
     </section>
 
     <section class="stage-card">
@@ -499,12 +501,7 @@
           <h2>20 年，七段履历</h2>
           <p>从培训师，到 HR 一号位，再到乙方。</p>
         </div>
-        <div class="head-right">
-          <span class="stage-tag">一页版</span>
-          <div class="head-avatar">
-            <img src="avatar-simon.png" alt="思考熊 Simon" />
-          </div>
-        </div>
+        <span class="stage-tag">一页版</span>
       </div>
       <div class="stages">
         <div class="stage">
