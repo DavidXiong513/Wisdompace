@@ -91,7 +91,7 @@ export const tools: Record<string, ToolInfo> = {
   },
   'life-scorecard': {
     id: 'life-scorecard',
-    name: '今生称重：称一称自己的斤两',
+    name: '今生复盘：看看当下的自己有几斤几两',
     status: 'ready',
     description: '八个维度各问两句：现在在哪、往后还能走多少。用你自己划的上限做分母，半年后回来只看同一项挪了几格。',
   },

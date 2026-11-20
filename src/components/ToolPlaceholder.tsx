@@ -850,7 +850,7 @@ function FutureVowEntry() {
   );
 }
 
-// ── 今生称重入口卡片 ──
+// ── 今生复盘入口卡片 ──
 function LifeScorecardEntry() {
   return (
     <Link
@@ -859,15 +859,15 @@ function LifeScorecardEntry() {
     >
       <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
         <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FDF5EE] text-4xl shadow-inner transition-transform group-hover:scale-110">
-          ⚖️
+          🧭
         </div>
 
         <div className="flex-1 text-center sm:text-left">
           <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
-            今生称重 · 称一称自己的斤两
+            今生复盘 · 看看当下的自己有几斤几两
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
-            八项各问两句：你现在在哪，往后还能往上走多少。分母是你自己划的上限，不是 100——半年后回来重称一次，只看同一项挪了几格。
+            八项各问两句：你现在在哪，往后还能往上走多少。分母是你自己划的上限，不是 100——半年后回来再复盘一次，只看同一项挪了几格。
           </p>
           <div className="mt-3 flex flex-wrap justify-center gap-1.5 sm:justify-start">
             {['八项自评', '你自己的上限', '可复测'].map(chip => (
@@ -882,7 +882,7 @@ function LifeScorecardEntry() {
         </div>
 
         <div className="flex items-center gap-2 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D] group-hover:px-8">
-          开始称重
+          开始复盘
           <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -1020,7 +1020,7 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
     return <FutureVowEntry />;
   }
 
-  // 特殊处理：今生称重（章节内只放入口卡，完整流程在 /tools/life-scorecard）
+  // 特殊处理：今生复盘（章节内只放入口卡，完整流程在 /tools/life-scorecard）
   if (toolId === 'life-scorecard') {
     return <LifeScorecardEntry />;
   }

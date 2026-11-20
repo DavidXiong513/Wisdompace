@@ -120,7 +120,7 @@ function Progress({ done }: { done: number }) {
     <div className="mt-5">
       <div className="flex items-baseline justify-between text-[11px]" style={{ color: MUTED }}>
         <span>已定位 {done} / {ATTRIBUTES.length}</span>
-        <span>{done === ATTRIBUTES.length ? '可以出称重单了' : `还差 ${ATTRIBUTES.length - done} 项`}</span>
+        <span>{done === ATTRIBUTES.length ? '可以出复盘单了' : `还差 ${ATTRIBUTES.length - done} 项`}</span>
       </div>
       <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full" style={{ background: TRACK }}>
         <div
@@ -555,10 +555,10 @@ export default function LifeScorecardPage() {
 
         <header className="mt-4">
           <div className="text-[11px] tracking-[0.22em]" style={{ color: MUTED }}>
-            WEIGH YOURSELF · 今生称重
+            TAKE STOCK · 今生复盘
           </div>
           <h1 className="mt-2 text-2xl font-bold sm:text-3xl" style={{ color: INK }}>
-            称一称自己的斤两
+            看看当下的自己有几斤几两
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed" style={{ color: MUTED }}>
             八个维度。每一项问两件事：你现在在哪，以及往后还能往上走多少。
@@ -585,7 +585,7 @@ export default function LifeScorecardPage() {
         {!complete && (
           <div className="mt-4 rounded-xl border border-dashed px-4 py-3" style={{ borderColor: '#D9C6AE' }}>
             <p className="text-[12.5px] leading-relaxed" style={{ color: MUTED }}>
-              还差 {ATTRIBUTES.length - done} 项。八项都答完才会出称重单——半张单子算不出总分，
+              还差 {ATTRIBUTES.length - done} 项。八项都答完才会出复盘单——半张单子算不出总分，
               而且现在的偏好会污染你对还没答的那几项判断。
             </p>
           </div>
@@ -597,7 +597,7 @@ export default function LifeScorecardPage() {
 
             <section className="mt-6 rounded-2xl border bg-white p-5 sm:p-7" style={{ borderColor: BORDER }}>
               <div className="text-[11px] tracking-[0.18em]" style={{ color: MUTED }}>
-                你 的 称 重 单
+                你 的 复 盘 单
               </div>
               <TotalBoard assessment={assessment} />
 
@@ -726,7 +726,7 @@ export default function LifeScorecardPage() {
               </div>
 
               <p className="mt-5 border-t pt-4 text-[11px] leading-relaxed" style={{ color: MUTED }}>
-                这是一次自我盘点，不是测评、不是诊断，也不产生任何排名。稳一稳再来一次也完全可以——半年、一年、三年、五年，只要同一项的数字动了，这份称重单就有意义。
+                这是一次自我复盘，不是测评、不是诊断，也不产生任何排名。稳一稳再来一次也完全可以——半年、一年、三年、五年，只要同一项的数字动了，这份复盘单就有意义。
                 数据只存在你这台设备的浏览器里，不上传。
               </p>
             </section>
