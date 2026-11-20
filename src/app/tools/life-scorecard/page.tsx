@@ -171,36 +171,42 @@ function AttributeRow({
   );
 }
 
-// ── 右侧潜力面板 ──────────────────────────────────────────────────────
-function PotentialPanel({ scores }: { scores: Scores }) {
+// ── 总看板（放在报告最前面，打分时看不到） ────────────────────────────
+function TotalBoard({ scores }: { scores: Scores }) {
   const total = sumScores(scores);
   const percent = Math.round((total / TOTAL_CEILING) * 100);
 
   return (
-    <div className="rounded-2xl border border-[#EADFD0] bg-white p-4 sm:p-5">
-      <div className="text-[11px] tracking-[0.18em]" style={{ color: MUTED }}>
-        总 势
+    <div className="mt-4 rounded-xl border border-[#EADFD0] bg-[#FBF7F1] p-4 sm:p-5">
+      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+        <div>
+          <div className="text-[11px] tracking-[0.18em]" style={{ color: MUTED }}>
+            总 势
+          </div>
+          <div className="mt-1 flex items-baseline gap-1">
+            <span className="font-mono text-4xl font-bold leading-none" style={{ color: INK }}>
+              {total.toFixed(1)}
+            </span>
+            <span className="font-mono text-base" style={{ color: MUTED }}>
+              / {TOTAL_CEILING}
+            </span>
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="font-mono text-2xl font-semibold leading-none" style={{ color: ACCENT }}>
+            {percent}%
+          </div>
+          <div className="mt-1 text-[11px]" style={{ color: MUTED }}>
+            距你自己的上限
+          </div>
+        </div>
       </div>
-      <div className="mt-1 flex items-baseline gap-1">
-        <span className="font-mono text-3xl font-bold" style={{ color: INK }}>
-          {total.toFixed(1)}
-        </span>
-        <span className="font-mono text-sm" style={{ color: MUTED }}>
-          / {TOTAL_CEILING}
-        </span>
-      </div>
-      <p className="mt-1 text-[12px] leading-relaxed" style={{ color: MUTED }}>
-        分母是你自己的潜力上限，不是 100，也不是 50。
-      </p>
 
-      <div className="mt-3 h-2 w-full overflow-hidden rounded-full" style={{ background: TRACK }}>
+      <div className="mt-4 h-2 w-full overflow-hidden rounded-full" style={{ background: TRACK }}>
         <div className="h-full rounded-full" style={{ width: `${Math.min(100, percent)}%`, background: ACCENT }} />
       </div>
-      <div className="mt-1 text-right text-[11px] font-mono" style={{ color: MUTED }}>
-        {percent}%
-      </div>
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 grid gap-x-6 gap-y-2 sm:grid-cols-2">
         {ATTRIBUTES.map(attr => {
           const score = scores[attr.key];
           const ratio = fillRatio(attr, score);
@@ -228,8 +234,9 @@ function PotentialPanel({ scores }: { scores: Scores }) {
           );
         })}
       </div>
+
       <p className="mt-3 text-[11px] leading-relaxed" style={{ color: MUTED }}>
-        浅色段是后天能挪的范围，深点是你的位置。
+        分母是你自己的潜力上限，不是 100，也不是 50。浅色段是后天能挪的范围，深点是你的位置。
       </p>
     </div>
   );
@@ -361,17 +368,10 @@ export default function LifeScorecardPage() {
           </p>
         </header>
 
-        <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_340px]">
-          <div className="order-2 space-y-3 lg:order-1">
-            {ATTRIBUTES.map(attr => (
-              <AttributeRow key={attr.key} attr={attr} score={scores[attr.key]} onChange={handleChange} />
-            ))}
-          </div>
-          <div className="order-1 lg:order-2">
-            <div className="lg:sticky lg:top-6">
-              <PotentialPanel scores={scores} />
-            </div>
-          </div>
+        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          {ATTRIBUTES.map(attr => (
+            <AttributeRow key={attr.key} attr={attr} score={scores[attr.key]} onChange={handleChange} />
+          ))}
         </div>
 
         <GoalPicker goals={goals} onToggle={handleToggle} onCustom={handleCustom} />
@@ -380,7 +380,8 @@ export default function LifeScorecardPage() {
           <div className="text-[11px] tracking-[0.18em]" style={{ color: MUTED }}>
             你 的 称 重 单
           </div>
-          <h2 className="mt-2 text-xl font-bold leading-snug sm:text-2xl" style={{ color: INK }}>
+          <TotalBoard scores={scores} />
+          <h2 className="mt-5 text-xl font-bold leading-snug sm:text-2xl" style={{ color: INK }}>
             {report.headline}
           </h2>
           <p className="mt-3 text-sm leading-relaxed" style={{ color: '#5C4A38' }}>
