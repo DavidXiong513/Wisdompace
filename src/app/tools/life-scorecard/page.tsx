@@ -17,6 +17,7 @@ import {
   generateReport,
   isAnswered,
   isComplete,
+  missingItems,
   parseAssessment,
   parseGoals,
   type Assessment,
@@ -148,27 +149,38 @@ function AttributeCard({ attr, entry, open, onToggleOpen, onScore, onElasticity,
   const score = entry.score;
   const cap = capOf(entry);
   const room = Math.max(0, cap - (score ?? 0));
+  // 「基本就这样了」之后还欠一句「是哪一种」——这是唯一会卡住进度的半完成态
+  const needsReason = entry.elasticity === 'none' && entry.reason === null;
+
+  const tag = !entry.elasticity
+    ? null
+    : needsReason
+      ? '还差一句'
+      : entry.elasticity === 'none'
+        ? entry.reason === 'enough'
+          ? '已够好'
+          : '动不了'
+        : entry.elasticity === 'high'
+          ? '空间大'
+          : '空间小';
 
   return (
     <div
       data-attr={attr.key}
       className="rounded-2xl border bg-white/70 p-4 transition-colors sm:p-5"
-      style={{ borderColor: answered ? '#DFCDB4' : BORDER }}
+      style={{
+        borderColor: needsReason ? ACCENT : answered ? '#DFCDB4' : BORDER,
+        boxShadow: needsReason ? '0 0 0 3px rgba(200,121,65,0.12)' : 'none',
+      }}
     >
       <div className="flex items-baseline justify-between gap-3">
         <div className="flex items-baseline gap-2">
           <span className="text-[15px] font-semibold" style={{ color: INK }}>
             {attr.name}
           </span>
-          {entry.elasticity && (
-            <span className="text-[11px]" style={{ color: MUTED }}>
-              {entry.elasticity === 'none'
-                ? entry.reason === 'enough'
-                  ? '已够好'
-                  : '动不了'
-                : entry.elasticity === 'high'
-                  ? '空间大'
-                  : '空间小'}
+          {tag && (
+            <span className="text-[11px]" style={{ color: needsReason ? ACCENT : MUTED }}>
+              {tag}
             </span>
           )}
         </div>
@@ -292,9 +304,15 @@ function AttributeCard({ attr, entry, open, onToggleOpen, onScore, onElasticity,
 
             {/* 「基本就这样了」要说清是哪一种不动 */}
             {entry.elasticity === 'none' && (
-              <div className="mt-2 rounded-lg px-2.5 py-2" style={{ background: SOFT }}>
-                <p className="text-[11px]" style={{ color: MUTED }}>
-                  是哪一种？这两种在报告里的读法完全不同。
+              <div
+                className="mt-2 rounded-lg px-2.5 py-2"
+                style={{
+                  background: needsReason ? '#FDF3E4' : SOFT,
+                  borderLeft: `3px solid ${needsReason ? ACCENT : 'transparent'}`,
+                }}
+              >
+                <p className="text-[11px]" style={{ color: needsReason ? ACCENT : MUTED }}>
+                  {needsReason ? '还差一句 · 是哪一种？' : '是哪一种？这两种在报告里的读法完全不同。'}
                 </p>
                 <div className="mt-1.5 flex flex-wrap gap-1.5">
                   {(
@@ -515,10 +533,9 @@ export default function LifeScorecardPage() {
 
   const handleElasticity = useCallback((key: AttributeKey, value: Elasticity) => {
     const cur = assessmentStore.getSnapshot();
-    assessmentStore.set({
-      ...cur,
-      [key]: { ...cur[key], elasticity: value, reason: value === 'none' ? cur[key].reason : null },
-    });
+    // 不清空 reason：用户从「基本就这样了」切走再切回来时，
+    // 之前回答过的那一句应该还在，否则会掉进「看起来填完了其实差一句」的坑
+    assessmentStore.set({ ...cur, [key]: { ...cur[key], elasticity: value } });
   }, []);
 
   const handleReason = useCallback((key: AttributeKey, value: CeilingReason) => {
@@ -543,6 +560,7 @@ export default function LifeScorecardPage() {
 
   const done = filledCount(assessment);
   const complete = isComplete(assessment);
+  const missing = useMemo(() => missingItems(assessment), [assessment]);
   const report = useMemo(() => (complete ? generateReport(assessment) : null), [complete, assessment]);
   const insight = useMemo(() => (complete ? buildGoalInsight(assessment, goals) : null), [complete, assessment, goals]);
 
@@ -585,8 +603,11 @@ export default function LifeScorecardPage() {
         {!complete && (
           <div className="mt-4 rounded-xl border border-dashed px-4 py-3" style={{ borderColor: '#D9C6AE' }}>
             <p className="text-[12.5px] leading-relaxed" style={{ color: MUTED }}>
-              还差 {ATTRIBUTES.length - done} 项。八项都答完才会出复盘单——半张单子算不出总分，
-              而且现在的偏好会污染你对还没答的那几项判断。
+              <span style={{ color: ACCENT }}>还差 {missing.length} 项：</span>
+              {missing
+                .map(m => (m.needsReason ? `${m.attr.name}（还欠一句「是哪一种」）` : m.attr.name))
+                .join('、')}
+              。八项都答完才会出复盘单——半张单子算不出总分，而且现在的偏好会污染你对还没答的那几项判断。
             </p>
           </div>
         )}

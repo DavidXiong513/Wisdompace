@@ -262,6 +262,22 @@ export function isComplete(a: Assessment): boolean {
   return filledCount(a) === ATTRIBUTES.length;
 }
 
+export type MissingItem = { attr: Attribute; needsReason: boolean };
+
+/**
+ * 还差什么。单独抽出来，是为了让进度条能点名——
+ * 「还差 1 项」而不说是哪一项，用户会盯着八张填满的卡找不到问题。
+ */
+export function missingItems(a: Assessment): MissingItem[] {
+  return ATTRIBUTES.filter(attr => !isAnswered(a[attr.key])).map(attr => {
+    const entry = a[attr.key];
+    return {
+      attr,
+      needsReason: entry.score !== null && entry.elasticity === 'none' && entry.reason === null,
+    };
+  });
+}
+
 export function gainOf(entry: Entry): number {
   if (entry.elasticity === null || entry.elasticity === 'none') return 0;
   return entry.elasticity === 'high' ? GAIN_HIGH : 2;
@@ -321,7 +337,9 @@ export function parseAssessment(raw: unknown): Assessment {
         : null;
     const reason: CeilingReason | null =
       rec.reason === 'enough' || rec.reason === 'stuck' ? rec.reason : null;
-    out[attr.key] = { score, elasticity, reason: elasticity === 'none' ? reason : null };
+    // reason 不随 elasticity 清空：用户从「基本就这样了」切走再切回来时，
+    // 之前那一句应该还在，而不是被静默重置成半完成状态。
+    out[attr.key] = { score, elasticity, reason };
   }
   return out;
 }
@@ -412,7 +430,13 @@ export function generateReport(a: Assessment): Report {
   const release = stuck.filter(r => r.ratio < 0.6).map(r => ({ attr: r.attr, score: r.score }));
 
   const watch = rows
-    .filter(r => r.decay >= 2 && r.score >= 4 && r.entry.reason !== 'enough')
+    .filter(
+      r =>
+        r.decay >= 2 &&
+        r.score >= 4 &&
+        // 只有「封顶且真的够好了」才排除；reason 可能在切走弹性后残留，不能单看它
+        !(r.entry.elasticity === 'none' && r.entry.reason === 'enough')
+    )
     .sort((x, y) => y.decay - x.decay || y.score - x.score)
     .slice(0, 2)
     .map((r, i) => ({
