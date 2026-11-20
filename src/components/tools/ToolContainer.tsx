@@ -126,6 +126,7 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'ai-knowledge-base',
     'community-aging-poll',
     'career-values-section',
+    'life-scorecard',
   ].includes(toolId);
 
   return (

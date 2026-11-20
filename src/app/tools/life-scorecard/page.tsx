@@ -1,33 +1,45 @@
 'use client';
 
-import { useCallback, useMemo, useSyncExternalStore } from 'react';
+import { useCallback, useMemo, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import {
   ATTRIBUTES,
   DEFAULT_GOALS,
-  DEFAULT_SCORES,
+  ELASTICITY_OPTIONS,
+  EMPTY_ASSESSMENT,
   GOAL_NONE,
   GOAL_TYPES,
   MAX_PER_ATTR,
-  TOTAL_CEILING,
+  TOTAL_MAX,
   buildGoalInsight,
-  fillRatio,
+  capOf,
+  filledCount,
   generateReport,
-  moveRate,
+  isAnswered,
+  isComplete,
+  parseAssessment,
   parseGoals,
-  sumScores,
+  type Assessment,
   type Attribute,
+  type AttributeKey,
+  type CeilingReason,
+  type Elasticity,
+  type Entry,
   type Goals,
-  type Scores,
 } from './data';
 
-const SCORE_KEY = 'wisdompace:life-scorecard:v1';
-const GOAL_KEY = 'wisdompace:life-scorecard:goals:v1';
+// v2：模型从「固定 baseline + ceiling」换成「现状 + 弹性双问」。
+// v1 的键一律不读，避免旧口径的默认分被当成用户输入。
+const STORE_KEY = 'wisdompace:life-scorecard:v2';
+const GOAL_KEY = 'wisdompace:life-scorecard:goals:v2';
 
 const INK = '#4A3728';
 const MUTED = '#7A6A58';
 const ACCENT = '#C87941';
 const TRACK = '#EDE3D6';
+const BORDER = '#EADFD0';
+const SOFT = '#FBF3E9';
+const ROOM = '#F5D9B8';
 
 // ── 通用本地存储（useSyncExternalStore 要求快照引用稳定） ────────────────
 type Store<T> = {
@@ -81,103 +93,250 @@ function makeStore<T>(key: string, fallback: T, parse: (raw: string) => T, eq: (
   };
 }
 
-function parseScores(raw: string): Scores {
-  const parsed: unknown = JSON.parse(raw);
-  if (!parsed || typeof parsed !== 'object') return DEFAULT_SCORES;
-  const src = parsed as Record<string, unknown>;
-  const next: Scores = { ...DEFAULT_SCORES };
-  for (const attr of ATTRIBUTES) {
-    const v = src[attr.key];
-    if (typeof v === 'number' && Number.isFinite(v)) {
-      next[attr.key] = Math.min(MAX_PER_ATTR, Math.max(0, Math.round(v)));
-    }
-  }
-  return next;
-}
-
-function eqScores(a: Scores, b: Scores): boolean {
-  return ATTRIBUTES.every(attr => a[attr.key] === b[attr.key]);
+function eqAssessment(a: Assessment, b: Assessment): boolean {
+  return ATTRIBUTES.every(attr => {
+    const x = a[attr.key];
+    const y = b[attr.key];
+    return x.score === y.score && x.elasticity === y.elasticity && x.reason === y.reason;
+  });
 }
 
 function eqGoals(a: Goals, b: Goals): boolean {
   return a.custom === b.custom && a.picked.length === b.picked.length && a.picked.every(id => b.picked.includes(id));
 }
 
-const scoresStore = makeStore<Scores>(SCORE_KEY, DEFAULT_SCORES, parseScores, eqScores);
+const assessmentStore = makeStore<Assessment>(
+  STORE_KEY,
+  EMPTY_ASSESSMENT,
+  raw => parseAssessment(JSON.parse(raw)),
+  eqAssessment
+);
 const goalsStore = makeStore<Goals>(GOAL_KEY, DEFAULT_GOALS, raw => parseGoals(JSON.parse(raw)), eqGoals);
 
-// ── 单条属性 ─────────────────────────────────────────────────────────
-function AttributeRow({
-  attr,
-  score,
-  onChange,
-}: {
-  attr: Attribute;
-  score: number;
-  onChange: (key: Attribute['key'], value: number) => void;
-}) {
-  const rate = Math.round(moveRate(attr) * 100);
+// ── 进度条 ────────────────────────────────────────────────────────────
+function Progress({ done }: { done: number }) {
+  const percent = Math.round((done / ATTRIBUTES.length) * 100);
   return (
-    <div className="rounded-2xl border border-[#EADFD0] bg-white/70 p-4 sm:p-5">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+    <div className="mt-5">
+      <div className="flex items-baseline justify-between text-[11px]" style={{ color: MUTED }}>
+        <span>已定位 {done} / {ATTRIBUTES.length}</span>
+        <span>{done === ATTRIBUTES.length ? '可以出称重单了' : `还差 ${ATTRIBUTES.length - done} 项`}</span>
+      </div>
+      <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full" style={{ background: TRACK }}>
+        <div
+          className="h-full rounded-full transition-all duration-300"
+          style={{ width: `${percent}%`, background: ACCENT }}
+        />
+      </div>
+    </div>
+  );
+}
+
+// ── 单项卡片 ──────────────────────────────────────────────────────────
+type CardProps = {
+  attr: Attribute;
+  entry: Entry;
+  open: boolean;
+  onToggleOpen: () => void;
+  onScore: (key: AttributeKey, value: number) => void;
+  onElasticity: (key: AttributeKey, value: Elasticity) => void;
+  onReason: (key: AttributeKey, value: CeilingReason) => void;
+};
+
+function AttributeCard({ attr, entry, open, onToggleOpen, onScore, onElasticity, onReason }: CardProps) {
+  const answered = isAnswered(entry);
+  const score = entry.score;
+  const cap = capOf(entry);
+  const room = Math.max(0, cap - (score ?? 0));
+
+  return (
+    <div
+      data-attr={attr.key}
+      className="rounded-2xl border bg-white/70 p-4 transition-colors sm:p-5"
+      style={{ borderColor: answered ? '#DFCDB4' : BORDER }}
+    >
+      <div className="flex items-baseline justify-between gap-3">
         <div className="flex items-baseline gap-2">
           <span className="text-[15px] font-semibold" style={{ color: INK }}>
             {attr.name}
           </span>
-          <span className="text-[11px]" style={{ color: MUTED }}>
-            可动 {rate}%
-          </span>
+          {entry.elasticity && (
+            <span className="text-[11px]" style={{ color: MUTED }}>
+              {entry.elasticity === 'none'
+                ? entry.reason === 'enough'
+                  ? '已够好'
+                  : '动不了'
+                : entry.elasticity === 'high'
+                  ? '空间大'
+                  : '空间小'}
+            </span>
+          )}
         </div>
-        <span className="font-mono text-[15px] font-semibold" style={{ color: ACCENT }}>
-          {score}
-        </span>
+        {score === null ? (
+          <span className="shrink-0 text-[11px]" style={{ color: '#A8927A' }}>
+            未定位
+          </span>
+        ) : (
+          <span className="shrink-0 font-mono text-[15px] font-semibold" style={{ color: ACCENT }}>
+            {score}
+          </span>
+        )}
       </div>
 
       <p className="mt-1 text-[12px] leading-relaxed" style={{ color: MUTED }}>
         测的是：{attr.control}
       </p>
 
-      <div className="relative mt-3 h-6">
-        <div className="absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-full" style={{ background: TRACK }}>
-          <div
-            className="absolute inset-y-0 rounded-full"
-            style={{
-              left: `${(attr.baseline / MAX_PER_ATTR) * 100}%`,
-              width: `${((attr.ceiling - attr.baseline) / MAX_PER_ATTR) * 100}%`,
-              background: '#F0CBA0',
-            }}
-          />
-        </div>
-        <div
-          className="pointer-events-none absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white"
-          style={{ left: `${(score / MAX_PER_ATTR) * 100}%`, background: ACCENT }}
-        />
-        <input
-          type="range"
-          min={0}
-          max={MAX_PER_ATTR}
-          step={1}
-          value={score}
-          aria-label={`${attr.name} 自评分数`}
-          onChange={e => onChange(attr.key, Number(e.target.value))}
-          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-        />
-      </div>
+      {/* 未定位：一句话 + 展开按钮 */}
+      {score === null && (
+        <button
+          type="button"
+          onClick={onToggleOpen}
+          className="mt-3 w-full rounded-xl border border-dashed px-3 py-2.5 text-[13px] transition hover:border-[#C87941]"
+          style={{ borderColor: '#D9C6AE', color: ACCENT }}
+        >
+          {open ? '收起' : '选一句最像现在的你'}
+        </button>
+      )}
 
-      <p className="mt-1 text-[12px] leading-relaxed" style={{ color: '#5C4A38' }}>
-        {attr.anchors[score]}
-      </p>
+      {/* 11 档选句 */}
+      {open && (
+        <ul className="mt-3 flex flex-col gap-1">
+          {attr.anchors.map((text, i) => {
+            const active = score === i;
+            return (
+              <li key={i}>
+                <button
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => onScore(attr.key, i)}
+                  className="flex w-full items-start gap-2 rounded-lg px-2.5 py-1.5 text-left transition"
+                  style={{
+                    background: active ? SOFT : 'transparent',
+                    outline: active ? `1px solid ${ACCENT}` : 'none',
+                  }}
+                >
+                  <span
+                    className="mt-[1px] w-5 shrink-0 text-center font-mono text-[11px]"
+                    style={{ color: active ? ACCENT : '#A8927A' }}
+                  >
+                    {i}
+                  </span>
+                  <span
+                    className="text-[12.5px] leading-relaxed"
+                    style={{ color: active ? INK : '#5C4A38' }}
+                  >
+                    {text}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {/* 已定位：现状句 + 刻度 */}
+      {score !== null && (
+        <>
+          <p className="mt-2 text-[12.5px] leading-relaxed" style={{ color: '#5C4A38' }}>
+            {attr.anchors[score]}
+          </p>
+
+          <div className="relative mt-3 h-2 w-full rounded-full" style={{ background: TRACK }}>
+            <div
+              className="absolute inset-y-0 left-0 rounded-full"
+              style={{ width: `${(score / MAX_PER_ATTR) * 100}%`, background: ACCENT }}
+            />
+            {room > 0 && (
+              <div
+                className="absolute inset-y-0 rounded-full"
+                style={{ left: `${(score / MAX_PER_ATTR) * 100}%`, width: `${(room / MAX_PER_ATTR) * 100}%`, background: ROOM }}
+              />
+            )}
+          </div>
+          <div className="mt-1 flex justify-between text-[11px]" style={{ color: MUTED }}>
+            <button type="button" onClick={onToggleOpen} className="underline decoration-dotted">
+              {open ? '收起' : '改一下'}
+            </button>
+            <span>{room > 0 ? `你给了 ${room} 分空间` : '你说这项封顶了'}</span>
+          </div>
+
+          {/* 第二问：弹性 */}
+          <div className="mt-3 border-t pt-3" style={{ borderColor: BORDER }}>
+            <p className="text-[11px]" style={{ color: MUTED }}>
+              往后三五年，这一项还能往上走多少？
+            </p>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {ELASTICITY_OPTIONS.map(opt => {
+                const active = entry.elasticity === opt.value;
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => onElasticity(attr.key, opt.value)}
+                    title={opt.hint}
+                    className="rounded-full border px-2.5 py-1 text-[11.5px] transition"
+                    style={{
+                      borderColor: active ? ACCENT : '#D9C6AE',
+                      background: active ? SOFT : 'transparent',
+                      color: active ? ACCENT : MUTED,
+                      fontWeight: active ? 600 : 400,
+                    }}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* 「基本就这样了」要说清是哪一种不动 */}
+            {entry.elasticity === 'none' && (
+              <div className="mt-2 rounded-lg px-2.5 py-2" style={{ background: SOFT }}>
+                <p className="text-[11px]" style={{ color: MUTED }}>
+                  是哪一种？这两种在报告里的读法完全不同。
+                </p>
+                <div className="mt-1.5 flex flex-wrap gap-1.5">
+                  {(
+                    [
+                      { value: 'enough', label: '已经够好了，不想再要更多' },
+                      { value: 'stuck', label: '不是不想要，是真的动不了' },
+                    ] as { value: CeilingReason; label: string }[]
+                  ).map(opt => {
+                    const active = entry.reason === opt.value;
+                    return (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() => onReason(attr.key, opt.value)}
+                        className="rounded-lg border px-2 py-1 text-[11px] transition"
+                        style={{
+                          borderColor: active ? ACCENT : '#D9C6AE',
+                          background: active ? '#FFFFFF' : 'transparent',
+                          color: active ? ACCENT : MUTED,
+                        }}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
-// ── 总看板（放在报告最前面，打分时看不到） ────────────────────────────
-function TotalBoard({ scores }: { scores: Scores }) {
-  const total = sumScores(scores);
-  const percent = Math.round((total / TOTAL_CEILING) * 100);
+// ── 总看板（只在八项全答后出现） ──────────────────────────────────────
+function TotalBoard({ assessment }: { assessment: Assessment }) {
+  const report = useMemo(() => generateReport(assessment), [assessment]);
 
   return (
-    <div className="mt-4 rounded-xl border border-[#EADFD0] bg-[#FBF7F1] p-4 sm:p-5">
+    <div className="mt-4 rounded-xl border p-4 sm:p-5" style={{ borderColor: BORDER, background: '#FBF7F1' }}>
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <div>
           <div className="text-[11px] tracking-[0.18em]" style={{ color: MUTED }}>
@@ -185,50 +344,60 @@ function TotalBoard({ scores }: { scores: Scores }) {
           </div>
           <div className="mt-1 flex items-baseline gap-1">
             <span className="font-mono text-4xl font-bold leading-none" style={{ color: INK }}>
-              {total.toFixed(1)}
+              {report.total}
             </span>
             <span className="font-mono text-base" style={{ color: MUTED }}>
-              / {TOTAL_CEILING}
+              / {TOTAL_MAX}
             </span>
           </div>
         </div>
         <div className="text-right">
           <div className="font-mono text-2xl font-semibold leading-none" style={{ color: ACCENT }}>
-            {percent}%
+            {report.potential}%
           </div>
           <div className="mt-1 text-[11px]" style={{ color: MUTED }}>
-            距你自己的上限
+            潜力进度 · 在你的区间里
           </div>
         </div>
       </div>
 
       <div className="mt-4 h-2 w-full overflow-hidden rounded-full" style={{ background: TRACK }}>
-        <div className="h-full rounded-full" style={{ width: `${Math.min(100, percent)}%`, background: ACCENT }} />
+        <div
+          className="h-full rounded-full"
+          style={{ width: `${Math.min(100, (report.total / TOTAL_MAX) * 100)}%`, background: ACCENT }}
+        />
+      </div>
+      <div className="mt-1 flex justify-between text-[11px]" style={{ color: MUTED }}>
+        <span>你自己声明的上限合计 {report.ceiling} 分</span>
+        <span>离上限还差 {report.ceiling - report.total} 分</span>
       </div>
 
-      <div className="mt-4 grid gap-x-6 gap-y-2 sm:grid-cols-2">
+      <div className="mt-4 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
         {ATTRIBUTES.map(attr => {
-          const score = scores[attr.key];
-          const ratio = fillRatio(attr, score);
+          const entry = assessment[attr.key];
+          const score = entry.score ?? 0;
+          const cap = capOf(entry);
+          const room = Math.max(0, cap - score);
           return (
             <div key={attr.key}>
               <div className="flex justify-between text-[11px]" style={{ color: MUTED }}>
                 <span>{attr.name}</span>
-                <span className="font-mono">{score}</span>
+                <span className="font-mono">
+                  {score}
+                  <span style={{ color: '#B8A791' }}> / {cap}</span>
+                </span>
               </div>
-              <div className="relative mt-0.5 h-1.5 w-full rounded-full" style={{ background: TRACK }}>
+              <div className="relative mt-1 h-1.5 w-full rounded-full" style={{ background: TRACK }}>
                 <div
-                  className="absolute inset-y-0 rounded-full"
-                  style={{
-                    left: `${(attr.baseline / MAX_PER_ATTR) * 100}%`,
-                    width: `${((attr.ceiling - attr.baseline) / MAX_PER_ATTR) * 100}%`,
-                    background: '#F0CBA0',
-                  }}
+                  className="absolute inset-y-0 left-0 rounded-full"
+                  style={{ width: `${(score / MAX_PER_ATTR) * 100}%`, background: INK }}
                 />
-                <div
-                  className="absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-                  style={{ left: `${(score / MAX_PER_ATTR) * 100}%`, background: ratio < 0 ? '#A8443C' : INK }}
-                />
+                {room > 0 && (
+                  <div
+                    className="absolute inset-y-0 rounded-full"
+                    style={{ left: `${(score / MAX_PER_ATTR) * 100}%`, width: `${(room / MAX_PER_ATTR) * 100}%`, background: ROOM }}
+                  />
+                )}
               </div>
             </div>
           );
@@ -236,7 +405,7 @@ function TotalBoard({ scores }: { scores: Scores }) {
       </div>
 
       <p className="mt-3 text-[11px] leading-relaxed" style={{ color: MUTED }}>
-        分母是你自己的潜力上限，不是 100，也不是 50。浅色段是后天能挪的范围，深点是你的位置。
+        总分满分 80（八项各十分），不是 50 分，也不和来生设计对齐。潜力进度的分母是你自己给每一项定的上限，不是 100。
       </p>
     </div>
   );
@@ -256,7 +425,7 @@ function GoalPicker({
   const count = goals.picked.filter(id => id !== GOAL_NONE).length;
 
   return (
-    <section className="mt-8 rounded-2xl border border-[#EADFD0] bg-white p-5 sm:p-7">
+    <section className="mt-6 rounded-2xl border bg-white p-5 sm:p-7" style={{ borderColor: BORDER }}>
       <div className="text-[11px] tracking-[0.18em]" style={{ color: MUTED }}>
         参 考 · 不 是 标 签
       </div>
@@ -277,9 +446,11 @@ function GoalPicker({
               type="button"
               aria-pressed={selected}
               onClick={() => onToggle(goal.id)}
-              className={`rounded-xl border px-3 py-2 text-left transition ${
-                selected ? 'border-[#C87941] bg-[#FBF3E9]' : 'border-[#EADFD0] bg-white hover:border-[#D9C6AE]'
-              }`}
+              className="rounded-xl border px-3 py-2 text-left transition"
+              style={{
+                borderColor: selected ? ACCENT : BORDER,
+                background: selected ? SOFT : '#FFFFFF',
+              }}
             >
               <span className="text-[13px] font-semibold" style={{ color: selected ? ACCENT : INK }}>
                 {goal.name}
@@ -296,10 +467,14 @@ function GoalPicker({
         type="button"
         aria-pressed={nonePicked}
         onClick={() => onToggle(GOAL_NONE)}
-        className={`mt-3 w-full rounded-xl border px-3 py-2 text-[13px] transition ${
-          nonePicked ? 'border-[#C87941] bg-[#FBF3E9] font-semibold' : 'border-dashed border-[#D9C6AE] bg-white'
-        }`}
-        style={{ color: nonePicked ? ACCENT : MUTED }}
+        className="mt-3 w-full rounded-xl border px-3 py-2 text-[13px] transition"
+        style={{
+          borderStyle: nonePicked ? 'solid' : 'dashed',
+          borderColor: nonePicked ? ACCENT : '#D9C6AE',
+          background: nonePicked ? SOFT : '#FFFFFF',
+          color: nonePicked ? ACCENT : MUTED,
+          fontWeight: nonePicked ? 600 : 400,
+        }}
       >
         以上都没有——先跳过也行
       </button>
@@ -314,8 +489,8 @@ function GoalPicker({
           maxLength={40}
           onChange={e => onCustom(e.target.value)}
           placeholder="我想留下的是……"
-          className="mt-1 w-full rounded-xl border border-[#EADFD0] bg-white px-3 py-2 text-[13px] outline-none focus:border-[#C87941]"
-          style={{ color: INK }}
+          className="mt-1 w-full rounded-xl border bg-white px-3 py-2 text-[13px] outline-none focus:border-[#C87941]"
+          style={{ borderColor: BORDER, color: INK }}
         />
       </label>
     </section>
@@ -324,14 +499,34 @@ function GoalPicker({
 
 // ── 页面 ────────────────────────────────────────────────────────────
 export default function LifeScorecardPage() {
-  const scores = useSyncExternalStore(scoresStore.subscribe, scoresStore.getSnapshot, scoresStore.getServerSnapshot);
+  const assessment = useSyncExternalStore(
+    assessmentStore.subscribe,
+    assessmentStore.getSnapshot,
+    assessmentStore.getServerSnapshot
+  );
   const goals = useSyncExternalStore(goalsStore.subscribe, goalsStore.getSnapshot, goalsStore.getServerSnapshot);
+  const [openKey, setOpenKey] = useState<AttributeKey | null>(null);
 
-  const handleChange = useCallback((key: Attribute['key'], value: number) => {
-    scoresStore.set({ ...scoresStore.getSnapshot(), [key]: value });
+  const handleScore = useCallback((key: AttributeKey, value: number) => {
+    const cur = assessmentStore.getSnapshot();
+    assessmentStore.set({ ...cur, [key]: { ...cur[key], score: value } });
+    setOpenKey(null);
   }, []);
 
-  const handleToggle = useCallback((id: string) => {
+  const handleElasticity = useCallback((key: AttributeKey, value: Elasticity) => {
+    const cur = assessmentStore.getSnapshot();
+    assessmentStore.set({
+      ...cur,
+      [key]: { ...cur[key], elasticity: value, reason: value === 'none' ? cur[key].reason : null },
+    });
+  }, []);
+
+  const handleReason = useCallback((key: AttributeKey, value: CeilingReason) => {
+    const cur = assessmentStore.getSnapshot();
+    assessmentStore.set({ ...cur, [key]: { ...cur[key], reason: value } });
+  }, []);
+
+  const handleToggleGoal = useCallback((id: string) => {
     const cur = goalsStore.getSnapshot();
     if (id === GOAL_NONE) {
       goalsStore.set({ ...cur, picked: cur.picked.includes(GOAL_NONE) ? [] : [GOAL_NONE] });
@@ -346,8 +541,10 @@ export default function LifeScorecardPage() {
     goalsStore.set({ ...goalsStore.getSnapshot(), custom: value.slice(0, 40) });
   }, []);
 
-  const report = useMemo(() => generateReport(scores), [scores]);
-  const insight = useMemo(() => buildGoalInsight(scores, goals), [scores, goals]);
+  const done = filledCount(assessment);
+  const complete = isComplete(assessment);
+  const report = useMemo(() => (complete ? generateReport(assessment) : null), [complete, assessment]);
+  const insight = useMemo(() => (complete ? buildGoalInsight(assessment, goals) : null), [complete, assessment, goals]);
 
   return (
     <main className="min-h-screen bg-[#FBF7F1] pb-20">
@@ -364,130 +561,177 @@ export default function LifeScorecardPage() {
             称一称自己的斤两
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed" style={{ color: MUTED }}>
-            八个维度，只对自己打分。不打分排名，不和别人比——分母是你自己的潜力上限。 每一项都只测「你还能影响的那部分」。
+            八个维度。每一项问两件事：你现在在哪，以及往后还能往上走多少。
+            不给默认起点——因为每个人的起点千差万别，先读句子，自己找位置。
           </p>
+          <Progress done={done} />
         </header>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <div className="mt-6 grid items-start gap-3 sm:grid-cols-2">
           {ATTRIBUTES.map(attr => (
-            <AttributeRow key={attr.key} attr={attr} score={scores[attr.key]} onChange={handleChange} />
+            <AttributeCard
+              key={attr.key}
+              attr={attr}
+              entry={assessment[attr.key]}
+              open={openKey === attr.key}
+              onToggleOpen={() => setOpenKey(prev => (prev === attr.key ? null : attr.key))}
+              onScore={handleScore}
+              onElasticity={handleElasticity}
+              onReason={handleReason}
+            />
           ))}
         </div>
 
-        <GoalPicker goals={goals} onToggle={handleToggle} onCustom={handleCustom} />
-
-        <section className="mt-6 rounded-2xl border border-[#EADFD0] bg-white p-5 sm:p-7">
-          <div className="text-[11px] tracking-[0.18em]" style={{ color: MUTED }}>
-            你 的 称 重 单
-          </div>
-          <TotalBoard scores={scores} />
-          <h2 className="mt-5 text-xl font-bold leading-snug sm:text-2xl" style={{ color: INK }}>
-            {report.headline}
-          </h2>
-          <p className="mt-3 text-sm leading-relaxed" style={{ color: '#5C4A38' }}>
-            {report.summary}
-          </p>
-
-          <div className="mt-6 rounded-xl bg-[#FBF3E9] p-4">
-            <h3 className="text-sm font-semibold" style={{ color: INK }}>
-              你想留下的，和你现在的样子
-            </h3>
-            <p className="mt-1 text-[13px] leading-relaxed" style={{ color: '#5C4A38' }}>
-              {insight.text}
+        {!complete && (
+          <div className="mt-4 rounded-xl border border-dashed px-4 py-3" style={{ borderColor: '#D9C6AE' }}>
+            <p className="text-[12.5px] leading-relaxed" style={{ color: MUTED }}>
+              还差 {ATTRIBUTES.length - done} 项。八项都答完才会出称重单——半张单子算不出总分，
+              而且现在的偏好会污染你对还没答的那几项判断。
             </p>
-            {insight.wanted.length > 0 && (
-              <p className="mt-2 text-[11px] leading-relaxed" style={{ color: MUTED }}>
-                你选的类型对应到八项：
-                {insight.wanted.map(w => (w.count > 1 ? `${w.attr.name} ×${w.count}` : w.attr.name)).join(' · ')}
-              </p>
-            )}
           </div>
+        )}
 
-          {report.actions.length > 0 && (
-            <div className="mt-6">
-              <h3 className="text-sm font-semibold" style={{ color: INK }}>
-                最该动的两处
-              </h3>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                {report.actions.map(({ attr, score }) => (
-                  <div key={attr.key} className="rounded-xl bg-[#FBF3E9] p-4">
-                    <div className="flex items-baseline justify-between">
-                      <span className="text-sm font-semibold" style={{ color: INK }}>
-                        {attr.name}
-                      </span>
-                      <span className="font-mono text-[13px]" style={{ color: ACCENT }}>
-                        {score} → {attr.ceiling}
-                      </span>
-                    </div>
-                    <p className="mt-2 text-[12px] leading-relaxed" style={{ color: MUTED }}>
-                      离上限还有 {attr.ceiling - score} 分，而这一项有 {Math.round(moveRate(attr) * 100)}% 是后天能挪的。
+        {complete && report && insight && (
+          <>
+            <GoalPicker goals={goals} onToggle={handleToggleGoal} onCustom={handleCustom} />
+
+            <section className="mt-6 rounded-2xl border bg-white p-5 sm:p-7" style={{ borderColor: BORDER }}>
+              <div className="text-[11px] tracking-[0.18em]" style={{ color: MUTED }}>
+                你 的 称 重 单
+              </div>
+              <TotalBoard assessment={assessment} />
+
+              <h2 className="mt-5 text-xl font-bold leading-snug sm:text-2xl" style={{ color: INK }}>
+                {report.headline}
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed" style={{ color: '#5C4A38' }}>
+                {report.summary}
+              </p>
+
+              <div className="mt-6 rounded-xl p-4" style={{ background: SOFT }}>
+                <h3 className="text-sm font-semibold" style={{ color: INK }}>
+                  你想留下的，和你现在的样子
+                </h3>
+                <p className="mt-1 text-[13px] leading-relaxed" style={{ color: '#5C4A38' }}>
+                  {insight.text}
+                </p>
+                {insight.wanted.length > 0 && (
+                  <p className="mt-2 text-[11px] leading-relaxed" style={{ color: MUTED }}>
+                    你选的类型对应到八项：
+                    {insight.wanted.map(w => (w.count > 1 ? `${w.attr.name} ×${w.count}` : w.attr.name)).join(' · ')}
+                  </p>
+                )}
+              </div>
+
+              {report.actions.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-sm font-semibold" style={{ color: INK }}>
+                    最该动的两处
+                  </h3>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    {report.actions.map(({ attr, score, cap, action }) => (
+                      <div key={attr.key} className="rounded-xl p-4" style={{ background: SOFT }}>
+                        <div className="flex items-baseline justify-between">
+                          <span className="text-sm font-semibold" style={{ color: INK }}>
+                            {attr.name}
+                          </span>
+                          <span className="font-mono text-[13px]" style={{ color: ACCENT }}>
+                            {score} → {cap}
+                          </span>
+                        </div>
+                        <p className="mt-2 text-[12px] leading-relaxed" style={{ color: MUTED }}>
+                          你自己划了 {cap - score} 分空间在这里。想动的话，先做这一件：
+                        </p>
+                        <p className="mt-1.5 text-[12.5px] leading-relaxed" style={{ color: '#5C4A38' }}>
+                          {action}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                {report.compound.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold" style={{ color: INK }}>
+                      复利区
+                    </h3>
+                    <p className="mt-1 text-[12px] leading-relaxed" style={{ color: MUTED }}>
+                      {report.compound.map(c => c.attr.name).join('、')}
+                      ：已经不错，而且还能继续长。加厚比补短更划算。
                     </p>
                   </div>
-                ))}
+                )}
+                {report.gift.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold" style={{ color: INK }}>
+                      天赋红利
+                    </h3>
+                    <p className="mt-1 text-[12px] leading-relaxed" style={{ color: MUTED }}>
+                      {report.gift.map(c => c.attr.name).join('、')}
+                      ：好，但你自己也说不太能再动。别在这里焦虑，这是运气，不是功劳。
+                    </p>
+                  </div>
+                )}
+                {report.release.length > 0 && (
+                  <div className="sm:col-span-2">
+                    <h3 className="text-sm font-semibold" style={{ color: INK }}>
+                      可以放下的
+                    </h3>
+                    <p className="mt-1 text-[12px] leading-relaxed" style={{ color: MUTED }}>
+                      {report.release.map(c => c.attr.name).join('、')}
+                      ：空间本来就窄。不是让你认命，是别再拿它审判自己——换一个你能控制的口径去衡量。
+                    </p>
+                  </div>
+                )}
               </div>
-            </div>
-          )}
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {report.compound.length > 0 && (
-              <div>
+              {report.watch.length > 0 && (
+                <div className="mt-6 rounded-xl border p-4" style={{ borderColor: '#E4C9A8', background: '#FDF6EC' }}>
+                  <h3 className="text-sm font-semibold" style={{ color: INK }}>
+                    守住，比追赶更急
+                  </h3>
+                  <p className="mt-1 text-[11px]" style={{ color: MUTED }}>
+                    这几项现在不算差，但它们本来就不会自己维持。不用你额外努力，只是别断。
+                  </p>
+                  <ul className="mt-2 flex flex-col gap-2">
+                    {report.watch.map(w => (
+                      <li key={w.attr.key} className="text-[12.5px] leading-relaxed" style={{ color: '#5C4A38' }}>
+                        {w.text}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div className="mt-6 rounded-xl border p-4" style={{ borderColor: BORDER }}>
                 <h3 className="text-sm font-semibold" style={{ color: INK }}>
-                  复利区
+                  半年后，回来再称一次
                 </h3>
-                <p className="mt-1 text-[12px] leading-relaxed" style={{ color: MUTED }}>
-                  {report.compound.map(c => c.attr.name).join('、')}
-                  ：已经不错，而且还能继续长。加厚比补短更划算。
+                <p className="mt-1 text-[13px] leading-relaxed" style={{ color: '#5C4A38' }}>
+                  {report.nextStep}
                 </p>
               </div>
-            )}
-            {report.gift.length > 0 && (
-              <div>
-                <h3 className="text-sm font-semibold" style={{ color: INK }}>
-                  天赋红利
-                </h3>
-                <p className="mt-1 text-[12px] leading-relaxed" style={{ color: MUTED }}>
-                  {report.gift.map(c => c.attr.name).join('、')}
-                  ：好，但不太能再动。别在这里焦虑，这是运气，不是功劳。
+
+              <div className="mt-6 border-t pt-5" style={{ borderColor: BORDER }}>
+                <p className="text-[13px] leading-relaxed" style={{ color: '#5C4A38' }}>
+                  没有哪一种活法天然更高级。
+                  <br />
+                  真正要紧的，是你有没有找到属于自己的那一种。
+                </p>
+                <p className="mt-2 text-[12px] leading-relaxed" style={{ color: MUTED }}>
+                  因为当你说不清自己要什么的时候，很容易把别人的期待，当成自己人生的方向。
                 </p>
               </div>
-            )}
-            {report.release.length > 0 && (
-              <div className="sm:col-span-2">
-                <h3 className="text-sm font-semibold" style={{ color: INK }}>
-                  可以放下的
-                </h3>
-                <p className="mt-1 text-[12px] leading-relaxed" style={{ color: MUTED }}>
-                  {report.release.map(c => c.attr.name).join('、')}
-                  ：可动区间本来就窄。不是让你认命，是别再拿它审判自己——换一个你能控制的口径去衡量。
-                </p>
-              </div>
-            )}
-          </div>
 
-          <div className="mt-6 rounded-xl border border-[#EADFD0] p-4">
-            <h3 className="text-sm font-semibold" style={{ color: INK }}>
-              下一步，只做一件
-            </h3>
-            <p className="mt-1 text-[13px] leading-relaxed" style={{ color: '#5C4A38' }}>
-              {report.nextStep}
-            </p>
-          </div>
-
-          <div className="mt-6 border-t border-[#EADFD0] pt-5">
-            <p className="text-[13px] leading-relaxed" style={{ color: '#5C4A38' }}>
-              没有哪一种活法天然更高级。
-              <br />
-              真正要紧的，是你有没有找到属于自己的那一种。
-            </p>
-            <p className="mt-2 text-[12px] leading-relaxed" style={{ color: MUTED }}>
-              因为当你说不清自己要什么的时候，很容易把别人的期待，当成自己人生的方向。
-            </p>
-          </div>
-
-          <p className="mt-5 border-t border-[#EADFD0] pt-4 text-[11px] leading-relaxed" style={{ color: MUTED }}>
-            这是一次自我盘点，不是测评、不是诊断，也不产生任何分数排名。数据只存在你这台设备的浏览器里，不上传。
-          </p>
-        </section>
+              <p className="mt-5 border-t pt-4 text-[11px] leading-relaxed" style={{ color: MUTED }}>
+                这是一次自我盘点，不是测评、不是诊断，也不产生任何排名。稳一稳再来一次也完全可以——半年、一年、三年、五年，只要同一项的数字动了，这份称重单就有意义。
+                数据只存在你这台设备的浏览器里，不上传。
+              </p>
+            </section>
+          </>
+        )}
       </div>
     </main>
   );

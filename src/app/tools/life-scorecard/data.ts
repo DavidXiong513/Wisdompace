@@ -5,12 +5,18 @@
 //   来生 = 50 分零和分配，测的是「你愿意怎么取舍」（价值排序）
 //   今生 = 八项独立自评，测的是「你现在有多少」（存量状态）
 //
-// 因为不再零和，总分必须有新分母 —— 用「你自己的潜力上限」：
-//   每项都有 baseline（先天给定）与 ceiling（后天可达上限），
-//   ceiling 之和 = 70，就是这个人理论上的天花板。
-//   「48 / 70」比「48 / 100」诚实，也不会被误读成不及格。
+// 每人两问，都必答：
+//   ① 现状 —— 11 档选一句最像现在的自己。初始为空，不给默认起点。
+//   ② 弹性 —— 这一项往后还能往上走多少。它独立测量，不用现状倒推上限，
+//      所以不会落进「用现状推上限、再用上限评价现状」的循环论证。
 //
-// ceiling 只用于算分母与分类，不限制输入 —— 用户可以自评到 10。
+// 由此得到三个刻度（下限不展示给用户，只在报告里转成提醒）：
+//   现状 score = 用户选的档位（0–10）
+//   上限 cap   = score + 弹性增益，封顶 10，决定这一项的分母份额
+//   下限 floor = score − 固有易退幅度，只用来生成「不管就会滑到哪」的场景句
+//
+// 总势用绝对存量：八项 × 十分 = 80 满分，不与来生的 50 分对齐。
+// 潜力进度用区间完成度均值：在自己这一项的 floor→cap 之间走到了几成。
 // ─────────────────────────────────────────────────────────────
 
 export type AttributeKey =
@@ -23,7 +29,23 @@ export type AttributeKey =
   | 'longevity'
   | 'spirituality';
 
+/** 扁平分数字典，只给目标落差分析用（要求八项已答完） */
 export type Scores = Record<AttributeKey, number>;
+
+/** 往后还能往上走多少 */
+export type Elasticity = 'high' | 'some' | 'none';
+
+/** 说「基本就这样了」时，追问一句是哪一种「不动」 */
+export type CeilingReason = 'enough' | 'stuck';
+
+export type Entry = {
+  /** null = 还没定位 */
+  score: number | null;
+  elasticity: Elasticity | null;
+  reason: CeilingReason | null;
+};
+
+export type Assessment = Record<AttributeKey, Entry>;
 
 export type Attribute = {
   key: AttributeKey;
@@ -31,10 +53,6 @@ export type Attribute = {
   icon: string;
   /** 可控面：这一项真正在测什么（避免用评价性词汇制造焦虑） */
   control: string;
-  /** 先天给定：不是让你自评，是让你知道「我从哪出发」 */
-  baseline: number;
-  /** 后天可达上限：决定这一项在分母里的份额 */
-  ceiling: number;
   /** 0–10 档的行为锚点，描述现状而非命运 */
   anchors: string[];
 };
@@ -45,8 +63,6 @@ export const ATTRIBUTES: Attribute[] = [
     name: '颜值身材',
     icon: '◐',
     control: '体态、精力，以及你对自己身体的管理感',
-    baseline: 5,
-    ceiling: 7,
     anchors: [
       '几乎不照镜子，身体长期被忽略',
       '很少关注体态与精力，常年疲惫',
@@ -66,8 +82,6 @@ export const ATTRIBUTES: Attribute[] = [
     name: '财富财商',
     icon: '◇',
     control: '收入结构、储蓄率，以及你对钱的理解',
-    baseline: 3,
-    ceiling: 9,
     anchors: [
       '没有储蓄，负债且不清楚总额',
       '月光，对自己的收支没有概念',
@@ -87,8 +101,6 @@ export const ATTRIBUTES: Attribute[] = [
     name: '名誉地位',
     icon: '◈',
     control: '专业口碑，以及别人愿意把事交给你的程度',
-    baseline: 3,
-    ceiling: 8,
     anchors: [
       '在所在领域几乎没有可被识别的名字',
       '只在很小的圈子里被知道',
@@ -108,8 +120,6 @@ export const ATTRIBUTES: Attribute[] = [
     name: '身心健康',
     icon: '◍',
     control: '睡眠、体检、情绪调节与恢复力',
-    baseline: 5,
-    ceiling: 9,
     anchors: [
       '长期失眠或疼痛，一直没有就医',
       '身体频繁报警，靠硬撑',
@@ -129,8 +139,6 @@ export const ATTRIBUTES: Attribute[] = [
     name: '学习能力',
     icon: '◎',
     control: '学习习惯、信息处理，把学到的迁移到新场景',
-    baseline: 4,
-    ceiling: 10,
     anchors: [
       '离开学校后几乎不再学习',
       '只学工作当场就要用的',
@@ -150,8 +158,6 @@ export const ATTRIBUTES: Attribute[] = [
     name: '和睦家庭',
     icon: '⌂',
     control: '与家人的沟通质量，以及冲突之后能不能修复',
-    baseline: 4,
-    ceiling: 9,
     anchors: [
       '与家人几乎断联，或长期冲突',
       '一说话就吵，索性回避接触',
@@ -171,8 +177,6 @@ export const ATTRIBUTES: Attribute[] = [
     name: '长寿善终',
     icon: '◌',
     control: '对衰老与终局的准备度，不是寿命预测',
-    baseline: 6,
-    ceiling: 8,
     anchors: [
       '从不体检，也没有任何交代',
       '知道要准备，但完全没开始',
@@ -192,8 +196,6 @@ export const ATTRIBUTES: Attribute[] = [
     name: '修行善根',
     icon: '◉',
     control: '价值锚点、独处能力，以及面对无常时的稳定性',
-    baseline: 3,
-    ceiling: 10,
     anchors: [
       '没有精神生活，只被欲望推着走',
       '偶尔空虚，但不去看它',
@@ -210,45 +212,118 @@ export const ATTRIBUTES: Attribute[] = [
   },
 ];
 
-export const DEFAULT_SCORES: Scores = {
-  looks: 5,
-  wealth: 4,
-  fame: 4,
-  health: 5,
-  intelligence: 6,
-  family: 6,
-  longevity: 5,
-  spirituality: 5,
-};
+// ── 常量与刻度 ─────────────────────────────────────────────────────────
 
-export const TOTAL_CEILING = ATTRIBUTES.reduce((s, a) => s + a.ceiling, 0);
-export const TOTAL_BASELINE = ATTRIBUTES.reduce((s, a) => s + a.baseline, 0);
 export const MAX_PER_ATTR = 10;
+export const TOTAL_MAX = MAX_PER_ATTR * ATTRIBUTES.length; // 80
+export const GAIN_HIGH = 4;
 
-export function sumScores(scores: Scores): number {
-  return ATTRIBUTES.reduce((s, a) => s + scores[a.key], 0);
-}
-
-/** 可动率：这一项有多少比例是后天能挪的 */
-export function moveRate(attr: Attribute): number {
-  return (attr.ceiling - attr.baseline) / MAX_PER_ATTR;
-}
+/** 弹性三档对应的向上增益 */
+export const ELASTICITY_OPTIONS: { value: Elasticity; label: string; hint: string }[] = [
+  { value: 'high', label: '还能往上走很多', hint: '有明显空间，只是一直没动' },
+  { value: 'some', label: '还能往上走一些', hint: '能改善，但大概就一两档' },
+  { value: 'none', label: '基本就这样了', hint: '再投入也不会有大变化' },
+];
 
 /**
- * 区间完成度：在自己的「给定 → 上限」区间里走到了几成。
- * 比绝对分数公平 —— 起点低的人不该被同一个标准评判。
- * 低于起点时返回负数，调用方负责提示。
+ * 固有易退幅度：不用就退的项给高值，有粘性的项给低值。
+ * 只用于生成提醒句，不展示成「下限几分」——那个数字只会让人不舒服。
  */
-export function fillRatio(attr: Attribute, score: number): number {
-  const span = attr.ceiling - attr.baseline;
-  if (span <= 0) return score >= attr.ceiling ? 1 : 0;
-  return (score - attr.baseline) / span;
+export const VOLATILITY: Record<AttributeKey, number> = {
+  looks: 2,
+  wealth: 1,
+  fame: 1,
+  health: 3,
+  intelligence: 2,
+  family: 2,
+  longevity: 1,
+  spirituality: 2,
+};
+
+export const EMPTY_ENTRY: Entry = { score: null, elasticity: null, reason: null };
+
+export const EMPTY_ASSESSMENT: Assessment = ATTRIBUTES.reduce(
+  (acc, attr) => ({ ...acc, [attr.key]: { ...EMPTY_ENTRY } }),
+  {} as Assessment
+);
+
+/** 现状答了、弹性答了、「基本就这样了」时还追问了原因，才算这一项答完 */
+export function isAnswered(entry: Entry): boolean {
+  if (entry.score === null || entry.elasticity === null) return false;
+  if (entry.elasticity === 'none' && entry.reason === null) return false;
+  return true;
 }
 
-/** 杠杆分：离上限还有多远 × 这项有多能挪 */
-export function leverage(attr: Attribute, score: number): number {
-  const gap = Math.max(0, attr.ceiling - score);
-  return gap * moveRate(attr);
+export function filledCount(a: Assessment): number {
+  return ATTRIBUTES.filter(attr => isAnswered(a[attr.key])).length;
+}
+
+export function isComplete(a: Assessment): boolean {
+  return filledCount(a) === ATTRIBUTES.length;
+}
+
+export function gainOf(entry: Entry): number {
+  if (entry.elasticity === null || entry.elasticity === 'none') return 0;
+  return entry.elasticity === 'high' ? GAIN_HIGH : 2;
+}
+
+/** 上限：自己声明的空间，封顶 10 */
+export function capOf(entry: Entry): number {
+  if (entry.score === null) return 0;
+  return Math.min(MAX_PER_ATTR, entry.score + gainOf(entry));
+}
+
+/** 固有易退 + 情境修正：认命型的、以及「还有大空间」的，都更容易一路滑 */
+export function decayOf(attr: Attribute, entry: Entry): number {
+  let d = VOLATILITY[attr.key];
+  if (entry.elasticity === 'none' && entry.reason === 'stuck') d += 1;
+  if (entry.elasticity === 'high') d += 1;
+  return d;
+}
+
+export function floorOf(attr: Attribute, entry: Entry): number {
+  if (entry.score === null) return 0;
+  return Math.max(0, entry.score - decayOf(attr, entry));
+}
+
+/** 区间完成度：在自己这一项的 floor→cap 之间走到了几成 */
+export function ratioOf(attr: Attribute, entry: Entry): number {
+  const score = entry.score ?? 0;
+  const lo = floorOf(attr, entry);
+  const hi = capOf(entry);
+  if (hi <= lo) return score >= hi ? 1 : 0;
+  return Math.min(1, Math.max(0, (score - lo) / (hi - lo)));
+}
+
+export function toScores(a: Assessment): Scores {
+  const out = {} as Scores;
+  for (const attr of ATTRIBUTES) out[attr.key] = a[attr.key].score ?? 0;
+  return out;
+}
+
+/** 读本地存储时按当前口径白名单过滤，脏值一律退回空 */
+export function parseAssessment(raw: unknown): Assessment {
+  const out = {} as Assessment;
+  for (const attr of ATTRIBUTES) out[attr.key] = { ...EMPTY_ENTRY };
+  if (!raw || typeof raw !== 'object') return out;
+  const src = raw as Record<string, unknown>;
+  for (const attr of ATTRIBUTES) {
+    const item = src[attr.key];
+    if (!item || typeof item !== 'object') continue;
+    const rec = item as Record<string, unknown>;
+    const score =
+      typeof rec.score === 'number' && Number.isFinite(rec.score)
+        ? Math.min(MAX_PER_ATTR, Math.max(0, Math.round(rec.score)))
+        : null;
+    const elasticity: Elasticity | null =
+      rec.elasticity === 'high' || rec.elasticity === 'some' || rec.elasticity === 'none'
+        ? rec.elasticity
+        : null;
+    const reason: CeilingReason | null =
+      rec.reason === 'enough' || rec.reason === 'stuck' ? rec.reason : null;
+    out[attr.key] = { score, elasticity, reason: elasticity === 'none' ? reason : null };
+  }
+  return out;
 }
 
 export const ACTION_BY_KEY: Record<AttributeKey, string> = {  looks: '拍一张正面全身照，三个月后再拍一张，只对比体态，不对比脸。',
@@ -261,66 +336,135 @@ export const ACTION_BY_KEY: Record<AttributeKey, string> = {  looks: '拍一张�
   spirituality: '每天留十五分钟不看屏幕，只坐着，什么也不做。',
 };
 
+/** 不管就会滑到哪 —— 不叫「下限」，叫「本来就保不住的部分」 */
+export function watchText(attr: Attribute, score: number, floor: number, index = 0): string {
+  if (index === 0) {
+    return `「${attr.name}」现在是 ${score} 分。接下来半年如果什么都不做，它大概会滑到 ${floor} 分——不是因为你做错了什么，只是这一项本来就不会自己维持。`;
+  }
+  return `「${attr.name}」${score} 分，滑到 ${floor} 分只需要你什么都不做。这项的底子比它看起来薄。`;
+}
+
 export type Report = {
+  /** 绝对存量，满分 80 */
   total: number;
+  max: number;
+  /** 自己声明的上限之和，是「潜力进度」的分母 */
   ceiling: number;
-  percent: number;
+  /** 区间完成度均值，0–100 */
+  potential: number;
   headline: string;
   summary: string;
-  /** 最该动：低完成度 + 高可动 */
-  actions: { attr: Attribute; score: number; ratio: number; gain: number }[];
-  /** 复利区：高完成度 + 高可动 */
+  /** 最该动：离上限远 + 还有空间，每项配一件具体可做的事 */
+  actions: { attr: Attribute; score: number; cap: number; ratio: number; room: number; action: string }[];
+  /** 复利区：完成度高 + 还有空间 */
   compound: { attr: Attribute; score: number }[];
-  /** 天赋红利：高完成度 + 低可动 */
+  /** 天赋红利：完成度高 + 没什么空间了 */
   gift: { attr: Attribute; score: number }[];
-  /** 该放下：低完成度 + 低可动 */
+  /** 该放下：完成度低 + 空间也窄 */
   release: { attr: Attribute; score: number }[];
+  /** 守住提醒：现在还行，但不用就会掉 */
+  watch: { attr: Attribute; score: number; floor: number; text: string }[];
+  /** 复测指引，不是行动建议——行动已经在 actions 里逐项给出 */
   nextStep: string;
+  /** 八项都说「已经够好了」——可能是真打通，也可能在回避变化 */
+  allCapped: boolean;
 };
 
-export function generateReport(scores: Scores): Report {
-  const total = sumScores(scores);
-  const percent = Math.round((total / TOTAL_CEILING) * 100);
-
-  const scored = ATTRIBUTES.map(attr => {
-    const score = scores[attr.key];
-    const ratio = fillRatio(attr, score);
-    const rate = moveRate(attr);
-    return { attr, score, ratio, rate, gain: leverage(attr, score) };
+export function generateReport(a: Assessment): Report {
+  const rows = ATTRIBUTES.map(attr => {
+    const entry = a[attr.key];
+    const score = entry.score ?? 0;
+    const cap = capOf(entry);
+    return {
+      attr,
+      entry,
+      score,
+      cap,
+      floor: floorOf(attr, entry),
+      ratio: ratioOf(attr, entry),
+      room: Math.max(0, cap - score),
+      decay: decayOf(attr, entry),
+    };
   });
 
-  const highMove = scored.filter(s => s.rate >= 0.45);
-  const lowMove = scored.filter(s => s.rate < 0.45);
+  const total = rows.reduce((s, r) => s + r.score, 0);
+  const ceiling = rows.reduce((s, r) => s + r.cap, 0);
+  const potential = Math.round((rows.reduce((s, r) => s + r.ratio, 0) / rows.length) * 100);
 
-  const actions = highMove
-    .filter(s => s.ratio < 0.6)
-    .sort((a, b) => b.gain - a.gain)
+  const movable = rows.filter(r => r.room >= 2);
+  const stuck = rows.filter(r => r.room < 2);
+
+  const actions = movable
+    .filter(r => r.ratio < 0.6)
+    .sort((x, y) => y.room - x.room || x.ratio - y.ratio)
     .slice(0, 2)
-    .map(s => ({ attr: s.attr, score: s.score, ratio: s.ratio, gain: s.gain }));
+    .map(r => ({
+      attr: r.attr,
+      score: r.score,
+      cap: r.cap,
+      ratio: r.ratio,
+      room: r.room,
+      action: ACTION_BY_KEY[r.attr.key],
+    }));
 
-  const compound = highMove.filter(s => s.ratio >= 0.6).map(s => ({ attr: s.attr, score: s.score }));
-  const gift = lowMove.filter(s => s.ratio >= 0.6).map(s => ({ attr: s.attr, score: s.score }));
-  const release = lowMove.filter(s => s.ratio < 0.6).map(s => ({ attr: s.attr, score: s.score }));
+  const compound = movable.filter(r => r.ratio >= 0.6).map(r => ({ attr: r.attr, score: r.score }));
+  const gift = stuck.filter(r => r.ratio >= 0.6).map(r => ({ attr: r.attr, score: r.score }));
+  const release = stuck.filter(r => r.ratio < 0.6).map(r => ({ attr: r.attr, score: r.score }));
+
+  const watch = rows
+    .filter(r => r.decay >= 2 && r.score >= 4 && r.entry.reason !== 'enough')
+    .sort((x, y) => y.decay - x.decay || y.score - x.score)
+    .slice(0, 2)
+    .map((r, i) => ({
+      attr: r.attr,
+      score: r.score,
+      floor: r.floor,
+      text: watchText(r.attr, r.score, r.floor, i),
+    }));
+
+  const allCapped = ATTRIBUTES.every(
+    attr => a[attr.key].elasticity === 'none' && a[attr.key].reason === 'enough'
+  );
 
   let headline: string;
-  if (percent >= 80) headline = '你把自己这条路的潜力，已经用掉了大半。';
-  else if (percent >= 65) headline = '你在自己的区间里走过了多半，剩下的空间集中且具体。';
-  else if (percent >= 45) headline = '你在自己的区间里走到一半，形状已经清楚。';
-  else headline = '你离自己的起点不远，这意味着能动的地方比你以为的多。';
+  if (allCapped) {
+    headline = '八项你都给了「已经够好」。要么你真的打通了，要么你在替自己关掉所有向上的门。';
+  } else if (potential >= 80) {
+    headline = '你把自己的空间用掉了大半，剩下的那几处都很具体。';
+  } else if (potential >= 60) {
+    headline = '你在自己的区间里走过了多半，剩下哪里还空着，已经看得见。';
+  } else if (potential >= 40) {
+    headline = '你在自己的区间里走到一半，形状已经清楚了。';
+  } else {
+    headline = '你离自己的底不远，这意味着能挪的地方比你以为的多。';
+  }
 
-  const gapPoints = Math.round((TOTAL_CEILING - total) * 10) / 10;
-  const moveNames = actions.map(a => a.attr.name).join('、');
+  const roomTotal = rows.reduce((s, r) => s + r.room, 0);
+  const moveNames = actions.map(x => x.attr.name).join('、');
 
   const summary =
     actions.length > 0
-      ? `按你自己的潜力算，还有 ${gapPoints} 分的空间，其中 ${actions
-          .reduce((s, a) => s + Math.round(a.gain * 10) / 10, 0)
-          .toFixed(1)} 分集中在「${moveNames}」上——这两项都是后天能挪的，值得先动。`
-      : `按你自己的潜力算，还有 ${gapPoints} 分的空间，但没有哪一项既低又容易动。这种时候，把已经好的地方再加厚，比补短板更划算。`;
+      ? `八项加在一起 ${total} 分，满分 80。你自己给每一项定的上限加起来是 ${ceiling} 分——离那里还有 ${roomTotal} 分的空间，其中最多的是「${moveNames}」，这两项你都说了还能往上走。`
+      : `八项加在一起 ${total} 分，满分 80。你自己给每一项定的上限加起来是 ${ceiling} 分，但没有哪一项还留着明显空间——这种时候，把已经好的地方再加厚，比补短板更划算。`;
 
-  const nextStep = actions.length > 0 ? ACTION_BY_KEY[actions[0].attr.key] : '把这份自评存下来，半年后再填一次，只看同一项有没有挪动。';
+  const nextStep =
+    '把这份称重单留在这台设备里就行，不用另存。半年后回来只改一项——看它挪了几格，别重填全部。这一项如果没动，那才是真正需要面对的地方。';
 
-  return { total, ceiling: TOTAL_CEILING, percent, headline, summary, actions, compound, gift, release, nextStep };
+  return {
+    total,
+    max: TOTAL_MAX,
+    ceiling,
+    potential,
+    headline,
+    summary,
+    actions,
+    compound,
+    gift,
+    release,
+    watch,
+    nextStep,
+    allCapped,
+  };
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -390,7 +534,7 @@ export type GoalInsight = {
   empty: boolean;
 };
 
-export function buildGoalInsight(scores: Scores, goals: Goals): GoalInsight {
+export function buildGoalInsight(a: Assessment, goals: Goals): GoalInsight {
   const active = goals.picked.filter(id => id !== GOAL_NONE);
   const names = (list: { attr: Attribute }[]) => list.map(x => x.attr.name).join('、');
 
@@ -402,7 +546,7 @@ export function buildGoalInsight(scores: Scores, goals: Goals): GoalInsight {
       empty: true,
       text: goals.custom.trim()
         ? `你自己写下的那一句，比这十六种分类都准。就按它来——它指向哪一项，那一项就是你的方向。`
-        : '你一条都没有选。这不算失败：很多人是在三十几岁才发现，自己一直在完成别人的清单。可以先不做选择，回到上面八项，看看哪一项你打分时最犹豫——犹豫的地方，往往就是目标藏着的地方。',
+        : '你一条都没有选。这不算失败：很多人要到很晚才发现，自己一直在完成别人的清单。可以先不做选择，回到上面八项，看看哪一项你打分时最犹豫——犹豫的地方，往往就是目标藏着的地方。',
     };
   }
 
@@ -418,14 +562,18 @@ export function buildGoalInsight(scores: Scores, goals: Goals): GoalInsight {
     .sort((a, b) => b.count - a.count);
 
   const tension = wanted
-    .map(w => ({ attr: w.attr, score: scores[w.attr.key], ratio: fillRatio(w.attr, scores[w.attr.key]) }))
+    .map(w => ({
+      attr: w.attr,
+      score: a[w.attr.key].score ?? 0,
+      ratio: ratioOf(w.attr, a[w.attr.key]),
+    }))
     .filter(t => t.ratio < 0.5)
-    .sort((a, b) => a.ratio - b.ratio)
+    .sort((x, y) => x.ratio - y.ratio)
     .slice(0, 2);
 
-  const unseen = ATTRIBUTES.filter(a => (counts.get(a.key) ?? 0) === 0)
-    .filter(a => fillRatio(a, scores[a.key]) >= 0.6)
-    .map(a => ({ attr: a, score: scores[a.key] }))
+  const unseen = ATTRIBUTES.filter(attr => (counts.get(attr.key) ?? 0) === 0)
+    .filter(attr => ratioOf(attr, a[attr.key]) >= 0.6)
+    .map(attr => ({ attr, score: a[attr.key].score ?? 0 }))
     .slice(0, 2);
 
   const wantedNames = names(wanted);

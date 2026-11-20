@@ -93,7 +93,7 @@ export const tools: Record<string, ToolInfo> = {
     id: 'life-scorecard',
     name: '今生称重：称一称自己的斤两',
     status: 'ready',
-    description: '八个维度自评今生现状，用你自己的潜力上限做分母，看见哪些还能长、哪些该放下。',
+    description: '八个维度各问两句：现在在哪、往后还能走多少。用你自己划的上限做分母，半年后回来只看同一项挪了几格。',
   },
   'ability-card': {
     id: 'ability-card',
