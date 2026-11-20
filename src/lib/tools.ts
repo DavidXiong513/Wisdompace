@@ -89,6 +89,12 @@ export const tools: Record<string, ToolInfo> = {
     status: 'ready',
     description: '用50点投胎福德积分分配到八大属性，折射你内心深处的价值排序。',
   },
+  'life-scorecard': {
+    id: 'life-scorecard',
+    name: '今生称重：称一称自己的斤两',
+    status: 'ready',
+    description: '八个维度自评今生现状，用你自己的潜力上限做分母，看见哪些还能长、哪些该放下。',
+  },
   'ability-card': {
     id: 'ability-card',
     name: '社会能力自评',
