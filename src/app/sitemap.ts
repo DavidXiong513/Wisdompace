@@ -4,12 +4,15 @@ import { chapters } from '@/data/chapters';
 const BASE_URL = 'https://wisdompace.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const chapterRoutes: MetadataRoute.Sitemap = chapters.map((c) => ({
-    url:              `${BASE_URL}/chapter/${c.slug}`,
-    lastModified:     new Date(),
-    changeFrequency:  'monthly',
-    priority:         0.8,
-  }));
+  // read-instructions 已在下方单独列出，避免同一 URL 出现两次
+  const chapterRoutes: MetadataRoute.Sitemap = chapters
+    .filter((c) => c.slug !== 'read-instructions')
+    .map((c) => ({
+      url:              `${BASE_URL}/chapter/${c.slug}`,
+      lastModified:     new Date(),
+      changeFrequency:  'monthly',
+      priority:         0.8,
+    }));
 
   return [
     {
@@ -44,6 +47,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url:             `${BASE_URL}/tools/future-vow`,
+      lastModified:    new Date(),
+      changeFrequency: 'monthly',
+      priority:        0.7,
+    },
+    {
+      url:             `${BASE_URL}/tools/life-scorecard`,
       lastModified:    new Date(),
       changeFrequency: 'monthly',
       priority:        0.7,
