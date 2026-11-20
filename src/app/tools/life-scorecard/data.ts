@@ -251,8 +251,7 @@ export function leverage(attr: Attribute, score: number): number {
   return gap * moveRate(attr);
 }
 
-export const ACTION_BY_KEY: Record<AttributeKey, string> = {
-  looks: '拍一张正面全身照，三个月后再拍一张，只对比体态，不对比脸。',
+export const ACTION_BY_KEY: Record<AttributeKey, string> = {  looks: '拍一张正面全身照，三个月后再拍一张，只对比体态，不对比脸。',
   wealth: '这个月把收入结构写下来：几份来源、各占多少、哪一份最脆。',
   fame: '挑一件你做过的事，写成八百字发出去，别只留在简历里。',
   health: '把体检预约排进日历，定一个具体日期，不是「有空去」。',
@@ -323,3 +322,127 @@ export function generateReport(scores: Scores): Report {
 
   return { total, ceiling: TOTAL_CEILING, percent, headline, summary, actions, compound, gift, release, nextStep };
 }
+
+// ─────────────────────────────────────────────────────────────
+// 目标类型（参考用，不做硬标签）
+//
+// 它不是测评，是一张「词库」：让用户在给完分之后，认领自己
+// 想追的东西，从而把「想要」和「拥有」接起来 —— 落差才有方向。
+// 允许一条都不选（none），因为硬选必然失真。
+// ─────────────────────────────────────────────────────────────
+
+export const GOAL_NONE = 'none';
+
+export type GoalType = {
+  id: string;
+  name: string;
+  desc: string;
+  /** 这一类型主要落在八项里的哪几项 */
+  maps: AttributeKey[];
+};
+
+export const GOAL_TYPES: GoalType[] = [
+  { id: 'opus', name: '作品型', desc: '通过创作留下长期价值，形成独特影响', maps: ['fame', 'spirituality'] },
+  { id: 'experience', name: '体验型', desc: '通过丰富经历获得持久感受和满足', maps: ['looks', 'wealth'] },
+  { id: 'public', name: '公益型', desc: '通过服务改善他人生活，产生长期影响', maps: ['fame', 'spirituality'] },
+  { id: 'achievement', name: '成就型', desc: '在专业或事业上达成标杆地位和认可', maps: ['fame', 'intelligence'] },
+  { id: 'inspire', name: '启发型', desc: '通过思想和教导启发他人认知和行动', maps: ['spirituality', 'fame'] },
+  { id: 'idea', name: '理念型', desc: '持续构建和实践价值观与理念体系', maps: ['spirituality', 'intelligence'] },
+  { id: 'dream', name: '追梦型', desc: '不断推进愿景和梦想，实现落地目标', maps: ['intelligence', 'fame'] },
+  { id: 'inner', name: '内修型', desc: '通过自我成长和修炼积累内在成熟', maps: ['spirituality'] },
+  { id: 'enjoy', name: '享受型', desc: '追求高品质生活与长期愉悦感', maps: ['wealth', 'looks'] },
+  { id: 'relation', name: '关系型', desc: '建立稳定联结，创造长期情感安全', maps: ['family'] },
+  { id: 'steady', name: '稳健型', desc: '保障财务与职业稳定，实现可控生活', maps: ['wealth', 'longevity'] },
+  { id: 'skill', name: '技能型', desc: '持续精进专业能力，形成长期影响力', maps: ['intelligence', 'fame'] },
+  { id: 'reputation', name: '声望型', desc: '通过形象和口碑获得长期社会认知', maps: ['fame', 'looks'] },
+  { id: 'enterprise', name: '企业型', desc: '经营与创新推动组织持续发展和增长', maps: ['fame', 'wealth'] },
+  { id: 'money', name: '赚钱型', desc: '积累财富，实现资本和收益长期增长', maps: ['wealth'] },
+  { id: 'power', name: '权力型', desc: '掌控决策与资源，实现长期系统影响', maps: ['fame', 'wealth'] },
+];
+
+export type Goals = {
+  picked: string[];
+  custom: string;
+};
+
+export const DEFAULT_GOALS: Goals = { picked: [], custom: '' };
+
+export function parseGoals(raw: unknown): Goals {
+  if (!raw || typeof raw !== 'object') return DEFAULT_GOALS;
+  const src = raw as Record<string, unknown>;
+  const known = new Set(GOAL_TYPES.map(g => g.id).concat(GOAL_NONE));
+  const picked = Array.isArray(src.picked)
+    ? src.picked.filter((x): x is string => typeof x === 'string' && known.has(x))
+    : [];
+  const custom = typeof src.custom === 'string' ? src.custom.slice(0, 40) : '';
+  return { picked, custom };
+}
+
+export type GoalInsight = {
+  /** 你选的类型落在八项里的那几项 */
+  wanted: { attr: Attribute; count: number }[];
+  /** 在意、但分数低的（错位） */
+  tension: { attr: Attribute; score: number; ratio: number }[];
+  /** 分数不低，却没出现在任何目标里 */
+  unseen: { attr: Attribute; score: number }[];
+  text: string;
+  /** 一条都没选 */
+  empty: boolean;
+};
+
+export function buildGoalInsight(scores: Scores, goals: Goals): GoalInsight {
+  const active = goals.picked.filter(id => id !== GOAL_NONE);
+  const names = (list: { attr: Attribute }[]) => list.map(x => x.attr.name).join('、');
+
+  if (active.length === 0) {
+    return {
+      wanted: [],
+      tension: [],
+      unseen: [],
+      empty: true,
+      text: goals.custom.trim()
+        ? `你自己写下的那一句，比这十六种分类都准。就按它来——它指向哪一项，那一项就是你的方向。`
+        : '你一条都没有选。这不算失败：很多人是在三十几岁才发现，自己一直在完成别人的清单。可以先不做选择，回到上面八项，看看哪一项你打分时最犹豫——犹豫的地方，往往就是目标藏着的地方。',
+    };
+  }
+
+  const counts = new Map<AttributeKey, number>();
+  for (const id of active) {
+    const goal = GOAL_TYPES.find(g => g.id === id);
+    if (!goal) continue;
+    for (const key of goal.maps) counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+
+  const wanted = ATTRIBUTES.filter(a => (counts.get(a.key) ?? 0) > 0)
+    .map(a => ({ attr: a, count: counts.get(a.key) ?? 0 }))
+    .sort((a, b) => b.count - a.count);
+
+  const tension = wanted
+    .map(w => ({ attr: w.attr, score: scores[w.attr.key], ratio: fillRatio(w.attr, scores[w.attr.key]) }))
+    .filter(t => t.ratio < 0.5)
+    .sort((a, b) => a.ratio - b.ratio)
+    .slice(0, 2);
+
+  const unseen = ATTRIBUTES.filter(a => (counts.get(a.key) ?? 0) === 0)
+    .filter(a => fillRatio(a, scores[a.key]) >= 0.6)
+    .map(a => ({ attr: a, score: scores[a.key] }))
+    .slice(0, 2);
+
+  const wantedNames = names(wanted);
+  let text: string;
+  if (tension.length > 0) {
+    text =
+      tension.length >= wanted.length
+        ? `你选的目标落在「${wantedNames}」上，而这恰好是你现在分数偏低的那几项——你不是没有方向，是还没开始走。`
+        : `你选的目标落在「${wantedNames}」上，其中「${names(tension)}」恰好是你现在分数偏低的那几项——你不是没有方向，是还没开始走。`;
+  } else {
+    text = `你选的目标落在「${wantedNames}」上，而这几项你都给到了及格线以上。方向和现状是对齐的，接下来是厚度问题，不是方向问题。`;
+  }
+
+  if (unseen.length > 0) {
+    text += ` 另外，「${unseen.map(u => u.attr.name).join('、')}」你分数不低，却没有出现在你的目标里——这可能是运气，也可能是一项还没被你自己认领的能力。`;
+  }
+
+  return { wanted, tension, unseen, empty: false, text };
+}
+

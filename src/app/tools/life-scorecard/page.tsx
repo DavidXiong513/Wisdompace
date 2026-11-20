@@ -4,76 +4,107 @@ import { useCallback, useMemo, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import {
   ATTRIBUTES,
+  DEFAULT_GOALS,
   DEFAULT_SCORES,
+  GOAL_NONE,
+  GOAL_TYPES,
   MAX_PER_ATTR,
   TOTAL_CEILING,
-  type Attribute,
-  type Scores,
+  buildGoalInsight,
   fillRatio,
   generateReport,
   moveRate,
+  parseGoals,
   sumScores,
+  type Attribute,
+  type Goals,
+  type Scores,
 } from './data';
 
-const STORAGE_KEY = 'wisdompace:life-scorecard:v1';
+const SCORE_KEY = 'wisdompace:life-scorecard:v1';
+const GOAL_KEY = 'wisdompace:life-scorecard:goals:v1';
 
 const INK = '#4A3728';
 const MUTED = '#7A6A58';
 const ACCENT = '#C87941';
 const TRACK = '#EDE3D6';
 
-// ── localStorage（useSyncExternalStore 要求快照引用稳定） ──────────────
-let cached: Scores | null = null;
+// ── 通用本地存储（useSyncExternalStore 要求快照引用稳定） ────────────────
+type Store<T> = {
+  subscribe: (cb: () => void) => () => void;
+  getSnapshot: () => T;
+  getServerSnapshot: () => T;
+  set: (next: T) => void;
+};
 
-function readScores(): Scores {
-  if (typeof window === 'undefined') return DEFAULT_SCORES;
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_SCORES;
-    const parsed: unknown = JSON.parse(raw);
-    if (!parsed || typeof parsed !== 'object') return DEFAULT_SCORES;
-    const src = parsed as Record<string, unknown>;
-    const next = { ...DEFAULT_SCORES };
-    for (const attr of ATTRIBUTES) {
-      const v = src[attr.key];
-      if (typeof v === 'number' && Number.isFinite(v)) {
-        next[attr.key] = Math.min(MAX_PER_ATTR, Math.max(0, Math.round(v)));
-      }
+function makeStore<T>(key: string, fallback: T, parse: (raw: string) => T, eq: (a: T, b: T) => boolean): Store<T> {
+  const eventName = `${key}:change`;
+  let cached = fallback;
+  let inited = false;
+
+  const read = (): T => {
+    if (typeof window === 'undefined') return fallback;
+    try {
+      const raw = window.localStorage.getItem(key);
+      if (!raw) return fallback;
+      return parse(raw);
+    } catch {
+      return fallback;
     }
-    return next;
-  } catch {
-    return DEFAULT_SCORES;
-  }
+  };
+
+  return {
+    subscribe: cb => {
+      window.addEventListener(eventName, cb);
+      window.addEventListener('storage', cb);
+      return () => {
+        window.removeEventListener(eventName, cb);
+        window.removeEventListener('storage', cb);
+      };
+    },
+    getSnapshot: () => {
+      const next = read();
+      if (inited && eq(cached, next)) return cached;
+      cached = next;
+      inited = true;
+      return cached;
+    },
+    getServerSnapshot: () => fallback,
+    set: next => {
+      try {
+        window.localStorage.setItem(key, JSON.stringify(next));
+        window.dispatchEvent(new Event(eventName));
+      } catch {
+        /* 隐私模式下降级：仅内存生效 */
+      }
+    },
+  };
 }
 
-function getSnapshot(): Scores {
-  const next = readScores();
-  if (cached && ATTRIBUTES.every(a => cached![a.key] === next[a.key])) return cached;
-  cached = next;
+function parseScores(raw: string): Scores {
+  const parsed: unknown = JSON.parse(raw);
+  if (!parsed || typeof parsed !== 'object') return DEFAULT_SCORES;
+  const src = parsed as Record<string, unknown>;
+  const next: Scores = { ...DEFAULT_SCORES };
+  for (const attr of ATTRIBUTES) {
+    const v = src[attr.key];
+    if (typeof v === 'number' && Number.isFinite(v)) {
+      next[attr.key] = Math.min(MAX_PER_ATTR, Math.max(0, Math.round(v)));
+    }
+  }
   return next;
 }
 
-function getServerSnapshot(): Scores {
-  return DEFAULT_SCORES;
+function eqScores(a: Scores, b: Scores): boolean {
+  return ATTRIBUTES.every(attr => a[attr.key] === b[attr.key]);
 }
 
-function writeScores(next: Scores) {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    window.dispatchEvent(new Event('life-scorecard-change'));
-  } catch {
-    /* 隐私模式下降级：仅内存生效 */
-  }
+function eqGoals(a: Goals, b: Goals): boolean {
+  return a.custom === b.custom && a.picked.length === b.picked.length && a.picked.every(id => b.picked.includes(id));
 }
 
-function subscribe(cb: () => void) {
-  window.addEventListener('life-scorecard-change', cb);
-  window.addEventListener('storage', cb);
-  return () => {
-    window.removeEventListener('life-scorecard-change', cb);
-    window.removeEventListener('storage', cb);
-  };
-}
+const scoresStore = makeStore<Scores>(SCORE_KEY, DEFAULT_SCORES, parseScores, eqScores);
+const goalsStore = makeStore<Goals>(GOAL_KEY, DEFAULT_GOALS, raw => parseGoals(JSON.parse(raw)), eqGoals);
 
 // ── 单条属性 ─────────────────────────────────────────────────────────
 function AttributeRow({
@@ -204,16 +235,112 @@ function PotentialPanel({ scores }: { scores: Scores }) {
   );
 }
 
+// ── 目标类型多选 ──────────────────────────────────────────────────────
+function GoalPicker({
+  goals,
+  onToggle,
+  onCustom,
+}: {
+  goals: Goals;
+  onToggle: (id: string) => void;
+  onCustom: (value: string) => void;
+}) {
+  const nonePicked = goals.picked.includes(GOAL_NONE);
+  const count = goals.picked.filter(id => id !== GOAL_NONE).length;
+
+  return (
+    <section className="mt-8 rounded-2xl border border-[#EADFD0] bg-white p-5 sm:p-7">
+      <div className="text-[11px] tracking-[0.18em]" style={{ color: MUTED }}>
+        参 考 · 不 是 标 签
+      </div>
+      <h2 className="mt-2 text-lg font-bold sm:text-xl" style={{ color: INK }}>
+        你最想留下什么？
+      </h2>
+      <p className="mt-2 max-w-2xl text-[13px] leading-relaxed" style={{ color: MUTED }}>
+        可多选，也可以一条都不选。选「像你」的，不是「听起来体面」的。
+        <span style={{ color: ACCENT }}> 已选 {count} 项</span>
+      </p>
+
+      <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {GOAL_TYPES.map(goal => {
+          const selected = goals.picked.includes(goal.id);
+          return (
+            <button
+              key={goal.id}
+              type="button"
+              aria-pressed={selected}
+              onClick={() => onToggle(goal.id)}
+              className={`rounded-xl border px-3 py-2 text-left transition ${
+                selected ? 'border-[#C87941] bg-[#FBF3E9]' : 'border-[#EADFD0] bg-white hover:border-[#D9C6AE]'
+              }`}
+            >
+              <span className="text-[13px] font-semibold" style={{ color: selected ? ACCENT : INK }}>
+                {goal.name}
+              </span>
+              <span className="mt-0.5 block text-[11px] leading-snug" style={{ color: MUTED }}>
+                {goal.desc}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <button
+        type="button"
+        aria-pressed={nonePicked}
+        onClick={() => onToggle(GOAL_NONE)}
+        className={`mt-3 w-full rounded-xl border px-3 py-2 text-[13px] transition ${
+          nonePicked ? 'border-[#C87941] bg-[#FBF3E9] font-semibold' : 'border-dashed border-[#D9C6AE] bg-white'
+        }`}
+        style={{ color: nonePicked ? ACCENT : MUTED }}
+      >
+        以上都没有——先跳过也行
+      </button>
+
+      <label className="mt-3 block">
+        <span className="text-[11px]" style={{ color: MUTED }}>
+          或者，用你自己的话说（选填）
+        </span>
+        <input
+          type="text"
+          value={goals.custom}
+          maxLength={40}
+          onChange={e => onCustom(e.target.value)}
+          placeholder="我想留下的是……"
+          className="mt-1 w-full rounded-xl border border-[#EADFD0] bg-white px-3 py-2 text-[13px] outline-none focus:border-[#C87941]"
+          style={{ color: INK }}
+        />
+      </label>
+    </section>
+  );
+}
+
 // ── 页面 ────────────────────────────────────────────────────────────
 export default function LifeScorecardPage() {
-  const scores = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const scores = useSyncExternalStore(scoresStore.subscribe, scoresStore.getSnapshot, scoresStore.getServerSnapshot);
+  const goals = useSyncExternalStore(goalsStore.subscribe, goalsStore.getSnapshot, goalsStore.getServerSnapshot);
 
   const handleChange = useCallback((key: Attribute['key'], value: number) => {
-    const current = getSnapshot();
-    writeScores({ ...current, [key]: value });
+    scoresStore.set({ ...scoresStore.getSnapshot(), [key]: value });
+  }, []);
+
+  const handleToggle = useCallback((id: string) => {
+    const cur = goalsStore.getSnapshot();
+    if (id === GOAL_NONE) {
+      goalsStore.set({ ...cur, picked: cur.picked.includes(GOAL_NONE) ? [] : [GOAL_NONE] });
+      return;
+    }
+    const withoutNone = cur.picked.filter(x => x !== GOAL_NONE);
+    const next = withoutNone.includes(id) ? withoutNone.filter(x => x !== id) : [...withoutNone, id];
+    goalsStore.set({ ...cur, picked: next });
+  }, []);
+
+  const handleCustom = useCallback((value: string) => {
+    goalsStore.set({ ...goalsStore.getSnapshot(), custom: value.slice(0, 40) });
   }, []);
 
   const report = useMemo(() => generateReport(scores), [scores]);
+  const insight = useMemo(() => buildGoalInsight(scores, goals), [scores, goals]);
 
   return (
     <main className="min-h-screen bg-[#FBF7F1] pb-20">
@@ -230,8 +357,7 @@ export default function LifeScorecardPage() {
             称一称自己的斤两
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed" style={{ color: MUTED }}>
-            八个维度，只对自己打分。不打分排名，不和别人比——分母是你自己的潜力上限。
-            每一项都只测「你还能影响的那部分」。
+            八个维度，只对自己打分。不打分排名，不和别人比——分母是你自己的潜力上限。 每一项都只测「你还能影响的那部分」。
           </p>
         </header>
 
@@ -248,7 +374,9 @@ export default function LifeScorecardPage() {
           </div>
         </div>
 
-        <section className="mt-8 rounded-2xl border border-[#EADFD0] bg-white p-5 sm:p-7">
+        <GoalPicker goals={goals} onToggle={handleToggle} onCustom={handleCustom} />
+
+        <section className="mt-6 rounded-2xl border border-[#EADFD0] bg-white p-5 sm:p-7">
           <div className="text-[11px] tracking-[0.18em]" style={{ color: MUTED }}>
             你 的 称 重 单
           </div>
@@ -258,6 +386,21 @@ export default function LifeScorecardPage() {
           <p className="mt-3 text-sm leading-relaxed" style={{ color: '#5C4A38' }}>
             {report.summary}
           </p>
+
+          <div className="mt-6 rounded-xl bg-[#FBF3E9] p-4">
+            <h3 className="text-sm font-semibold" style={{ color: INK }}>
+              你想留下的，和你现在的样子
+            </h3>
+            <p className="mt-1 text-[13px] leading-relaxed" style={{ color: '#5C4A38' }}>
+              {insight.text}
+            </p>
+            {insight.wanted.length > 0 && (
+              <p className="mt-2 text-[11px] leading-relaxed" style={{ color: MUTED }}>
+                你选的类型对应到八项：
+                {insight.wanted.map(w => (w.count > 1 ? `${w.attr.name} ×${w.count}` : w.attr.name)).join(' · ')}
+              </p>
+            )}
+          </div>
 
           {report.actions.length > 0 && (
             <div className="mt-6">
@@ -326,6 +469,17 @@ export default function LifeScorecardPage() {
             </h3>
             <p className="mt-1 text-[13px] leading-relaxed" style={{ color: '#5C4A38' }}>
               {report.nextStep}
+            </p>
+          </div>
+
+          <div className="mt-6 border-t border-[#EADFD0] pt-5">
+            <p className="text-[13px] leading-relaxed" style={{ color: '#5C4A38' }}>
+              没有哪一种活法天然更高级。
+              <br />
+              真正要紧的，是你有没有找到属于自己的那一种。
+            </p>
+            <p className="mt-2 text-[12px] leading-relaxed" style={{ color: MUTED }}>
+              因为当你说不清自己要什么的时候，很容易把别人的期待，当成自己人生的方向。
             </p>
           </div>
 
