@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 // 带版本号：手机 WebView 对同名 HTML 的缓存很顽固，换一个 query 才能确保拿到新构建
-const GAME_URL = '/games/erhe-baidao.html?v=4';
+const GAME_URL = '/games/erhe-baidao.html?v=5';
 
 /**
  * 「桌面 = 精细指针 + 宽屏」。
