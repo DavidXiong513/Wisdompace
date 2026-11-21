@@ -93,8 +93,8 @@ export const DIMENSIONS: Dimension[] = [
   {
     key: 'family',
     name: '和睦家庭',
-    measures: '家人关系与伴侣关系里，能不能好好说话',
-    changeable: '原生家庭改不了，但这段关系现在怎么处，还是能谈的',
+    measures: '家人关系与伴侣关系里，能不能好好说话、有事时能不能互相支撑',
+    changeable: '原生家庭改不了，但这段关系现在怎么处还是能谈的；家里有人在病中、你在照护，能动的是分工和喘息的余地',
     fit: 'partial',
     gap: '来生从你出生算起，含原生家庭；这里只算你此刻还能经营的部分。',
   },
