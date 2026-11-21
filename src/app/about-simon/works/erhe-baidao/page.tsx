@@ -1,11 +1,27 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 // 带版本号：手机 WebView 对同名 HTML 的缓存很顽固，换一个 query 才能确保拿到新构建
 const GAME_URL = '/games/erhe-baidao.html?v=3';
+
+/**
+ * 「桌面 = 精细指针 + 宽屏」。
+ * 这个条件同时被 matchMedia 和下面面板上的 CSS 断点使用，两处必须一字不差，
+ * 否则会出现「CSS 已经藏起来了、JS 却没切桌面」的空白区。
+ */
+const DESKTOP_MQ = '(pointer: fine) and (min-width: 768px)';
+
+function subscribeDesktop(onChange: () => void) {
+  const mq = window.matchMedia(DESKTOP_MQ);
+  mq.addEventListener('change', onChange);
+  return () => mq.removeEventListener('change', onChange);
+}
+const getIsDesktop = () => window.matchMedia(DESKTOP_MQ).matches;
+/** 服务端一律按手机渲染：先吐一个能点的链接，桌面水合后再换成 iframe */
+const getIsDesktopOnServer = () => false;
 
 /**
  * 二河白道 · 跑酷
@@ -21,14 +37,21 @@ const GAME_URL = '/games/erhe-baidao.html?v=3';
 export default function ErheBaidaoPage() {
   const { i18n } = useTranslation();
   const isEn = !(i18n.language || 'zh-CN').startsWith('zh');
-  // pending：还没判定；touch：手机；desktop：桌面。
-  // 初始 pending 渲染成纯色占位，避免手机上先挂 iframe 白下一兆
-  const [mode, setMode] = useState<'pending' | 'touch' | 'desktop'>('pending');
 
-  useEffect(() => {
-    const touch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    setMode(touch ? 'touch' : 'desktop');
-  }, []);
+  /**
+   * 默认必须是「手机入口」，不能是一块等判定的占位。
+   *
+   * 之前的写法初始等一个 useEffect 再判定，期间渲染一块纯色占位——
+   * 一旦 JS 没跑起来（水合失败、内置浏览器拦脚本、加载被截断），
+   * 这个占位就永远停在那儿，手机上看到的就是「黑屏，什么都没有」。
+   * 现在服务端直接吐「进入游戏」这个普通链接，JS 不执行也能点；
+   * 只有确认是桌面（精细指针 + 宽屏）才切到 iframe。
+   */
+  const isDesktop = useSyncExternalStore(
+    subscribeDesktop,
+    getIsDesktop,
+    getIsDesktopOnServer
+  );
 
   return (
     /**
@@ -93,10 +116,13 @@ export default function ErheBaidaoPage() {
 
       {/* ── 主体 ── */}
       <div className="relative min-h-0 flex-1">
-        {mode === 'pending' && <div className="h-full w-full bg-[#0d0b0a]" />}
-
-        {mode === 'touch' && (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-7 text-center">
+        {/*
+          手机端入口。默认就渲染它：即使 JS 没跑起来，这仍是一个普通 <a>，点得动。
+          桌面上用媒体查询在首帧就藏掉（和上面 matchMedia 的判断条件一字不差），
+          这样切到 iframe 之前也不会闪一下按钮。
+        */}
+        {!isDesktop && (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-7 text-center [@media(pointer:fine)_and_(min-width:768px)]:hidden">
             <h2 className="as-serif text-xl font-bold tracking-[0.16em] text-[#E8C87A]">
               {isEn ? 'Two Rivers, One White Path' : '二河白道 · 跑酷'}
             </h2>
@@ -125,7 +151,7 @@ export default function ErheBaidaoPage() {
           </div>
         )}
 
-        {mode === 'desktop' && (
+        {isDesktop && (
           <>
             {/* 垫在 iframe 后面：iframe 若什么都没画出来，这层才会露出来 */}
             <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 px-8 text-center">

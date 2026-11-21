@@ -46,7 +46,9 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
           {/* 导航链接 */}
           <div className="flex items-center gap-4">
-            <ul className="hidden items-center gap-1 sm:flex">
+            {/* lg 而不是 sm：手机横屏宽度常在 640–900px，命中 sm 会把 5 个中文菜单项
+                硬塞进 h-14 里挤成两行再被 overflow-hidden 裁掉。 */}
+            <ul className="hidden items-center gap-1 lg:flex">
               {NAV_ITEMS.map(item => {
                 const isActive = pathname === item.href;
                 return (
@@ -68,7 +70,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             </ul>
 
             {/* 语言切换 */}
-            <LanguageSwitcher className="hidden text-[var(--as-gray-500)] sm:flex" />
+            <LanguageSwitcher className="hidden text-[var(--as-gray-500)] lg:flex" />
 
             {/* 移动端菜单按钮 */}
             <MobileMenuButton pathname={pathname} />
@@ -128,7 +130,7 @@ function MobileMenuButton({ pathname }: { pathname: string }) {
   }, [pathname]);
 
   return (
-    <div className="relative sm:hidden" data-mobile-menu>
+    <div className="relative lg:hidden" data-mobile-menu>
       <button
         onClick={() => setOpen(v => !v)}
         className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--as-gray-600)] transition-colors hover:bg-[var(--as-primary-50)]"
