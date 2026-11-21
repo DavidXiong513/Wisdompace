@@ -109,11 +109,11 @@ export const DIMENSIONS: Dimension[] = [
   },
   {
     key: 'spirituality',
-    name: '修行善根',
-    measures: '精神生活、价值锚点，以及自洽程度',
+    name: '精神生活',
+    measures: '价值锚点、自洽程度，以及遇事稳不稳',
     changeable: '不靠信仰也能练：独处、反思、把话说圆',
     fit: 'partial',
-    gap: '来生问的是善根多深；这里问你遇事稳不稳、能不能自圆其说。不问宗教归属。',
+    gap: '来生叫「修行善根」，问善根多深；这里叫「精神生活」，问你稳不稳、能不能自圆其说——不问宗教归属。',
   },
 ];
 
