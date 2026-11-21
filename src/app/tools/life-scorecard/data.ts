@@ -106,10 +106,12 @@ const ATTR_BODY: Record<AttributeKey, AttrBody> = {
   },
   health: {
     icon: '◍',
+    // 低三档要覆盖「正在治病的人」，只描述状态，不暗示「你不去看病 / 你在拖」——
+    // 对长期病痛的人来说，坚持治疗本身就是主动，不是欠账。
     anchors: [
-      '长期失眠或疼痛，一直没有就医',
-      '身体频繁报警，靠硬撑',
-      '有明确的问题，但一直拖着',
+      '卧床或反复住院，日子主要是治疗和撑着',
+      '病情反反复复，长期跑医院吃药，体力常不够用',
+      '查出了病，正在治，日常得为身体让路',
       '亚健康，靠咖啡和意志维持',
       '大体正常，但情绪起伏明显',
       '体检无大问题，偶有失眠或焦虑',
@@ -202,7 +204,7 @@ export const GAIN_HIGH = 4;
 
 /** 弹性三档对应的向上增益 */
 export const ELASTICITY_OPTIONS: { value: Elasticity; label: string; hint: string }[] = [
-  { value: 'high', label: '还能往上走很多', hint: '有明显空间，只是一直没动' },
+  { value: 'high', label: '还能往上走很多', hint: '有明确空间，动起来能上几档' },
   { value: 'some', label: '还能往上走一些', hint: '能改善，但大概就一两档' },
   { value: 'none', label: '基本就这样了', hint: '再投入也不会有大变化' },
 ];
@@ -329,7 +331,7 @@ export function parseAssessment(raw: unknown): Assessment {
 export const ACTION_BY_KEY: Record<AttributeKey, string> = {  looks: '拍一张正面全身照，三个月后再拍一张，只对比体态，不对比脸。',
   wealth: '这个月把收入结构写下来：几份来源、各占多少、哪一份最脆。',
   fame: '挑一件你做过的事，写成八百字发出去，别只留在简历里。',
-  health: '把体检预约排进日历，定一个具体日期，不是「有空去」。',
+  health: '把下一次体检或复诊排进日历，定一个具体日期；要问医生的问题先写下来，别到诊室才想。',
   intelligence: '选一个主题，连续四周每周输出一篇笔记，写不出来就说明还没学会。',
   family: '约一次不谈事务的饭，只问对方最近怎么样，然后闭嘴听完。',
   longevity: '把体检报告和一份意愿清单放进同一个文件夹，告诉家人放在哪。',
@@ -358,9 +360,9 @@ export type Report = {
   actions: { attr: Attribute; score: number; cap: number; ratio: number; room: number; action: string }[];
   /** 复利区：完成度高 + 还有空间 */
   compound: { attr: Attribute; score: number }[];
-  /** 天赋红利：完成度高 + 没什么空间了 */
+  /** 天赋红利：完成度高 + 没什么空间了 + 确实算好（≥6 分） */
   gift: { attr: Attribute; score: number }[];
-  /** 该放下：完成度低 + 空间也窄 */
+  /** 该放下：空间也窄，但并不算好——低分又没有空间时也落这里 */
   release: { attr: Attribute; score: number }[];
   /** 守住提醒：现在还行，但不用就会掉 */
   watch: { attr: Attribute; score: number; floor: number; text: string }[];
@@ -408,8 +410,12 @@ export function generateReport(a: Assessment): Report {
     }));
 
   const compound = movable.filter(r => r.ratio >= 0.6).map(r => ({ attr: r.attr, score: r.score }));
-  const gift = stuck.filter(r => r.ratio >= 0.6).map(r => ({ attr: r.attr, score: r.score }));
-  const release = stuck.filter(r => r.ratio < 0.6).map(r => ({ attr: r.attr, score: r.score }));
+  // 「天赋红利」的措辞是「好，只是不太能再动」，所以必须真的算好（≥6 分）。
+  // 否则 0–1 分又说「动不了」的人（低分+零空间时 ratio 恰好算出 1）会被夸成「好」——
+  // 对长期病痛的人尤其刺耳。这一档统一归到「可以放下」。
+  const giftable = (r: (typeof stuck)[number]) => r.ratio >= 0.6 && r.score >= 6;
+  const gift = stuck.filter(giftable).map(r => ({ attr: r.attr, score: r.score }));
+  const release = stuck.filter(r => !giftable(r)).map(r => ({ attr: r.attr, score: r.score }));
 
   const watch = rows
     .filter(

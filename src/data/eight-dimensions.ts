@@ -78,7 +78,7 @@ export const DIMENSIONS: Dimension[] = [
     key: 'health',
     name: '身心健康',
     measures: '睡眠、体检、情绪调节与恢复力',
-    changeable: '睡、动、吃、查这四件事，都在你手上',
+    changeable: '睡、动、吃、查这四件事在你手上；已经在治病的，按时复诊、按医嘱用药，同样是主动',
     fit: 'partial',
     gap: '来生问你想多健康；这里问你现在的恢复力。体质底子不参与评分。',
   },
