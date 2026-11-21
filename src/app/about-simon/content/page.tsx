@@ -10,6 +10,7 @@ const SECTIONS = [
   { id: 'platforms', cn: '平台入口', enKey: 'navPlatforms' },
   { id: 'topics', cn: '内容板块', enKey: 'navTopics' },
   { id: 'podcast', cn: '播客·音乐·直播', enKey: 'navPodcast' },
+  { id: 'works', cn: '菩提游戏作品分享', enKey: 'navWorks' },
 ];
 
 const PLATFORMS = [
@@ -122,6 +123,48 @@ const LIVES_CN = [
     title: '生、老、病、死的交流与思考',
     desc: '关于疾病，衰老死亡的好书推荐',
     episodes: '5期精华',
+  },
+];
+
+/**
+ * 菩提游戏作品分享
+ * 二河白道是单文件游戏，走站内独立页（iframe 全屏），不在内容页内嵌——
+ * 1MB + WebGL 会拖慢这个页面。
+ * 在线佛堂是别人的站（善知识牵头、我参与共建），CSP 不允许被 iframe，
+ * 所以只能外链。
+ */
+const WORKS = [
+  {
+    icon: '🏔️',
+    title: '二河白道',
+    titleEn: 'Two Rivers, One White Path',
+    subtitle: '跑酷 · 信心中道 · 直向西去',
+    subtitleEn: 'Parkour · The Middle Way · Westward',
+    desc: '水火二河之间只有一条白道，宽不过四五寸。水河是贪爱，火河是嗔憎——三幕关卡，从跳跃到下滑再到二河齐发，别掉下去，也别被两岸带走。',
+    descEn:
+      'Between the river of greed and the river of anger there is only one white path, four or five inches wide. Three acts — jump, slide, then both rivers at once. Stay on it.',
+    tags: ['3D 跑酷', '电脑/手机双端', '无广告无内购'],
+    tagsEn: ['3D parkour', 'Desktop & mobile', 'No ads'],
+    href: '/about-simon/works/erhe-baidao',
+    external: false,
+    cta: '进入游戏',
+    ctaEn: 'Play now',
+  },
+  {
+    icon: '🪷',
+    title: '在线佛堂',
+    titleEn: 'Online Buddhist Hall',
+    subtitle: '择一清净境 · 云潮声',
+    subtitleEn: 'Choose a quiet place',
+    desc: '选一处清净地——云海仙山、七宝莲池、紫竹禅林、千峰耸翠，给佛堂题名，慢慢攒功德。由一位善知识牵头，我参与共建。',
+    descEn:
+      'Pick a quiet place — cloud sea, lotus pond, bamboo grove, or a thousand peaks — name your hall and slowly accumulate merit. Led by a teacher, built with my help.',
+    tags: ['3D 场景', '可题名', '功德值'],
+    tagsEn: ['3D scenes', 'Name your hall', 'Merit points'],
+    href: 'https://fotang.app',
+    external: true,
+    cta: '前往 fotang.app',
+    ctaEn: 'Visit fotang.app',
   },
 ];
 
@@ -277,6 +320,73 @@ export default function ContentPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+      <section id="works" className="as-section-alt">
+        <div className="as-container">
+          <div className="mb-6 text-center">
+            <h2 className="as-serif text-3xl font-bold text-[var(--as-primary-700)]">
+              <span className="as-heading-line">
+                {jt('aboutPageData.content.sectionWorks', '菩提游戏作品分享')}
+              </span>
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-[var(--as-gray-500)]">
+              {jt(
+                'aboutPageData.content.sectionWorksDesc',
+                '把经文里的场景，做成能走进去的地方。'
+              )}
+            </p>
+          </div>
+          <div className="mx-auto grid max-w-4xl gap-5 sm:grid-cols-2">
+            {WORKS.map(w => {
+              const inner = (
+                <>
+                  <span className="text-3xl">{w.icon}</span>
+                  <h3 className="as-serif mt-3 text-xl font-bold text-[var(--as-primary-700)]">
+                    {isEn ? w.titleEn : w.title}
+                  </h3>
+                  <p className="mt-1 text-xs text-[var(--as-primary-500)]">
+                    {isEn ? w.subtitleEn : w.subtitle}
+                  </p>
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-[var(--as-gray-600)]">
+                    {isEn ? w.descEn : w.desc}
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {(isEn ? w.tagsEn : w.tags).map(tag => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-[var(--as-primary-50)] px-2 py-0.5 text-[11px] text-[var(--as-primary-600)]"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="mt-4 text-sm font-semibold text-[var(--as-primary-600)]">
+                    {isEn ? w.ctaEn : w.cta} →
+                  </p>
+                </>
+              );
+
+              const cardClass =
+                'as-card flex flex-col p-6 transition hover:border-[var(--as-primary-300)] hover:shadow-md';
+
+              return w.external ? (
+                <a
+                  key={w.title}
+                  href={w.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cardClass}
+                >
+                  {inner}
+                </a>
+              ) : (
+                <Link key={w.title} href={w.href} scroll={false} className={cardClass}>
+                  {inner}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

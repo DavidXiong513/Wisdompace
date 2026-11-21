@@ -924,9 +924,12 @@
       "navPlatforms": "Platforms",
       "navTopics": "Content Topics",
       "navPodcast": "Podcast, Music & Live",
+      "navWorks": "Buddhist Games",
       "sectionPlatforms": "Platforms & Channels",
       "sectionTopics": "Content Topics",
       "sectionPodcast": "Podcast, Music & Live Streams",
+      "sectionWorks": "Buddhist Game Works",
+      "sectionWorksDesc": "Turning scenes from the sutras into places you can actually walk into.",
       "platforms": [
         {
           "name": "Zaihai",
