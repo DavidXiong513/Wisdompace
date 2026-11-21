@@ -205,7 +205,7 @@ function AttributeCard({ attr, entry, open, onToggleOpen, onScore, onElasticity,
       </p>
       <p className="mt-0.5 flex gap-1.5 text-[11px] leading-relaxed" style={{ color: '#A8927A' }}>
         <span aria-hidden>—</span>
-        <span>{attr.given}</span>
+        <span>{attr.changeable}</span>
       </p>
       {attr.fit === 'different' && (
         <p className="mt-0.5 text-[11px] leading-relaxed" style={{ color: '#A8927A' }}>
@@ -598,6 +598,9 @@ export default function LifeScorecardPage() {
           </p>
           <p className="mt-2 max-w-2xl text-[11.5px] leading-relaxed" style={{ color: '#A8927A' }}>
             这八项和你做「来生设计」时那八项同名，但问的不是一件事：那边问你想重新拿什么牌，这里问手里这副牌你打到几分。同一个 6 分，两处意思不同，不用拿两个分数互相校准。
+          </p>
+          <p className="mt-1 max-w-2xl text-[11.5px] leading-relaxed" style={{ color: '#A8927A' }}>
+            长相、身高、家底、智商不参与评分——它们不归你选，写进来只会让这份单子变成宿命论。每一项只问你还能动的那一段。
           </p>
           <Progress done={done} />
         </header>
