@@ -538,6 +538,7 @@ export default function LifeScorecardPage() {
   );
   const goals = useSyncExternalStore(goalsStore.subscribe, goalsStore.getSnapshot, goalsStore.getServerSnapshot);
   const [openKey, setOpenKey] = useState<AttributeKey | null>(null);
+  const [confirmReset, setConfirmReset] = useState(false);
 
   const handleScore = useCallback((key: AttributeKey, value: number) => {
     const cur = assessmentStore.getSnapshot();
@@ -571,6 +572,25 @@ export default function LifeScorecardPage() {
   const handleCustom = useCallback((value: string) => {
     goalsStore.set({ ...goalsStore.getSnapshot(), custom: value.slice(0, 40) });
   }, []);
+
+  // 回到卡片区：报告很长，滚回顶部还要再滑一段才到第一张卡，所以直接定位过去
+  const scrollToCards = useCallback(() => {
+    const first = document.querySelector('[data-attr]');
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
+
+  // 清空是不可逆的（数据只在本地），所以点第一次只是亮出确认态
+  const handleReset = useCallback(() => {
+    if (!confirmReset) {
+      setConfirmReset(true);
+      return;
+    }
+    assessmentStore.set(EMPTY_ASSESSMENT);
+    goalsStore.set(DEFAULT_GOALS);
+    setConfirmReset(false);
+    setOpenKey(null);
+    scrollToCards();
+  }, [confirmReset, scrollToCards]);
 
   const done = filledCount(assessment);
   const complete = isComplete(assessment);
@@ -771,6 +791,37 @@ export default function LifeScorecardPage() {
                 数据只存在你这台设备的浏览器里，不上传。
               </p>
             </section>
+
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setConfirmReset(false);
+                  scrollToCards();
+                }}
+                className="rounded-xl border px-4 py-2.5 text-[13px] font-medium transition hover:bg-[#FBF3E9]"
+                style={{ borderColor: ACCENT, color: ACCENT, background: '#fff' }}
+              >
+                返回修改
+              </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="rounded-xl border px-4 py-2.5 text-[13px] transition"
+                style={{
+                  borderColor: confirmReset ? '#C0553F' : '#D9C6AE',
+                  color: confirmReset ? '#C0553F' : MUTED,
+                  background: confirmReset ? '#FDF1ED' : 'transparent',
+                }}
+              >
+                {confirmReset ? '确定清空？再点一次' : '再测一次'}
+              </button>
+              <span className="text-[11px] leading-relaxed" style={{ color: MUTED }}>
+                {confirmReset
+                  ? '清空后这份复盘单就没了，无法恢复。'
+                  : '返回修改只滚回上面，答案都在；再测一次会清空全部答案。'}
+              </span>
+            </div>
           </>
         )}
       </div>
