@@ -174,10 +174,15 @@ function AttributeCard({ attr, entry, open, onToggleOpen, onScore, onElasticity,
       }}
     >
       <div className="flex items-baseline justify-between gap-3">
-        <div className="flex items-baseline gap-2">
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
           <span className="text-[15px] font-semibold" style={{ color: INK }}>
             {attr.name}
           </span>
+          {attr.note && (
+            <span className="text-[11px]" style={{ color: '#A8927A' }}>
+              {attr.note}
+            </span>
+          )}
           {tag && (
             <span className="text-[11px]" style={{ color: needsReason ? ACCENT : MUTED }}>
               {tag}
@@ -198,6 +203,15 @@ function AttributeCard({ attr, entry, open, onToggleOpen, onScore, onElasticity,
       <p className="mt-1 text-[12px] leading-relaxed" style={{ color: MUTED }}>
         测的是：{attr.control}
       </p>
+      <p className="mt-0.5 flex gap-1.5 text-[11px] leading-relaxed" style={{ color: '#A8927A' }}>
+        <span aria-hidden>—</span>
+        <span>{attr.given}</span>
+      </p>
+      {attr.fit === 'different' && (
+        <p className="mt-0.5 text-[11px] leading-relaxed" style={{ color: '#A8927A' }}>
+          {attr.gap}
+        </p>
+      )}
 
       {/* 未定位：一句话 + 展开按钮 */}
       {score === null && (
@@ -581,6 +595,9 @@ export default function LifeScorecardPage() {
           <p className="mt-2 max-w-2xl text-sm leading-relaxed" style={{ color: MUTED }}>
             八个维度。每一项问两件事：你现在在哪，以及往后还能往上走多少。
             不给默认起点——因为每个人的起点千差万别，先读句子，自己找位置。
+          </p>
+          <p className="mt-2 max-w-2xl text-[11.5px] leading-relaxed" style={{ color: '#A8927A' }}>
+            这八项和你做「来生设计」时那八项同名，但问的不是一件事：那边问你想重新拿什么牌，这里问手里这副牌你打到几分。同一个 6 分，两处意思不同，不用拿两个分数互相校准。
           </p>
           <Progress done={done} />
         </header>

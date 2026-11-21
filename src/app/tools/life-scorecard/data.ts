@@ -19,15 +19,9 @@
 // 潜力进度用区间完成度均值：在自己这一项的 floor→cap 之间走到了几成。
 // ─────────────────────────────────────────────────────────────
 
-export type AttributeKey =
-  | 'looks'
-  | 'wealth'
-  | 'fame'
-  | 'health'
-  | 'intelligence'
-  | 'family'
-  | 'longevity'
-  | 'spirituality';
+import { DIMENSIONS, type Dimension, type DimensionKey } from '@/data/eight-dimensions';
+
+export type AttributeKey = DimensionKey;
 
 /** 扁平分数字典，只给目标落差分析用（要求八项已答完） */
 export type Scores = Record<AttributeKey, number>;
@@ -47,60 +41,55 @@ export type Entry = {
 
 export type Assessment = Record<AttributeKey, Entry>;
 
-export type Attribute = {
-  key: AttributeKey;
-  name: string;
+export type Attribute = Dimension & {
   icon: string;
-  /** 可控面：这一项真正在测什么（避免用评价性词汇制造焦虑） */
+  /** = Dimension.measures，保留旧字段名以免动页面 */
   control: string;
   /** 0–10 档的行为锚点，描述现状而非命运 */
   anchors: string[];
 };
 
-export const ATTRIBUTES: Attribute[] = [
-  {
-    key: 'looks',
-    name: '颜值身材',
+type AttrBody = { icon: string; anchors: string[] };
+
+/**
+ * 名称、定义、先天成分、与来生设计的差异，全部来自 @/data/eight-dimensions。
+ * 这里只放「图标 + 十一档锚点」这两样只属于今生复盘的东西。
+ */
+const ATTR_BODY: Record<AttributeKey, AttrBody> = {
+  looks: {
     icon: '◐',
-    control: '体态、精力，以及你对自己身体的管理感',
     anchors: [
-      '几乎不照镜子，身体长期被忽略',
-      '很少关注体态与精力，常年疲惫',
-      '知道该管，但一年里几乎没有行动',
-      '偶尔运动，作息不稳定',
-      '有基本习惯，常被工作打断',
-      '体态与精力中等，谈不上满意也说不上糟',
-      '作息基本规律，每周有固定的运动',
-      '体态自觉可控，别人常说你状态不错',
-      '长期稳定管理，精力充沛',
-      '体格与精神状态在同龄人中靠前',
-      '身体像一件长期保养的器具，随心可用',
+      '外形条件明显受限，也基本放弃了打理',
+      '底子偏弱，照镜子时不太愿意看，索性不管',
+      '底子偏弱，想过改变，但一直没有动',
+      '底子不算好，穿什么戴什么都难掩',
+      '底子普通偏下，打扮一下能看，素颜不太敢出门',
+      '底子寻常，身高长相都在人群中间，打理到干净得体',
+      '底子不难看，作息也规律，每周有固定运动',
+      '底子占优，或底子普通但打磨得极好，别人常说你状态不错',
+      '先天条件好，也一直维持着，外形是加分项',
+      '外形条件在同龄人里明显靠前，不必费力',
+      '先天极佳且几十年如一日地维持，外形本身成了标识',
     ],
   },
-  {
-    key: 'wealth',
-    name: '财富财商',
+  wealth: {
     icon: '◇',
-    control: '收入结构、储蓄率，以及你对钱的理解',
     anchors: [
-      '没有储蓄，负债且不清楚总额',
-      '月光，对自己的收支没有概念',
-      '有收入但无规划，抗风险能力很弱',
-      '开始记账，储蓄刚刚起步',
-      '有稳定储蓄，但只有单一收入来源',
-      '收支平衡，有一笔能应急的钱',
+      '负债且不清楚总额，手上没有任何资产',
+      '月光，靠周转过日子，没有储蓄',
+      '有收入但没规划，抗风险能力很弱',
+      '有一点储蓄，但只有一份工资收入',
+      '有应急钱，资产结构单薄，主要靠工资',
+      '收支平衡，有一笔能撑半年的钱',
       '有储蓄与基础配置，能承受短期波动',
       '收入多元，资产有结构',
       '被动收入能覆盖一部分生活成本',
-      '资产配置成熟，抗风险能力强',
+      '资产本身在增值，工作成了可选项',
       '钱是工具而不是目标，能选择做或不做',
     ],
   },
-  {
-    key: 'fame',
-    name: '名誉地位',
+  fame: {
     icon: '◈',
-    control: '专业口碑，以及别人愿意把事交给你的程度',
     anchors: [
       '在所在领域几乎没有可被识别的名字',
       '只在很小的圈子里被知道',
@@ -115,30 +104,24 @@ export const ATTRIBUTES: Attribute[] = [
       '名字本身成了一种信任凭证',
     ],
   },
-  {
-    key: 'health',
-    name: '身心健康',
+  health: {
     icon: '◍',
-    control: '睡眠、体检、情绪调节与恢复力',
     anchors: [
+      '有明确病症且没在治，靠硬撑',
       '长期失眠或疼痛，一直没有就医',
-      '身体频繁报警，靠硬撑',
-      '有明确的问题，但一直拖着',
+      '身体频繁报警，靠药维持',
+      '底子偏弱，有明显的问题一直拖着',
       '亚健康，靠咖啡和意志维持',
-      '大体正常，但情绪起伏明显',
       '体检无大问题，偶有失眠或焦虑',
       '睡眠稳定，情绪能自我调节',
-      '有规律的运动与放松方式',
-      '身心状态稳定，恢复力好',
-      '长期健康管理，很少生病',
+      '有规律的运动与放松方式，恢复快',
+      '底子不错也维持得好，很少生病',
+      '长期健康管理，精力明显优于同龄人',
       '身心如静水，应对压力几乎不耗损',
     ],
   },
-  {
-    key: 'intelligence',
-    name: '学习能力',
+  intelligence: {
     icon: '◎',
-    control: '学习习惯、信息处理，把学到的迁移到新场景',
     anchors: [
       '离开学校后几乎不再学习',
       '只学工作当场就要用的',
@@ -153,11 +136,8 @@ export const ATTRIBUTES: Attribute[] = [
       '学习成了生活方式，学什么像什么',
     ],
   },
-  {
-    key: 'family',
-    name: '和睦家庭',
+  family: {
     icon: '⌂',
-    control: '与家人的沟通质量，以及冲突之后能不能修复',
     anchors: [
       '与家人几乎断联，或长期冲突',
       '一说话就吵，索性回避接触',
@@ -172,11 +152,8 @@ export const ATTRIBUTES: Attribute[] = [
       '家是可以卸下盔甲的地方',
     ],
   },
-  {
-    key: 'longevity',
-    name: '长寿善终',
+  longevity: {
     icon: '◌',
-    control: '对衰老与终局的准备度，不是寿命预测',
     anchors: [
       '从不体检，也没有任何交代',
       '知道要准备，但完全没开始',
@@ -191,11 +168,8 @@ export const ATTRIBUTES: Attribute[] = [
       '对死亡不恐惧，走得从容',
     ],
   },
-  {
-    key: 'spirituality',
-    name: '修行善根',
+  spirituality: {
     icon: '◉',
-    control: '价值锚点、独处能力，以及面对无常时的稳定性',
     anchors: [
       '没有精神生活，只被欲望推着走',
       '偶尔空虚，但不去看它',
@@ -210,7 +184,15 @@ export const ATTRIBUTES: Attribute[] = [
       '顺逆一如，心如止水',
     ],
   },
-];
+};
+
+/** 顺序由 DIMENSIONS 决定，不在这里重复写一遍 */
+export const ATTRIBUTES: Attribute[] = DIMENSIONS.map(d => ({
+  ...d,
+  control: d.measures,
+  icon: ATTR_BODY[d.key].icon,
+  anchors: ATTR_BODY[d.key].anchors,
+}));
 
 // ── 常量与刻度 ─────────────────────────────────────────────────────────
 
