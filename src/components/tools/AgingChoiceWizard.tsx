@@ -19,6 +19,7 @@ import {
   identityOptions,
   institutionNotice,
   institutionTypes,
+  pricingNotice,
   referralRules,
   scoredDimensions,
   subjectOf,
@@ -191,6 +192,10 @@ function FacilityStep({ onBackHome }: { onBackHome: () => void }) {
                 <span className="text-[#A8927A]">适合：</span>
                 {t.fitFor}
               </p>
+              <p className="mt-0.5 text-[12.5px] leading-[1.7] text-[#6A6256]">
+                <span className="text-[#A8927A]">量级：</span>
+                {t.scale}
+              </p>
               <p className="mt-1 text-[12px] leading-[1.7] text-[#A8927A]">{t.caution}</p>
             </div>
           ))}
@@ -198,6 +203,36 @@ function FacilityStep({ onBackHome }: { onBackHome: () => void }) {
         <p className="mt-3 border-t border-[#F0E6D6] pt-3 text-[12px] leading-[1.75] text-[#A8927A]">
           {institutionNotice}
         </p>
+      </div>
+
+      <div className="rounded-2xl border border-[#E8D9C2] bg-white p-5 sm:p-6">
+        <h3 className="text-[15px] font-bold text-[#4A3728]">{pricingNotice.title}</h3>
+        <p className="mt-1.5 text-[13px] leading-[1.75] text-[#6A6256]">{pricingNotice.desc}</p>
+
+        <div className="mt-4 grid gap-5 sm:grid-cols-2">
+          <div>
+            <p className="text-[11px] font-bold tracking-[0.12em] text-[#A8927A]">报价为什么会变</p>
+            <ul className="mt-2 space-y-1.5">
+              {pricingNotice.factors.map((f) => (
+                <li key={f} className="flex gap-2 text-[12.5px] leading-[1.7] text-[#6A6256]">
+                  <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9B49A]" />
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-[11px] font-bold tracking-[0.12em] text-[#A8927A]">参访时先问这四句</p>
+            <ol className="mt-2 space-y-1.5">
+              {pricingNotice.askTips.map((q, i) => (
+                <li key={q} className="flex gap-2 text-[12.5px] leading-[1.7] text-[#6A6256]">
+                  <span className="shrink-0 font-bold text-[#C87941]">{i + 1}.</span>
+                  <span>{q}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
       </div>
 
       <div className="rounded-2xl border border-dashed border-[#E8D9C2] bg-[#FAF8F3] p-5 sm:p-6">
