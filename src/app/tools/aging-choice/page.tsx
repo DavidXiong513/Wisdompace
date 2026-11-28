@@ -11,48 +11,28 @@ const stages = [
   {
     step: '一',
     title: '先确认你是谁在问',
-    desc: '是本人来问，还是子女替父母问，还是本人已经无法表达意愿。三种情况后面问的问题不一样，结论要给的人也不一样。',
+    desc: '本人、子女代问、本人已无法表达——三条路后面追问的不同。',
     note: '约 1 分钟',
   },
   {
     step: '二',
     title: '看居家还撑不撑得住',
-    desc: '先过一遍硬条件：认知是否已不能独处、是否需要 24 小时照护、是否需要定期专业医疗、独居时有没有人能在几小时内赶到。没有触发，再看五个维度还差什么、能不能补。',
-    note: '给出居家结论与注意事项',
+    desc: '先过硬条件，再看五个维度还差什么、能不能补。',
+    note: '居家结论与注意事项',
   },
   {
     step: '三',
     title: '撑不住时，收窄机构类型',
-    desc: '按护理等级先排除，再按医疗需求排除，然后用预算和所在城市标注价格区间，最后剩一到两类。附一份可以打印带走的参访提问清单。',
-    note: '给出类型建议与提问清单',
+    desc: '按护理等级、医疗需求、预算与城市逐层排除，剩一到两类。',
+    note: '类型建议与提问清单',
   },
 ];
 
 const facilityTypes = [
-  {
-    name: '养老院',
-    forWhom: '能自理到半自理，主要需要人照看起居',
-    offer: '住宿、三餐、日常照料、活动组织，多数内设医务室但不做治疗',
-    note: '门槛最低，也最容易被误当成「什么都能管」',
-  },
-  {
-    name: '护理院',
-    forWhom: '失能、长期卧床、需要管路护理或专业护理操作',
-    offer: '医疗护理为主，需医疗执业许可，护理员与护士配比更高',
-    note: '很多同时是医保与长护险定点，但并非全部',
-  },
-  {
-    name: '康复医院',
-    forWhom: '术后、卒中后、骨折后，处于功能恢复期',
-    offer: '以康复训练与医疗治疗为主，通常有明确住院周期',
-    note: '解决的是「恢复」，不是「长期住下去」',
-  },
-  {
-    name: '康养社区',
-    forWhom: '还能自理，但希望省心、有配套与社交',
-    offer: '居住品质、餐饮、健康管理与活动，可逐步升级到协助照护',
-    note: '多含押金或会员费，前期资金占用最大',
-  },
+  { name: '养老院', desc: '生活照料为主，门槛最低' },
+  { name: '护理院', desc: '医疗护理为主，多可对接医保' },
+  { name: '康复医院', desc: '术后与功能恢复，有住院周期' },
+  { name: '康养社区', desc: '能自理但想省心，多为押金制' },
 ];
 
 export default function AgingChoicePage() {
@@ -73,83 +53,60 @@ export default function AgingChoicePage() {
 
       <main className="mx-auto max-w-3xl px-4 pt-10 sm:px-6">
         <header>
-          <p className="text-[13px] font-medium tracking-[0.18em] text-[#A8927A]">
-            先分流 · 再匹配
-          </p>
+          <p className="text-[13px] font-medium tracking-[0.18em] text-[#A8927A]">先分流 · 再匹配</p>
           <h2 className="mt-3 text-3xl leading-snug font-bold text-[#4A3728] sm:text-[34px]">
             先判断居家还撑不撑得住，
             <br className="hidden sm:block" />
             再谈去不去机构。
           </h2>
           <p className="mt-5 text-[15px] leading-[1.9] text-[#5A5A5A]">
-            九成老人最终在自己家里老去。所以这个工具不先问你「想不想去养老院」，而是先问一件更实际的事：
-            <span className="font-medium text-[#4A3728]">现在这个状态，居家还撑不撑得住。</span>
-            撑得住，就不必被「该不该送机构」这种问题消耗；撑不住，也要知道到底卡在哪一条，该找哪一类机构。
+            九成老人最后在自己家里老去。所以要先判断的不是「想不想去机构」，而是
+            <span className="font-medium text-[#4A3728]">居家还撑不撑得住</span>。
           </p>
         </header>
 
-        <section className="mt-10 flex flex-col gap-4">
+        <section className="mt-8 flex flex-col gap-3">
           {stages.map(item => (
-            <div
-              key={item.step}
-              className="rounded-2xl border border-[#E8D9C2] bg-white p-5 sm:p-6"
-            >
+            <div key={item.step} className="rounded-2xl border border-[#E8D9C2] bg-white p-5">
               <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FDF5EE] text-[15px] font-bold text-[#C87941]">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FDF5EE] text-[14px] font-bold text-[#C87941]">
                   {item.step}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <h3 className="text-[17px] font-bold text-[#4A3728]">{item.title}</h3>
+                    <h3 className="text-[16px] font-bold text-[#4A3728]">{item.title}</h3>
                     <span className="rounded-full bg-[#FDF5EE] px-2.5 py-0.5 text-[11px] font-medium text-[#A85E2D]">
                       {item.note}
                     </span>
                   </div>
-                  <p className="mt-2 text-[14px] leading-[1.8] text-[#6A6256]">{item.desc}</p>
+                  <p className="mt-1.5 text-[13.5px] leading-[1.75] text-[#6A6256]">{item.desc}</p>
                 </div>
               </div>
             </div>
           ))}
         </section>
 
-        <section className="mt-12">
-          <h3 className="text-[17px] font-bold text-[#4A3728]">四类机构，一句话区分</h3>
-          <p className="mt-2 text-[14px] leading-[1.8] text-[#6A6256]">
-            它们的准入门槛、能提供的服务和价格完全不是一回事。选错的代价，往往是钱花了，却拿不到你真正需要的那一项。
-          </p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <section className="mt-8 rounded-2xl border border-[#E8D9C2] bg-white p-5 sm:p-6">
+          <h3 className="text-[15px] font-bold text-[#4A3728]">撑不住时，要分清是哪一类</h3>
+          <ul className="mt-3 divide-y divide-[#F0E6D6]">
             {facilityTypes.map(item => (
-              <div
-                key={item.name}
-                className="rounded-2xl border border-[#E8D9C2] bg-white p-5"
-              >
-                <h4 className="text-[15px] font-bold text-[#C87941]">{item.name}</h4>
-                <dl className="mt-3 space-y-2 text-[13px] leading-[1.75]">
-                  <div>
-                    <dt className="inline font-medium text-[#8A7E6A]">适合：</dt>
-                    <dd className="inline text-[#5A5A5A]">{item.forWhom}</dd>
-                  </div>
-                  <div>
-                    <dt className="inline font-medium text-[#8A7E6A]">提供：</dt>
-                    <dd className="inline text-[#5A5A5A]">{item.offer}</dd>
-                  </div>
-                </dl>
-                <p className="mt-3 border-t border-[#F0E6D6] pt-2.5 text-[12px] leading-[1.7] text-[#A8927A]">
-                  {item.note}
-                </p>
-              </div>
+              <li key={item.name} className="flex items-baseline gap-3 py-2.5">
+                <span className="w-[4.5em] shrink-0 text-[14px] font-bold text-[#C87941]">
+                  {item.name}
+                </span>
+                <span className="text-[13.5px] leading-[1.7] text-[#5A5A5A]">{item.desc}</span>
+              </li>
             ))}
-          </div>
-          <p className="mt-4 text-[12px] leading-[1.8] text-[#A8927A]">
-            名称在各地并不统一：有的地方「养老院」「敬老院」「福利院」混用，有的护理院对外称「护理型养老机构」。
-            报名前先问清一件事：这家有没有医疗执业许可、能不能做你要的那项护理操作。
+          </ul>
+          <p className="mt-3 border-t border-[#F0E6D6] pt-3 text-[12px] leading-[1.7] text-[#A8927A]">
+            名称各地不统一。参访先问一句：有没有医疗执业许可，能不能做你要的那项护理。
           </p>
         </section>
 
-        <section className="mt-10 rounded-2xl border border-[#E8D9C2] bg-[#FAF8F3] p-6">
+        <section className="mt-8 rounded-2xl border border-[#E8D9C2] bg-[#FAF8F3] p-5 sm:p-6">
           <h3 className="text-[15px] font-bold text-[#4A3728]">测评环节正在开发中</h3>
-          <p className="mt-2 text-[14px] leading-[1.8] text-[#6A6256]">
-            上面三步的判断逻辑已经定稿，问卷与结果报告在做。开放后，你随时可以退出，回来接着填。
+          <p className="mt-1.5 text-[13.5px] leading-[1.75] text-[#6A6256]">
+            三步逻辑已定稿，问卷与报告在做。开放后随时可退出，回来接着填。
           </p>
           <Link
             href="/chapter/chapter-3"
@@ -159,9 +116,8 @@ export default function AgingChoicePage() {
           </Link>
         </section>
 
-        <p className="mt-8 text-[12px] leading-[1.8] text-[#A8927A]">
-          本工具提供的是一般性梳理，不构成医疗诊断，也不替代正式的老年人能力评估与长护险失能等级评定。
-          价格区间以上海样本为参考，机构供给与补贴政策各地不同，请以当地民政、医保部门与机构实际口径为准。
+        <p className="mt-6 text-[12px] leading-[1.75] text-[#A8927A]">
+          一般性梳理，不构成医疗诊断，也不替代老年人能力评估与长护险失能等级评定。价格以上海样本为参考，各地政策与供给请以当地民政、医保部门及机构口径为准。
         </p>
       </main>
     </div>
