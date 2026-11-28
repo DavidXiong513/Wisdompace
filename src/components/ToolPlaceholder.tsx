@@ -195,6 +195,58 @@ function RetirementCostEntry() {
   );
 }
 
+// ── 居家养老还是去养老院 入口卡片 ──
+function AgingChoiceEntry() {
+  return (
+    <Link
+      href="/tools/aging-choice"
+      className="group mt-8 block overflow-hidden rounded-2xl border border-[#E8D9C2] bg-white p-1 transition-all hover:border-[#C87941] hover:shadow-[0_12px_24px_rgba(200,121,65,0.12)]"
+    >
+      <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
+        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-[#FDF5EE] text-4xl shadow-inner transition-transform group-hover:scale-110">
+          🏠
+        </div>
+
+        <div className="flex-1 text-center sm:text-left">
+          <h3 className="text-xl font-bold text-[#4A3728] transition-colors group-hover:text-[#C87941]">
+            居家养老还是去养老院 · 先分流，再匹配
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
+            先判断居家还撑不撑得住——身体照应得过来吗，身边有人几小时内赶得到吗，房子还住得下去吗。撑得住，给你一份居家注意事项；撑不住，再按护理等级、预算与所在城市，把机构类型收窄到一两类。
+          </p>
+          <div className="mt-3 flex flex-wrap justify-center gap-1.5 sm:justify-start">
+            {['三段式判断', '本人或子女代做', '含参访提问清单'].map(chip => (
+              <span
+                key={chip}
+                className="rounded-full bg-[#FDF5EE] px-2.5 py-1 text-[11px] font-medium text-[#A85E2D]"
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all group-hover:bg-[#A85E2D] group-hover:px-8">
+          开始判断
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
+          </svg>
+        </div>
+      </div>
+      <div className="border-t border-[#F0E6D6] px-5 py-2.5">
+        <p className="text-center text-[11px] leading-relaxed text-[#A8927A] sm:text-left">
+          不推荐具体机构，不做排名 · 价格与政策以当地口径为准
+        </p>
+      </div>
+    </Link>
+  );
+}
+
 // ── 生前预嘱入口卡片 ──
 function LivingWillEntry() {
   return (
@@ -924,6 +976,11 @@ export function ToolPlaceholder({ toolId }: { toolId: string }) {
   // 特殊处理：晚年花费测算入口
   if (toolId === 'retirement-cost-calculator') {
     return <RetirementCostEntry />;
+  }
+
+  // 特殊处理：居家养老还是去养老院入口
+  if (toolId === 'aging-choice') {
+    return <AgingChoiceEntry />;
   }
 
   // 特殊处理：生前预嘱入口

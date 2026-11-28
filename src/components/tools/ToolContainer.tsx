@@ -111,6 +111,7 @@ export function ToolContainer({ toolId }: ToolContainerProps) {
     'reminder-list',
     'three-questions-tool',
     'retirement-cost-calculator',
+    'aging-choice',
     'emotional-assessment',
     'choice-rights',
     'dementia-prevention-entry',

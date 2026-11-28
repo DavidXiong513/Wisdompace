@@ -143,6 +143,13 @@ export const tools: Record<string, ToolInfo> = {
     status: 'ready',
     description: '从退休到离世，算清日常、医疗、照护与热爱需要多少钱。',
   },
+  'aging-choice': {
+    id: 'aging-choice',
+    name: '居家养老还是去养老院',
+    status: 'developing',
+    description:
+      '先判断居家养老还撑不撑得住，再按护理等级、预算与所在城市，把机构类型收窄到一两类。',
+  },
   'choice-rights': {
     id: 'choice-rights',
     name: '生前预嘱',
