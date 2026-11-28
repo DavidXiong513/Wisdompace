@@ -14,6 +14,15 @@ import type { AuthUser } from '@/lib/auth-placeholder';
 
 export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
 
+/**
+ * initSession 的单飞（in-flight）守卫。
+ *
+ * Providers 与 useCurrentUser 都会在挂载时调用 initSession()，
+ * 若不加守卫会对 Supabase 发起两次并发 getUser() 请求，
+ * 白白占用首屏主线程与网络。这里让并发调用共享同一个 Promise。
+ */
+let initSessionPromise: Promise<void> | null = null;
+
 interface AuthState {
   // 状态
   user: AuthUser | null;
@@ -63,35 +72,39 @@ export const useAuthStore = create<AuthState>()(
       /**
        * 初始化会话 — 从 Supabase 获取当前 session
        * 每次页面加载时调用（通过 middleware 已在 cookie 写入，这里做客户端同步）
+       *
+       * 使用单飞守卫：并发调用共享同一次网络请求，避免重复 getUser()。
        */
       initSession: async () => {
-        try {
-          const supabase = createClient();
-          const {
-            data: { user: supaUser },
-            error,
-          } = await supabase.auth.getUser();
+        if (initSessionPromise) return initSessionPromise;
 
-          if (error || !supaUser) {
+        initSessionPromise = (async () => {
+          try {
+            const supabase = createClient();
+            const {
+              data: { user: supaUser },
+              error,
+            } = await supabase.auth.getUser();
+
+            if (error || !supaUser) {
+              set({ user: null, status: 'unauthenticated', initialized: true });
+              return;
+            }
+
+            set({
+              user: toAuthUser(supaUser),
+              status: 'authenticated',
+              initialized: true,
+            });
+          } catch {
             set({ user: null, status: 'unauthenticated', initialized: true });
-            return;
+          } finally {
+            // 请求结束后释放守卫，允许后续（如登录后）再次校验
+            initSessionPromise = null;
           }
+        })();
 
-          // 从 profile 扩展字段获取 name（fallback 到 email 前缀）
-          const name =
-            supaUser.user_metadata?.name ??
-            (supaUser.email ? supaUser.email.split('@')[0] : '用户');
-
-          const authUser: AuthUser = {
-            id: supaUser.id,
-            email: supaUser.email ?? undefined,
-            name,
-          };
-
-          set({ user: authUser, status: 'authenticated', initialized: true });
-        } catch {
-          set({ user: null, status: 'unauthenticated', initialized: true });
-        }
+        return initSessionPromise;
       },
 
       /**
@@ -99,7 +112,7 @@ export const useAuthStore = create<AuthState>()(
        */
       login: async (email, password) => {
         const supabase = createClient();
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error) {
           const message = mapAuthError(error);
@@ -107,10 +120,20 @@ export const useAuthStore = create<AuthState>()(
           return { ok: false, message };
         }
 
-        // signInWithPassword 成功后，会通过 middleware 写入 cookie
-        // 调用 initSession 同步用户信息到 store
-        await get().initSession();
-        set({ error: null });
+        // 性能：signInWithPassword 的响应里已包含 user，
+        // 直接落到 store，省掉一次多余的 auth.getUser() 网络往返
+        // （原实现会多打一个请求，登录感知延迟明显更高）
+        if (data?.user) {
+          set({
+            user: toAuthUser(data.user),
+            status: 'authenticated',
+            initialized: true,
+            error: null,
+          });
+        } else {
+          await get().initSession();
+          set({ error: null });
+        }
 
         // 登录成功后，异步合并本地数据到云端（非阻塞）
         try {
@@ -130,7 +153,7 @@ export const useAuthStore = create<AuthState>()(
        */
       register: async (name, email, password) => {
         const supabase = createClient();
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -145,9 +168,20 @@ export const useAuthStore = create<AuthState>()(
           return { ok: false, message };
         }
 
-        // 注册成功，自动登录
-        await get().initSession();
-        set({ error: null });
+        // 若项目开启了邮箱验证，signUp 不返回 session（data.session 为 null），
+        // 此时保持未登录态，等用户点邮件里的链接走 /auth/callback。
+        // 若已自动登录，则直接用返回的 user，省掉一次 getUser() 往返。
+        if (data?.session && data.user) {
+          set({
+            user: toAuthUser(data.user),
+            status: 'authenticated',
+            initialized: true,
+            error: null,
+          });
+        } else {
+          await get().initSession();
+          set({ error: null });
+        }
 
         // 注册登录成功后，异步合并本地数据到云端（非阻塞）
         try {
@@ -223,6 +257,29 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 );
+
+/**
+ * 把 Supabase 返回的 user 对象归一化为应用内的 AuthUser。
+ */
+function toAuthUser(user: {
+  id: string;
+  email?: string | null;
+  user_metadata?: Record<string, unknown> | null;
+}): AuthUser {
+  const metaName = user.user_metadata?.name;
+  const name =
+    typeof metaName === 'string' && metaName.length > 0
+      ? metaName
+      : user.email
+        ? user.email.split('@')[0]
+        : '用户';
+
+  return {
+    id: user.id,
+    email: user.email ?? undefined,
+    name,
+  };
+}
 
 /**
  * Supabase Auth 错误码映射为中文友好提示

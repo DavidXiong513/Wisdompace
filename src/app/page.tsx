@@ -33,13 +33,20 @@ export default function Home() {
           alt="Hero Background"
           fill
           priority
-          className="object-cover object-center brightness-75"
+          fetchPriority="high"
+          quality={82}
+          className="object-cover object-center"
           sizes="100vw"
         />
       </div>
 
-      {/* Overlay to darken the image slightly for better text contrast */}
-      <div className="absolute inset-0 bg-black/20" />
+      {/*
+        Darken overlay for text contrast.
+        原本用「brightness-75 滤镜 + bg-black/20」叠加，效果等效 0.75 × 0.8 ≈ 0.6。
+        改为纯 bg-black/40 overlay：视觉几乎一致，但省掉全屏图片上的 CSS 滤镜
+        （滤镜会为整张 100vw 图片提升独立合成层，低端移动设备首帧绘制更贵）。
+      */}
+      <div className="absolute inset-0 bg-black/40" />
 
       {/* Content */}
       <div className="relative z-10 h-full w-full">
