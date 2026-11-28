@@ -222,7 +222,7 @@ function FacilityStep({ onBackHome }: { onBackHome: () => void }) {
             </ul>
           </div>
           <div>
-            <p className="text-[11px] font-bold tracking-[0.12em] text-[#A8927A]">参访时先问这五句</p>
+            <p className="text-[11px] font-bold tracking-[0.12em] text-[#A8927A]">参访时先问这六句</p>
             <ol className="mt-2 space-y-1.5">
               {pricingNotice.askTips.map((q, i) => (
                 <li key={q} className="flex gap-2 text-[12.5px] leading-[1.7] text-[#6A6256]">
