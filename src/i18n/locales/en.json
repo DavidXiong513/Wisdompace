@@ -16,7 +16,13 @@
     "searchPlaceholder": "Search personality tests, values assessment...",
     "searchBtn": "Search",
     "hotLabel": "🔥 Trending:",
-    "hotTags": ["Personality", "Values", "Abilities", "Emotions", "Stress"],
+    "hotTags": [
+      "Personality",
+      "Values",
+      "Abilities",
+      "Emotions",
+      "Stress"
+    ],
     "footerText": "Website by Musing Bear | Content source: \"A Life Organized\" V1.0 (also known as: Musing Bear: Seek Truth Through Illusions)"
   },
   "homeNav": {
@@ -301,6 +307,14 @@
           "This tool does not ask you to give up what you love. It lays out the structure of later-life spending so you can see where the gap is, which stage is tightest, and which trade-offs are truly worth making."
         ]
       },
+      "aging-choice": {
+        "title": "Home Care or a Care Facility",
+        "paragraphs": [
+          "China's elderly-care landscape is commonly described as 9073: 90% ageing at home, 7% relying on community services, 3% moving into institutions. So the first thing to judge is not whether you want to go, but whether staying at home still holds together.",
+          "Holding together requires three conditions at once: the body can still be managed, someone can get there within hours, and the home remains liveable. Falling apart usually leaves traces — no longer safe alone cognitively, needing someone present around the clock, needing regular professional care, or living alone with no one able to arrive within hours. Any one of these turns home care from inconvenient into too late.",
+          "This tool does not ask whether you want a care facility. It first judges whether home care still holds: if it does, you get a home-care checklist; if it is close, you see whether community services can fill the gap (day care, home bathing and meal delivery, home care beds); if it genuinely does not, the field narrows from nursing homes, care hospitals, rehabilitation hospitals and continuing-care communities down to one or two types. It neither pushes you out nor talks you into staying."
+        ]
+      },
       "choice-rights": {
         "title": "Advance Directives",
         "paragraphs": [
@@ -343,6 +357,7 @@
         "paragraphs": [
           "You've made it here, completing the core work of the 'State Clearly' chapter.",
           "You've sorted your responsibility checklist, identified what's urgent and important, and what needs advance transition planning. You've examined the real trade-offs behind major decisions, and seen the financial structure of daily living, healthcare and caregiving in later-life cost estimates. You've written down your five wishes in advance directives — those things you want your family to know but never found the words to say.",
+          "With the numbers clear, a more concrete question follows: where will the coming years actually be spent? You first judged whether home care still holds — the body manageable, someone able to arrive within hours, the home liveable, all three at once. Where it does not hold, you narrowed the field from nursing homes, care hospitals, rehabilitation hospitals and continuing-care communities down to one or two types, and carried away a 24-question visit checklist.",
           "You first let everyday observations settle in 'Insight into People,' then evaluated who can be your designated agent; where no suitable person exists, you also learned about professional alternatives. These aren't cold procedures — they are your final order and tenderness left for this world.",
           "Finally, you prepared for your will — sorting through your possessions one by one, seeing clearly what is yours and who you want it to go to, and working out which form fits your situation.",
           "But there is a long distance between knowing how to write one and actually writing it. Most people get stuck not on the form but on the decision itself: do it now, or wait a while longer. No one can make that call for you — the three questions in 'Preparing My Will' are there to help you see which side you stand on.",
@@ -352,6 +367,7 @@
           "In your responsibility checklist, which item worries you most? Have you thought of a transition plan?",
           "Which major decision did the Three Questions help clarify the real sticking point of?",
           "In the later-life cost estimate, which expense was most beyond your expectation, and what will you do to prepare for it?",
+          "In 'Home Care or a Care Facility', which side did your judgement land on? If it landed on the facility side, which one or two types did you narrow it down to?",
           "Among your five wishes in advance directives, which one do you most want your family to know?",
           "Have you confirmed your designated agent? If not, which alternative plan will you start with?",
           "In preparing your will, which step made you hesitate most: not being able to inventory what you have, or not being able to decide who should get it?",
@@ -592,14 +608,38 @@
       "High School Chinese Teacher License"
     ],
     "capabilitiesData": [
-      { "name": "Organizational Transformation & Upgrade", "tag": "Organization" },
-      { "name": "Talent Management & Assessment", "tag": "Organization" },
-      { "name": "Organizational Efficiency Improvement", "tag": "Organization" },
-      { "name": "Performance & Incentive System Design", "tag": "Organization" },
-      { "name": "Career Planning & Consultation", "tag": "Individual" },
-      { "name": "MBTI & Personality Insight", "tag": "Individual" },
-      { "name": "AI + Humanities Tool Development", "tag": "Exploration" },
-      { "name": "Content Creation & Expression", "tag": "Exploration" }
+      {
+        "name": "Organizational Transformation & Upgrade",
+        "tag": "Organization"
+      },
+      {
+        "name": "Talent Management & Assessment",
+        "tag": "Organization"
+      },
+      {
+        "name": "Organizational Efficiency Improvement",
+        "tag": "Organization"
+      },
+      {
+        "name": "Performance & Incentive System Design",
+        "tag": "Organization"
+      },
+      {
+        "name": "Career Planning & Consultation",
+        "tag": "Individual"
+      },
+      {
+        "name": "MBTI & Personality Insight",
+        "tag": "Individual"
+      },
+      {
+        "name": "AI + Humanities Tool Development",
+        "tag": "Exploration"
+      },
+      {
+        "name": "Content Creation & Expression",
+        "tag": "Exploration"
+      }
     ],
     "credentialsData": [
       {
@@ -610,15 +650,42 @@
         "label": "Beijing Institute of Technology (985)",
         "sub": "Full-time Bachelor · Information Management & Information Systems (E-Commerce)"
       },
-      { "label": "GCDF & BCC Career Counselor", "sub": "CCE (USA) Certified" },
-      { "label": "Learning Agility Certified", "sub": "Korn Ferry (USA, NYSE:KFY)" },
-      { "label": "MBTI Certified Trainer", "sub": "Skill & Will (USA & HK)" },
-      { "label": "PMP Project Management Professional", "sub": "PMI (USA) Certified" },
-      { "label": "High-performance Teams & Leadership Development", "sub": "CEIBS" },
-      { "label": "MOT Organizational Change Management", "sub": "Linkage Certified Training" },
-      { "label": "PSC/PSS Sales Coaching", "sub": "AG Certified Training" },
-      { "label": "Bilingual National Tour Guide", "sub": "Tourism Bureau Certified" },
-      { "label": "High School Chinese Teacher License", "sub": "Education Bureau Certified" }
+      {
+        "label": "GCDF & BCC Career Counselor",
+        "sub": "CCE (USA) Certified"
+      },
+      {
+        "label": "Learning Agility Certified",
+        "sub": "Korn Ferry (USA, NYSE:KFY)"
+      },
+      {
+        "label": "MBTI Certified Trainer",
+        "sub": "Skill & Will (USA & HK)"
+      },
+      {
+        "label": "PMP Project Management Professional",
+        "sub": "PMI (USA) Certified"
+      },
+      {
+        "label": "High-performance Teams & Leadership Development",
+        "sub": "CEIBS"
+      },
+      {
+        "label": "MOT Organizational Change Management",
+        "sub": "Linkage Certified Training"
+      },
+      {
+        "label": "PSC/PSS Sales Coaching",
+        "sub": "AG Certified Training"
+      },
+      {
+        "label": "Bilingual National Tour Guide",
+        "sub": "Tourism Bureau Certified"
+      },
+      {
+        "label": "High School Chinese Teacher License",
+        "sub": "Education Bureau Certified"
+      }
     ],
     "philosophy": {
       "heroTitle": "Practice Truth, Live Toward Death",
@@ -664,8 +731,16 @@
         }
       ],
       "stagesMethods": [
-        ["MBTI Insight", "360° Feedback Decoding", "Career Narrative"],
-        ["Context-Based Decision 4Qs", "Strengths Anchoring", "Scenario Design"],
+        [
+          "MBTI Insight",
+          "360° Feedback Decoding",
+          "Career Narrative"
+        ],
+        [
+          "Context-Based Decision 4Qs",
+          "Strengths Anchoring",
+          "Scenario Design"
+        ],
         [
           "Work-Life Balance",
           "Physical Interest",
@@ -673,7 +748,11 @@
           "Creative Interest",
           "Continuous Growth"
         ],
-        ["Eastern Wisdom Guidance", "Vegetarian Practice", "Precept Discipline"]
+        [
+          "Eastern Wisdom Guidance",
+          "Vegetarian Practice",
+          "Precept Discipline"
+        ]
       ],
       "methodologies": [
         {
@@ -703,7 +782,10 @@
         }
       ],
       "quotes": [
-        { "text": "Work is not asceticism, but it can be a dojo.", "cat": "Practice Truth" },
+        {
+          "text": "Work is not asceticism, but it can be a dojo.",
+          "cat": "Practice Truth"
+        },
         {
           "text": "Layoffs are an organization's metabolism, but every person metabolized deserves to be seen.",
           "cat": "Practice Truth"
@@ -880,7 +962,10 @@
           "price": "Free",
           "desc": "A concise decision tool: What do you truly want? What are you willing to give up? Are you ready?",
           "badge": "",
-          "features": ["Scenario-Based Guidance", "Decision Report"]
+          "features": [
+            "Scenario-Based Guidance",
+            "Decision Report"
+          ]
         },
         {
           "title": "Customized Consulting",
@@ -902,10 +987,22 @@
       "storyP4": "What I can do is not choose between 'cold' and 'warm' — because this work is inherently contradictory. What I strive for is: let those leaving leave with dignity, let those staying not live in fear, so that every time the balance breaks, both sides can turn around gracefully.",
       "storyQuote": "Layoffs are an organization's metabolism, but every person metabolized deserves to be seen.",
       "stats": [
-        { "value": "9.7/10", "label": "Zaihai Rating" },
-        { "value": "125+", "label": "Enterprise Clients" },
-        { "value": "~1,000", "label": "Individual Clients" },
-        { "value": "985×2", "label": "Education" }
+        {
+          "value": "9.7/10",
+          "label": "Zaihai Rating"
+        },
+        {
+          "value": "125+",
+          "label": "Enterprise Clients"
+        },
+        {
+          "value": "~1,000",
+          "label": "Individual Clients"
+        },
+        {
+          "value": "985×2",
+          "label": "Education"
+        }
       ],
       "clientsCategories": [
         "Foreign Companies",
@@ -1034,10 +1131,26 @@
       "sectionForm": "Send a Message",
       "sectionFaq": "Frequently Asked Questions",
       "contactMethods": [
-        { "icon": "📧", "title": "Email", "value": "1318952797@qq.com" },
-        { "icon": "📱", "title": "WeChat", "value": "DavidXiong513" },
-        { "icon": "💼", "title": "LinkedIn", "value": "Musing Bear" },
-        { "icon": "🌐", "title": "Zaihai", "value": "Career Counselor, 9.7/10 Rating" }
+        {
+          "icon": "📧",
+          "title": "Email",
+          "value": "1318952797@qq.com"
+        },
+        {
+          "icon": "📱",
+          "title": "WeChat",
+          "value": "DavidXiong513"
+        },
+        {
+          "icon": "💼",
+          "title": "LinkedIn",
+          "value": "Musing Bear"
+        },
+        {
+          "icon": "🌐",
+          "title": "Zaihai",
+          "value": "Career Counselor, 9.7/10 Rating"
+        }
       ],
       "faqItems": [
         {

@@ -148,7 +148,7 @@ export const tools: Record<string, ToolInfo> = {
     name: '居家养老还是去养老院',
     status: 'ready',
     description:
-      '先判断居家养老还撑不撑得住，再按护理等级、预算与所在城市，把机构类型收窄到一两类。',
+      '先判断居家养老还撑不撑得住；撑不住，再按护理等级与医疗需求，把机构类型收窄到一到两类。',
   },
   'choice-rights': {
     id: 'choice-rights',

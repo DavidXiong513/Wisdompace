@@ -10,6 +10,24 @@ import type { ProgressCategory } from '@/lib/validations/progress';
 
 const debounceTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
+/**
+ * 是否已登录（读 auth-storage）
+ *
+ * 未登录时不发任何 /api/progress 请求：否则匿名用户每打开一个工具页面
+ * 都会在控制台留下一条 401，且白跑一次网络往返。
+ */
+function hasAuthUser(): boolean {
+  if (typeof localStorage === 'undefined') return false;
+  const raw = localStorage.getItem('auth-storage');
+  if (!raw) return false;
+  try {
+    const data = JSON.parse(raw) as { state?: { user?: { id?: string } } };
+    return Boolean(data?.state?.user?.id);
+  } catch {
+    return false;
+  }
+}
+
 export function syncToolState(
   category: ProgressCategory,
   key: string,
@@ -25,19 +43,8 @@ export function syncToolState(
   debounceTimers.set(
     timerKey,
     setTimeout(() => {
-      // 检查是否登录（通过 localStorage 中的 auth-storage）
-      const authRaw = localStorage.getItem('auth-storage');
-      if (!authRaw) return;
-
-      let authData: { state?: { user?: { id: string } } } | null = null;
-      try {
-        authData = JSON.parse(authRaw) as { state?: { user?: { id: string } } };
-      } catch {
-        return;
-      }
-
-      const userId = authData?.state?.user?.id;
-      if (!userId) return; // 未登录，不同步
+      // 未登录不同步
+      if (!hasAuthUser()) return;
 
       // 发送请求
       const payload = {
@@ -69,6 +76,8 @@ export async function fetchToolState(
   category: ProgressCategory,
   key: string
 ): Promise<unknown | null> {
+  // 未登录直接返回：避免匿名访问打出一个 401
+  if (!hasAuthUser()) return null;
   try {
     const res = await fetch(`/api/progress?category=${category}`);
     if (!res.ok) return null;
