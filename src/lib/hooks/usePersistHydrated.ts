@@ -19,10 +19,10 @@ type PersistStore = {
  * 因为 setState 在 effect 中是必要的（等待外部存储 hydration 完成后再更新渲染）。
  */
 export function usePersistHydrated<TStore extends PersistStore>(store: TStore) {
-  const [hydrated, setHydrated] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return store.persist.hasHydrated();
-  });
+  // 初始值必须恒为 false：服务端无 window 时是 false，若客户端首次渲染直接读
+  // hasHydrated()（localStorage 同步水合，恒为 true），两侧渲染分支不同 →
+  // React 报 hydration mismatch。统一从 false 起步，effect 里再切 true。
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     if (store.persist.hasHydrated()) {

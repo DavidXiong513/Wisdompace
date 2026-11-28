@@ -215,7 +215,7 @@ function AgingChoiceEntry() {
             先判断居家还撑不撑得住，再决定补社区服务还是找机构。
           </p>
           <div className="mt-3 flex flex-wrap justify-center gap-1.5 sm:justify-start">
-            {['三段式判断', '本人或子女代做', '含参访提问清单'].map(chip => (
+            {['三段式判断', '本人或子女代做', '含居家注意事项'].map(chip => (
               <span
                 key={chip}
                 className="rounded-full bg-[#FDF5EE] px-2.5 py-1 text-[11px] font-medium text-[#A85E2D]"
