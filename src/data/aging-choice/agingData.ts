@@ -61,6 +61,8 @@ export interface HardSignal {
   detail: string;
   level: 'red' | 'amber';
   pointsTo: string;
+  /** 可点跳转（如 H5 指向意定人评估） */
+  href?: string;
 }
 
 /**
@@ -102,6 +104,7 @@ export const hardSignals: HardSignal[] = [
     detail: '择期手术、特殊检查、转院或签机构协议时，没有人能签字',
     level: 'amber',
     pointsTo: '先补意定监护，不改变居家结论',
+    href: '/tools/ta-worth-trust',
   },
   {
     id: 'H6',
@@ -414,6 +417,9 @@ export function verdictCopy(v: Verdict): VerdictCopy {
 export interface AdviceItem {
   title: string;
   detail: string;
+  /** 可点跳转（如指向意定人评估工具） */
+  href?: string;
+  linkLabel?: string;
 }
 
 /** 居家注意事项（主交付物） */
@@ -436,7 +442,9 @@ export const homeAdvice: AdviceItem[] = [
   },
   {
     title: '把医疗代理补上',
-    detail: '无人在场时谁替长辈签字，是居家最容易被忽略的一环，指向「意定人选择」。',
+    detail: '无人在场时谁替长辈签字，是居家最容易被忽略的一环。先选人，再评估这个人扛不扛得住。',
+    href: '/tools/ta-worth-trust',
+    linkLabel: '去做意定人评估',
   },
 ];
 
@@ -459,3 +467,104 @@ export const watchPoints: string[] = [
 
 export const DISCLAIMER =
   '本工具提供的是一般性梳理，不构成医疗诊断，也不替代 GB/T 42195-2022 老年人能力评估与长护险失能等级评定。价格区间以上海样本为参考，机构供给与补贴政策各地不同，请以当地民政、医保部门与机构实际口径为准。';
+
+/* ── 入口分流：先选一条路 ─────────────────────────────── */
+
+export type Branch = 'home' | 'facility';
+
+export interface BranchOption {
+  value: Branch;
+  tag: string;
+  title: string;
+  desc: string;
+  cta: string;
+}
+
+export const branchOptions: BranchOption[] = [
+  {
+    value: 'home',
+    tag: '约 4 分钟 · 推荐',
+    title: '先做居家自测',
+    desc: '判断居家还撑不撑得住。撑得住，给一份居家注意事项；差一点，看社区服务能不能补上；真撑不住，再收窄机构类型。',
+    cta: '开始自测',
+  },
+  {
+    value: 'facility',
+    tag: '跳过自测',
+    title: '直接看机构类型',
+    desc: '已知要进机构、不想再判断居家。跳过前两步，直接看五类机构各管什么，先弄清自己该找哪一类。',
+    cta: '直接看机构',
+  },
+];
+
+/* ── 机构侧：五类载体 ─────────────────────────────────── */
+
+export interface InstitutionType {
+  key: string;
+  name: string;
+  /** 性质标签 */
+  tag: string;
+  /** 医疗能力 */
+  medical: string;
+  /** 适合谁 */
+  fitFor: string;
+  /** 一句提醒 */
+  caution: string;
+}
+
+export const institutionTypes: InstitutionType[] = [
+  {
+    key: 'nursing-home',
+    name: '养老院',
+    tag: '生活照料机构',
+    medical: '内设基本医疗，可刷医保；不具备抢救能力，急症要转医院',
+    fitFor: '自理到二级护理',
+    caution: '门槛最低，但别指望它处理急症。',
+  },
+  {
+    key: 'care-hospital',
+    name: '护理院',
+    tag: '医疗机构',
+    medical: '医生、护士、药剂师齐全，能处理抢救',
+    fitFor: '三级以上护理、医疗依赖高',
+    caution: '属医疗机构、主要走医保，不是「养老院升级版」。',
+  },
+  {
+    key: 'rehab-hospital',
+    name: '康复医院',
+    tag: '医院（多为二级资质）',
+    medical: '专业康复训练，针对中风后、骨折后等功能恢复',
+    fitFor: '病后短期集中康复',
+    caution: '有住院周期，通常不是长期养老的地方。',
+  },
+  {
+    key: 'ccrc',
+    name: '康养社区（CCRC）',
+    tag: '高端养老机构',
+    medical: '以内设医疗为主，部分自建护理院',
+    fitFor: '能自理的活力老人、预算充裕',
+    caution: '多为会员或押金制，前期资金门槛高，退费条款要看清。',
+  },
+  {
+    key: 'dementia-unit',
+    name: '认知症照护单元',
+    tag: '机构内的专区',
+    medical: '记忆照护、封闭管理，护理配比高于普通区',
+    fitFor: '失智、五级护理',
+    caution: '它不是独立机构，是在前四类里找的专区。',
+  },
+];
+
+export const institutionNotice =
+  '「认知症照护单元」不另设一类，它就设在养老院或护理院里——该问的是「你们有没有记忆照护专区」，而不是去找一家「认知症照护院」。另外，「康养社区」是机构，和「社区养老」（日间照料、上门服务）不是一回事。名称各地不统一，参访先问一句：有没有医疗执业许可，能不能做你要的那项护理。';
+
+/** 机构侧（跳过居家自测）的入口说明 */
+export const facilityBranchIntro =
+  '你跳过了居家自测，直接从机构这一侧看。下面先分清五类载体各管什么，弄清该找哪一类，再谈预算与参访。';
+
+/** 机构侧待办：P2 的护理等级自查 + 类型匹配 */
+export const facilityNextStep = {
+  title: '护理等级自查 + 类型匹配',
+  desc: '按护理等级、医疗需求、预算逐层排除，收窄到一到两类，并给一份可打印的参访提问清单。',
+};
+

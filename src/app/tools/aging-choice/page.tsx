@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import AgingChoiceWizard from '@/components/tools/AgingChoiceWizard';
+import AgingReferenceSection from '@/components/tools/AgingReferenceSection';
 import { DISCLAIMER } from '@/data/aging-choice/agingData';
 
 export const metadata: Metadata = {
@@ -8,13 +9,6 @@ export const metadata: Metadata = {
   description:
     '先判断居家养老还撑不撑得住——身体、身边有没有人、房子住不住得下去；撑不住，再按护理等级、预算与所在城市，把机构类型收窄到一两类。不推荐具体机构，不做排名。',
 };
-
-const facilityTypes = [
-  { name: '养老院', desc: '生活照料为主，门槛最低' },
-  { name: '护理院', desc: '医疗护理为主，多可对接医保' },
-  { name: '康复医院', desc: '术后与功能恢复，有住院周期' },
-  { name: '康养社区', desc: '能自理但想省心，多为押金制' },
-];
 
 export default function AgingChoicePage() {
   return (
@@ -48,22 +42,7 @@ export default function AgingChoicePage() {
 
         <AgingChoiceWizard />
 
-        <section className="mt-8 rounded-2xl border border-[#E8D9C2] bg-white p-5 sm:p-6">
-          <h3 className="text-[15px] font-bold text-[#4A3728]">四类机构，先分清</h3>
-          <ul className="mt-3 divide-y divide-[#F0E6D6]">
-            {facilityTypes.map((item) => (
-              <li key={item.name} className="flex items-baseline gap-3 py-2.5">
-                <span className="w-[4.5em] shrink-0 text-[14px] font-bold text-[#C87941]">
-                  {item.name}
-                </span>
-                <span className="text-[13.5px] leading-[1.7] text-[#5A5A5A]">{item.desc}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 border-t border-[#F0E6D6] pt-3 text-[12px] leading-[1.7] text-[#A8927A]">
-            注意「康养社区」是机构，和「社区养老」（日间照料、上门服务）不是一回事。名称各地不统一，参访先问一句：有没有医疗执业许可，能不能做你要的那项护理。
-          </p>
-        </section>
+        <AgingReferenceSection />
 
         <p className="mt-6 text-[12px] leading-[1.75] text-[#A8927A]">{DISCLAIMER}</p>
       </main>

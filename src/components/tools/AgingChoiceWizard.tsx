@@ -7,18 +7,24 @@ import { useAgingChoiceStore } from '@/stores/agingChoiceStore';
 import {
   MAX_SCORE,
   actorOf,
+  branchOptions,
   dimScore,
   dimensions,
   evaluate,
+  facilityBranchIntro,
+  facilityNextStep,
   gapsOf,
   hardSignals,
   homeAdvice,
   identityOptions,
+  institutionNotice,
+  institutionTypes,
   referralRules,
   scoredDimensions,
   subjectOf,
   verdictCopy,
   watchPoints,
+  type Branch,
   type Dimension,
   type HardSignal,
   type IdentityType,
@@ -104,6 +110,119 @@ function Nav({
         </button>
       </div>
     </div>
+  );
+}
+
+/* ── 入口：先选一条路 ─────────────────────────────────── */
+
+function WelcomeStep({ onPick }: { onPick: (b: Branch) => void }) {
+  return (
+    <section className="mt-4 rounded-2xl border border-[#E8D9C2] bg-white p-5 sm:p-8">
+      <StepBadge index="00" title="先选一条路" />
+      <h2 className="mt-3 text-[22px] leading-snug font-bold text-[#4A3728] sm:mt-4 sm:text-2xl">
+        两条路，选一条就行
+      </h2>
+      <p className="mt-3 text-[14px] leading-[1.8] text-[#6A6256]">
+        不确定自己的情况，走第一条；已经决定要看机构，直接走第二条。做完自测也会给机构建议，两条路不冲突。
+      </p>
+
+      <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-2">
+        {branchOptions.map((opt, i) => (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onPick(opt.value)}
+            className={`group flex h-full flex-col rounded-xl border p-4 text-left transition-all ${
+              i === 0
+                ? 'border-[#C87941]/60 bg-[#FDF5EE]/60 hover:border-[#C87941] hover:shadow-[0_8px_20px_rgba(200,121,65,0.10)]'
+                : 'border-[#E8D9C2] bg-white hover:border-[#C87941]/60'
+            }`}
+          >
+            <span className="w-fit rounded-full bg-white px-2.5 py-0.5 text-[11px] font-medium text-[#A85E2D]">
+              {opt.tag}
+            </span>
+            <p className="mt-2.5 text-[16px] font-bold text-[#4A3728]">{opt.title}</p>
+            <p className="mt-1.5 flex-1 text-[13px] leading-[1.75] text-[#6A6256]">{opt.desc}</p>
+            <span className="mt-3 text-[13px] font-bold text-[#C87941] group-hover:underline">
+              {opt.cta} →
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <p className="mt-4 text-[12px] leading-[1.7] text-[#A8927A]">
+        两条路都不推荐具体机构、不做排名。
+      </p>
+    </section>
+  );
+}
+
+/* ── 机构侧：跳过居家自测 ─────────────────────────────── */
+
+function FacilityStep({ onBackHome }: { onBackHome: () => void }) {
+  return (
+    <section className="mt-4 space-y-4">
+      <div className="rounded-2xl border border-[#E8D9C2] bg-white p-5 sm:p-8">
+        <span className="inline-block rounded-full bg-[#FDF5EE] px-3 py-1 text-[11px] font-bold tracking-[0.12em] text-[#C87941]">
+          机构侧 · 已跳过居家自测
+        </span>
+        <h2 className="mt-3 text-[22px] leading-snug font-bold text-[#4A3728] sm:text-2xl">
+          五类载体，先分清各管什么
+        </h2>
+        <p className="mt-3 text-[14px] leading-[1.8] text-[#6A6256]">{facilityBranchIntro}</p>
+      </div>
+
+      <div className="rounded-2xl border border-[#E8D9C2] bg-white p-5 sm:p-6">
+        <h3 className="text-[15px] font-bold text-[#4A3728]">五类机构对照</h3>
+        <div className="mt-4">
+          {institutionTypes.map((t) => (
+            <div
+              key={t.key}
+              className="border-t border-[#F0E6D6] py-4 first:border-t-0 first:pt-0"
+            >
+              <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                <span className="text-[15px] font-bold text-[#4A3728]">{t.name}</span>
+                <span className="rounded-full bg-[#FDF5EE] px-2 py-0.5 text-[10.5px] font-medium text-[#A85E2D]">
+                  {t.tag}
+                </span>
+              </div>
+              <p className="mt-1.5 text-[12.5px] leading-[1.7] text-[#5A5A5A]">{t.medical}</p>
+              <p className="mt-1 text-[12.5px] leading-[1.7] text-[#6A6256]">
+                <span className="text-[#A8927A]">适合：</span>
+                {t.fitFor}
+              </p>
+              <p className="mt-1 text-[12px] leading-[1.7] text-[#A8927A]">{t.caution}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 border-t border-[#F0E6D6] pt-3 text-[12px] leading-[1.75] text-[#A8927A]">
+          {institutionNotice}
+        </p>
+      </div>
+
+      <div className="rounded-2xl border border-dashed border-[#E8D9C2] bg-[#FAF8F3] p-5 sm:p-6">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <h3 className="text-[15px] font-bold text-[#8A7E6A]">{facilityNextStep.title}</h3>
+          <span className="rounded-full bg-white px-2.5 py-0.5 text-[10.5px] font-medium text-[#A85E2D]">
+            正在开发
+          </span>
+        </div>
+        <p className="mt-1.5 text-[13px] leading-[1.75] text-[#A8927A]">{facilityNextStep.desc}</p>
+      </div>
+
+      <div className="rounded-2xl border border-[#E8D9C2] bg-white p-6">
+        <p className="text-[13px] leading-[1.8] text-[#6A6256]">
+          如果不确定现在该不该往机构走，也可以先花四分钟做一次居家自测——它不劝你去，也不劝你留。之前填过的进度会保留。
+        </p>
+        <button
+          type="button"
+          onClick={onBackHome}
+          className="mt-4 rounded-full border border-[#C87941] px-5 py-2.5 text-sm font-bold text-[#C87941] transition-colors hover:bg-[#FDF5EE]"
+        >
+          ← 回到居家自测
+        </button>
+      </div>
+    </section>
   );
 }
 
@@ -377,12 +496,14 @@ function ReportStep({
   answers,
   onRestart,
   onBack,
+  onOpenFacility,
 }: {
   identity: IdentityType | null;
   signals: Partial<Record<SignalId, boolean>>;
   answers: Partial<Record<string, number>>;
   onRestart: () => void;
   onBack: () => void;
+  onOpenFacility: () => void;
 }) {
   const result = evaluate(signals, answers);
   const copy = verdictCopy(result.verdict);
@@ -433,6 +554,14 @@ function ReportStep({
                   <p className="mt-0.5 text-[12.5px] leading-relaxed text-[#8A7E6A]">
                     指向：{s.pointsTo}
                   </p>
+                  {s.href && (
+                    <Link
+                      href={s.href}
+                      className="mt-1 inline-block text-[12.5px] font-semibold text-[#C87941] hover:underline"
+                    >
+                      去做意定人评估 →
+                    </Link>
+                  )}
                 </div>
               </li>
             ))}
@@ -518,6 +647,14 @@ function ReportStep({
               <div>
                 <p className="text-[13.5px] font-medium text-[#4A3728]">{a.title}</p>
                 <p className="mt-0.5 text-[12.5px] leading-relaxed text-[#8A7E6A]">{a.detail}</p>
+                {a.href && (
+                  <Link
+                    href={a.href}
+                    className="mt-1 inline-block text-[12.5px] font-semibold text-[#C87941] hover:underline"
+                  >
+                    {a.linkLabel} →
+                  </Link>
+                )}
               </div>
             </li>
           ))}
@@ -556,16 +693,23 @@ function ReportStep({
           <div className="rounded-xl border border-dashed border-[#E8D9C2] p-4">
             <p className="text-[13.5px] font-bold text-[#8A7E6A]">机构类型建议</p>
             <p className="mt-1 text-[12px] leading-relaxed text-[#A8927A]">
-              护理等级自查、四类机构排除法、参访提问清单——正在开发。
+              护理等级自查、机构类型排除法、参访提问清单——正在开发。
             </p>
+            <button
+              type="button"
+              onClick={onOpenFacility}
+              className="mt-2 text-[12.5px] font-semibold text-[#C87941] hover:underline"
+            >
+              先看五类机构对照 →
+            </button>
           </div>
           <Link
-            href="/chapter/chapter-3#insight-people"
+            href="/tools/ta-worth-trust"
             className="rounded-xl border border-[#E8D9C2] p-4 transition-colors hover:border-[#C87941]"
           >
             <p className="text-[13.5px] font-bold text-[#4A3728]">先把医疗代理补上 →</p>
             <p className="mt-1 text-[12px] leading-relaxed text-[#8A7E6A]">
-              无人签字这件事，指向「意定人选择」。
+              无人签字这件事，指向「意定人选择」。这个工具帮你评估那个人扛不扛得住。
             </p>
           </Link>
         </div>
@@ -597,10 +741,12 @@ const STEP_LABELS = ['身份', '硬条件', '五个维度', '结论'];
 
 export default function AgingChoiceWizard() {
   const hydrated = usePersistHydrated(useAgingChoiceStore);
+  const branch = useAgingChoiceStore((s) => s.branch);
   const identity = useAgingChoiceStore((s) => s.identity);
   const signals = useAgingChoiceStore((s) => s.signals);
   const answers = useAgingChoiceStore((s) => s.answers);
   const step = useAgingChoiceStore((s) => s.step);
+  const setBranch = useAgingChoiceStore((s) => s.setBranch);
   const setIdentity = useAgingChoiceStore((s) => s.setIdentity);
   const toggleSignal = useAgingChoiceStore((s) => s.toggleSignal);
   const setAnswer = useAgingChoiceStore((s) => s.setAnswer);
@@ -608,25 +754,43 @@ export default function AgingChoiceWizard() {
   const complete = useAgingChoiceStore((s) => s.complete);
   const reset = useAgingChoiceStore((s) => s.reset);
 
-  // 步骤切换后回到向导顶部：下一步按钮在长页底部，不重置会落在新步骤的中段
+  // 步骤 / 分支切换后回到顶部：下一步按钮在长页底部，不重置会落在新内容的中段
   const wrapRef = React.useRef<HTMLDivElement | null>(null);
   const prevStep = React.useRef(step);
+  const prevBranch = React.useRef(branch);
   React.useEffect(() => {
-    if (prevStep.current === step) return;
+    if (prevStep.current === step && prevBranch.current === branch) return;
     prevStep.current = step;
-    // 等新步骤完成布局再量位置，否则会按旧高度算出被夹断的滚动目标
+    prevBranch.current = branch;
+    // 等新内容完成布局再量位置，否则会按旧高度算出被夹断的滚动目标
     const id = requestAnimationFrame(() => {
       const el = wrapRef.current;
       if (!el) return;
       window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 84 });
     });
     return () => cancelAnimationFrame(id);
-  }, [step]);
+  }, [step, branch]);
 
   if (!hydrated) {
     return (
       <div className="mt-5 rounded-2xl border border-[#E8D9C2] bg-white p-8">
         <p className="text-sm text-[#8A7E6A]">正在读取上次的进度…</p>
+      </div>
+    );
+  }
+
+  if (branch === null) {
+    return (
+      <div ref={wrapRef} className="mt-5">
+        <WelcomeStep onPick={setBranch} />
+      </div>
+    );
+  }
+
+  if (branch === 'facility') {
+    return (
+      <div ref={wrapRef} className="mt-5">
+        <FacilityStep onBackHome={() => setBranch('home')} />
       </div>
     );
   }
@@ -686,6 +850,7 @@ export default function AgingChoiceWizard() {
           answers={answers}
           onBack={() => setStep(2)}
           onRestart={reset}
+          onOpenFacility={() => setBranch('facility')}
         />
       )}
     </div>

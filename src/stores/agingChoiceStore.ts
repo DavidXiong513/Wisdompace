@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { IdentityType, SignalId } from '@/data/aging-choice/agingData';
+import type { Branch, IdentityType, SignalId } from '@/data/aging-choice/agingData';
 
 export const AGING_CHOICE_STORAGE_KEY = 'wp-aging-choice';
 
@@ -8,12 +8,15 @@ export const AGING_CHOICE_STORAGE_KEY = 'wp-aging-choice';
 export type WizardStep = 0 | 1 | 2 | 3;
 
 interface AgingChoiceState {
+  /** null = 还在入口分流页，没选路 */
+  branch: Branch | null;
   identity: IdentityType | null;
   signals: Partial<Record<SignalId, boolean>>;
   /** questionId → 分值 */
   answers: Partial<Record<string, number>>;
   step: WizardStep;
   completedAt: string | null;
+  setBranch: (b: Branch) => void;
   setIdentity: (v: IdentityType) => void;
   toggleSignal: (id: SignalId, value: boolean) => void;
   setAnswer: (questionId: string, score: number) => void;
@@ -23,6 +26,7 @@ interface AgingChoiceState {
 }
 
 const initial = {
+  branch: null as Branch | null,
   identity: null as IdentityType | null,
   signals: {} as Partial<Record<SignalId, boolean>>,
   answers: {} as Partial<Record<string, number>>,
@@ -34,6 +38,7 @@ export const useAgingChoiceStore = create<AgingChoiceState>()(
   persist(
     (set) => ({
       ...initial,
+      setBranch: (branch) => set({ branch }),
       setIdentity: (v) => set({ identity: v }),
       toggleSignal: (id, value) =>
         set((state) => ({ signals: { ...state.signals, [id]: value } })),
@@ -53,6 +58,8 @@ export const useAgingChoiceStore = create<AgingChoiceState>()(
           ...saved,
           signals: { ...(saved?.signals ?? {}) },
           answers: { ...(saved?.answers ?? {}) },
+          // 旧数据没有 branch：已经填过内容的视为走过居家自测，未填过的回入口页
+          branch: saved?.branch ?? (saved?.identity || saved?.answers ? 'home' : null),
           step: typeof saved?.step === 'number' ? (saved.step as WizardStep) : current.step,
         };
       },
