@@ -31,88 +31,8 @@ import {
   type IdentityType,
   type SignalId,
 } from '@/data/aging-choice/agingData';
-
-/* ── 通用小组件 ───────────────────────────────────────── */
-
-function Pill({
-  active,
-  children,
-  onClick,
-}: {
-  active: boolean;
-  children: React.ReactNode;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-full border px-4 py-2 text-sm transition-all ${
-        active
-          ? 'border-[#C87941] bg-[#FDF5EE] font-semibold text-[#4A3728]'
-          : 'border-[#E8D9C2] bg-white text-[#5A5A5A] hover:border-[#C87941]/50'
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
-function StepBadge({ index, title }: { index: string; title: string }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#FDF5EE] text-[11px] font-bold text-[#C87941]">
-        {index}
-      </span>
-      <span className="text-[11px] font-bold tracking-[0.18em] text-[#C87941] uppercase">{title}</span>
-    </div>
-  );
-}
-
-function Nav({
-  onBack,
-  onNext,
-  nextLabel = '下一步',
-  nextDisabled,
-  hint,
-}: {
-  onBack?: () => void;
-  onNext: () => void;
-  nextLabel?: string;
-  nextDisabled?: boolean;
-  hint?: string;
-}) {
-  return (
-    <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div>
-        {onBack && (
-          <button
-            type="button"
-            onClick={onBack}
-            className="text-sm font-medium text-[#8A7E6A] transition-colors hover:text-[#C87941]"
-          >
-            ← 上一步
-          </button>
-        )}
-      </div>
-      <div className="flex flex-col items-stretch gap-2 sm:items-end">
-        {hint && <span className="text-[12px] text-[#A8927A]">{hint}</span>}
-        <button
-          type="button"
-          onClick={onNext}
-          disabled={nextDisabled}
-          className={`rounded-full px-7 py-3 text-sm font-bold transition-all ${
-            nextDisabled
-              ? 'cursor-not-allowed bg-[#E8D9C2] text-white'
-              : 'bg-[#C87941] text-white hover:bg-[#A85E2D]'
-          }`}
-        >
-          {nextLabel}
-        </button>
-      </div>
-    </div>
-  );
-}
+import { Nav, Pill, StepBadge, StepProgress } from '@/components/tools/agingUi';
+import AgingChoiceStage3 from '@/components/tools/AgingChoiceStage3';
 
 /* ── 入口：先选一条路 ─────────────────────────────────── */
 
@@ -160,7 +80,13 @@ function WelcomeStep({ onPick }: { onPick: (b: Branch) => void }) {
 
 /* ── 机构侧：跳过居家自测 ─────────────────────────────── */
 
-function FacilityStep({ onBackHome }: { onBackHome: () => void }) {
+function FacilityStep({
+  onBackHome,
+  onStartCheck,
+}: {
+  onBackHome: () => void;
+  onStartCheck: () => void;
+}) {
   return (
     <section className="mt-4 space-y-4">
       <div className="rounded-2xl border border-[#E8D9C2] bg-white p-5 sm:p-8">
@@ -171,6 +97,16 @@ function FacilityStep({ onBackHome }: { onBackHome: () => void }) {
           五类载体，先分清各管什么
         </h2>
         <p className="mt-3 text-[14px] leading-[1.8] text-[#6A6256]">{facilityBranchIntro}</p>
+        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <button
+            type="button"
+            onClick={onStartCheck}
+            className="rounded-full border border-[#C87941]/60 px-4 py-2 text-[13px] font-bold text-[#C87941] transition-colors hover:bg-[#FDF5EE]"
+          >
+            已经清楚类型，直接自查 →
+          </button>
+          <span className="text-[11.5px] text-[#A8927A]">只问三件事，约 2 分钟</span>
+        </div>
       </div>
 
       <div className="rounded-2xl border border-[#E8D9C2] bg-white p-5 sm:p-6">
@@ -238,14 +174,21 @@ function FacilityStep({ onBackHome }: { onBackHome: () => void }) {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-dashed border-[#E8D9C2] bg-[#FAF8F3] p-5 sm:p-6">
+      <div className="rounded-2xl border border-[#C87941]/45 bg-[#FDF5EE]/60 p-5 sm:p-6">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h3 className="text-[15px] font-bold text-[#8A7E6A]">{facilityNextStep.title}</h3>
+          <h3 className="text-[15px] font-bold text-[#4A3728]">{facilityNextStep.title}</h3>
           <span className="rounded-full bg-white px-2.5 py-0.5 text-[10.5px] font-medium text-[#A85E2D]">
-            正在开发
+            三问 · 约 2 分钟
           </span>
         </div>
-        <p className="mt-1.5 text-[13px] leading-[1.75] text-[#A8927A]">{facilityNextStep.desc}</p>
+        <p className="mt-1.5 text-[13px] leading-[1.75] text-[#6A6256]">{facilityNextStep.desc}</p>
+        <button
+          type="button"
+          onClick={onStartCheck}
+          className="mt-4 rounded-full bg-[#C87941] px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#A85E2D]"
+        >
+          开始自查 →
+        </button>
       </div>
 
       <div className="rounded-2xl border border-[#E8D9C2] bg-white p-6">
@@ -535,6 +478,7 @@ function ReportStep({
   onRestart,
   onBack,
   onOpenFacility,
+  onOpenOverview,
 }: {
   identity: IdentityType | null;
   signals: Partial<Record<SignalId, boolean>>;
@@ -542,6 +486,7 @@ function ReportStep({
   onRestart: () => void;
   onBack: () => void;
   onOpenFacility: () => void;
+  onOpenOverview: () => void;
 }) {
   const result = evaluate(signals, answers);
   const copy = verdictCopy(result.verdict);
@@ -728,17 +673,24 @@ function ReportStep({
       <div className="rounded-2xl border border-[#E8D9C2] bg-white p-6">
         <h3 className="text-[15px] font-bold text-[#4A3728]">接下来</h3>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-xl border border-dashed border-[#E8D9C2] p-4">
-            <p className="text-[13.5px] font-bold text-[#8A7E6A]">机构类型建议</p>
-            <p className="mt-1 text-[12px] leading-relaxed text-[#A8927A]">
-              护理等级自查、机构类型排除法、参访提问清单——正在开发。
+          <div className="rounded-xl border border-[#C87941]/45 bg-[#FDF5EE]/50 p-4">
+            <p className="text-[13.5px] font-bold text-[#4A3728]">机构类型建议</p>
+            <p className="mt-1 text-[12px] leading-relaxed text-[#6A6256]">
+              护理等级自查 + 类型排除法 + 参访 24 问清单。再问三件事，就能收窄到一到两类。
             </p>
             <button
               type="button"
               onClick={onOpenFacility}
-              className="mt-2 text-[12.5px] font-semibold text-[#C87941] hover:underline"
+              className="mt-2.5 rounded-full bg-[#C87941] px-4 py-1.5 text-[12.5px] font-bold text-white transition-colors hover:bg-[#A85E2D]"
             >
-              先看五类机构对照 →
+              开始自查 →
+            </button>
+            <button
+              type="button"
+              onClick={onOpenOverview}
+              className="mt-2 ml-3 text-[12.5px] font-medium text-[#8A7E6A] hover:text-[#C87941]"
+            >
+              先看五类对照
             </button>
           </div>
           <Link
@@ -784,6 +736,8 @@ export default function AgingChoiceWizard() {
   const signals = useAgingChoiceStore((s) => s.signals);
   const answers = useAgingChoiceStore((s) => s.answers);
   const step = useAgingChoiceStore((s) => s.step);
+  const facilityView = useAgingChoiceStore((s) => s.facilityView);
+  const setFacilityView = useAgingChoiceStore((s) => s.setFacilityView);
   const setBranch = useAgingChoiceStore((s) => s.setBranch);
   const setIdentity = useAgingChoiceStore((s) => s.setIdentity);
   const toggleSignal = useAgingChoiceStore((s) => s.toggleSignal);
@@ -796,10 +750,17 @@ export default function AgingChoiceWizard() {
   const wrapRef = React.useRef<HTMLDivElement | null>(null);
   const prevStep = React.useRef(step);
   const prevBranch = React.useRef(branch);
+  const prevView = React.useRef(facilityView);
   React.useEffect(() => {
-    if (prevStep.current === step && prevBranch.current === branch) return;
+    if (
+      prevStep.current === step &&
+      prevBranch.current === branch &&
+      prevView.current === facilityView
+    )
+      return;
     prevStep.current = step;
     prevBranch.current = branch;
+    prevView.current = facilityView;
     // 等新内容完成布局再量位置，否则会按旧高度算出被夹断的滚动目标
     const id = requestAnimationFrame(() => {
       const el = wrapRef.current;
@@ -807,7 +768,7 @@ export default function AgingChoiceWizard() {
       window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 84 });
     });
     return () => cancelAnimationFrame(id);
-  }, [step, branch]);
+  }, [step, branch, facilityView]);
 
   if (!hydrated) {
     return (
@@ -828,35 +789,21 @@ export default function AgingChoiceWizard() {
   if (branch === 'facility') {
     return (
       <div ref={wrapRef} className="mt-5">
-        <FacilityStep onBackHome={() => setBranch('home')} />
+        {facilityView === 'check' ? (
+          <AgingChoiceStage3 onExit={() => setFacilityView('overview')} />
+        ) : (
+          <FacilityStep
+            onBackHome={() => setBranch('home')}
+            onStartCheck={() => setFacilityView('check')}
+          />
+        )}
       </div>
     );
   }
 
   return (
     <div ref={wrapRef} className="mt-5">
-      {/* 进度 */}
-      <div className="flex items-center gap-2">
-        {STEP_LABELS.map((label, i) => {
-          const active = step === i;
-          const done = step > i;
-          return (
-            <div key={label} className="flex flex-1 items-center gap-2">
-              <span
-                className={`h-1 flex-1 rounded-full ${
-                  active ? 'bg-[#C87941]' : done ? 'bg-[#E0B182]' : 'bg-[#E8D9C2]'
-                }`}
-              />
-            </div>
-          );
-        })}
-      </div>
-      <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-[11px] text-[#A8927A]">
-        <span className="tracking-[0.14em]">
-          第 {Math.min(step + 1, 4)} 步 / 共 4 步 · {STEP_LABELS[Math.min(step, 3)]}
-        </span>
-        <span>约 4 分钟 · 进度自动保存</span>
-      </div>
+      <StepProgress labels={STEP_LABELS} current={step} note="约 4 分钟 · 进度自动保存" />
 
       {step === 0 && (
         <IdentityStep identity={identity} onPick={setIdentity} onNext={() => setStep(1)} />
@@ -888,7 +835,14 @@ export default function AgingChoiceWizard() {
           answers={answers}
           onBack={() => setStep(2)}
           onRestart={reset}
-          onOpenFacility={() => setBranch('facility')}
+          onOpenFacility={() => {
+            setBranch('facility');
+            setFacilityView('check');
+          }}
+          onOpenOverview={() => {
+            setBranch('facility');
+            setFacilityView('overview');
+          }}
         />
       )}
     </div>

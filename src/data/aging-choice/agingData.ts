@@ -596,9 +596,9 @@ export const institutionNotice =
 export const facilityBranchIntro =
   '你跳过了居家自测，直接从机构这一侧看。下面先分清五类载体各管什么，弄清该找哪一类，再谈预算与参访。';
 
-/** 机构侧待办：P2 的护理等级自查 + 类型匹配 */
+/** 机构侧自查入口说明 */
 export const facilityNextStep = {
   title: '护理等级自查 + 类型匹配',
-  desc: '按护理等级、医疗需求、预算逐层排除，收窄到一到两类，并给一份可打印的参访提问清单。',
+  desc: '只问三件事：护理等级、医疗需求、预算档。逐层排除后收窄到一到两类，并给出一份 24 问的参访清单。',
 };
 
