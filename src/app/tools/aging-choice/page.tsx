@@ -17,8 +17,8 @@ const stages = [
   {
     step: '二',
     title: '看居家还撑不撑得住',
-    desc: '先过硬条件，再看五个维度还差什么、能不能补。',
-    note: '居家结论与注意事项',
+    desc: '先过硬条件，再看还差什么、社区服务能不能补上。',
+    note: '居家／社区／机构',
   },
   {
     step: '三',
@@ -99,7 +99,7 @@ export default function AgingChoicePage() {
             ))}
           </ul>
           <p className="mt-3 border-t border-[#F0E6D6] pt-3 text-[12px] leading-[1.7] text-[#A8927A]">
-            名称各地不统一。参访先问一句：有没有医疗执业许可，能不能做你要的那项护理。
+            注意「康养社区」是机构，和「社区养老」（日间照料、上门服务）不是一回事。名称各地不统一，参访先问一句：有没有医疗执业许可，能不能做你要的那项护理。
           </p>
         </section>
 

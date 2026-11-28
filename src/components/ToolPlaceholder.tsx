@@ -212,7 +212,7 @@ function AgingChoiceEntry() {
             居家养老还是去养老院 · 先分流，再匹配
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-[#8A7E6A]">
-            先判断居家还撑不撑得住；撑不住，再按护理等级、预算与所在城市，把机构类型收窄到一两类。
+            先判断居家还撑不撑得住，再决定补社区服务还是找机构。
           </p>
           <div className="mt-3 flex flex-wrap justify-center gap-1.5 sm:justify-start">
             {['三段式判断', '本人或子女代做', '含参访提问清单'].map(chip => (
