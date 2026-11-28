@@ -548,7 +548,7 @@ export const institutionTypes: InstitutionType[] = [
     tag: '生活照料机构',
     medical: '内设基本医疗，可刷医保；不具备抢救能力，急症要转医院',
     fitFor: '自理到二级护理',
-    scale: '数千元到近万元级／月',
+    scale: '数千元到万元级／月',
     caution: '门槛最低，但别指望它处理急症。',
   },
   {
@@ -557,7 +557,7 @@ export const institutionTypes: InstitutionType[] = [
     tag: '医疗机构',
     medical: '医生、护士、药剂师齐全，能处理抢救',
     fitFor: '三级以上护理、医疗依赖高',
-    scale: '近万元到万元级／月，医疗自费部分另计',
+    scale: '数千元到万元级／月，医疗自费部分另计',
     caution: '属医疗机构、主要走医保，不是「养老院升级版」。',
   },
   {

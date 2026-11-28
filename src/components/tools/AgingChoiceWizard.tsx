@@ -175,6 +175,9 @@ function FacilityStep({ onBackHome }: { onBackHome: () => void }) {
 
       <div className="rounded-2xl border border-[#E8D9C2] bg-white p-5 sm:p-6">
         <h3 className="text-[15px] font-bold text-[#4A3728]">五类机构对照</h3>
+        <p className="mt-1 text-[12.5px] leading-[1.7] text-[#A8927A]">
+          类型看功能，档位看价格——同一类型从经济档到高端，能差两三倍。
+        </p>
         <div className="mt-4">
           {institutionTypes.map((t) => (
             <div
